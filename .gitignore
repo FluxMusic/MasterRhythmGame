@@ -1,6 +1,9 @@
 # Visual Studio 2015 user specific files
 .vs/
 
+# Mac Folder Files
+.DS_Store
+
 # Compiled Object files
 *.slo
 *.lo
@@ -38,6 +41,8 @@
 *.suo
 *.opensdf
 *.sdf
+*.vscode
+*.code-workspace
 *.VC.db
 *.VC.opendb
 
