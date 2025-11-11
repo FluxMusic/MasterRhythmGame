@@ -15,9 +15,7 @@ AMainPlayerController::AMainPlayerController()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	InitMidi();
-
+	
 	InitInputAction();
 
 	//MusicComponent = CreateDefaultSubobject<UAudioComponent>(*Music_Name);
@@ -27,6 +25,8 @@ AMainPlayerController::AMainPlayerController()
 void AMainPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
+	InitMidi();
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
@@ -80,12 +80,12 @@ void AMainPlayerController::CreateMidiController()
 
 	if (MidiController != nullptr)
 	{
-		//TODO
+		UE_LOG(LogTemp, Log, TEXT("Successfully connected with MIDI Controller."));
 	}
 	else
 	{
 		// Should not happen
-		UE_LOG(LogTemp, Log, TEXT("Failed to "));
+		UE_LOG(LogTemp, Log, TEXT("Failed to connect with MIDI Controller."));
 	}
 }
 
