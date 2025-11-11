@@ -6,7 +6,8 @@
 #include "EnhancedInputSubsystemInterface.h"
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
-#include "InputAction.h"
+//#include "MIDIDevice/Public/MIDIDeviceInputController.h"
+//#include "MIDIDevice/Public/MIDIDeviceManager.h"
 
 // Sets default values
 AMainPlayerController::AMainPlayerController()
@@ -15,6 +16,8 @@ AMainPlayerController::AMainPlayerController()
 	PrimaryActorTick.bCanEverTick = true;
 
 	InitInputAction();
+
+	//InitMidi();
 
 	//MusicComponent = CreateDefaultSubobject<UAudioComponent>(*Music_Name);
 }
@@ -49,6 +52,37 @@ void AMainPlayerController::InitInputAction()
 	DefaultMappingContext = LoadObject<UInputMappingContext>(nullptr, TEXT("/Game/Input/IMC_Character.IMC_Character"));
 
 }
+
+//void AMainPlayerController::InitMidi()
+//{
+//	DisplayMidiDevicesIDs();
+//
+//	CreateMidiController();
+//}
+//
+//void AMainPlayerController::DisplayMidiDevicesIDs()
+//{
+//	//TArray<FFoundMIDIDevice> InputDevices;
+//
+//	//UMIDIDeviceManager::FindMIDIDevices(InputDevices);
+//
+//	//for (auto InputDevice : InputDevices)
+//	//{
+//	//	UE_LOG(LogTemp, Log, TEXT("ID: %d"), InputDevice.DeviceID);
+//	//	UE_LOG(LogTemp, Log, TEXT("ID: %s"), InputDevice.DeviceName);
+//
+//	//}
+//}
+//
+//void AMainPlayerController::CreateMidiController()
+//{
+//	//MidiController = UMIDIDeviceManager::CreateMIDIDeviceInputController(1, 1024);
+//
+//	//if (IsValid(MidiController))
+//	//{
+//	//	UE_LOG(LogTemp, Log, TEXT("Erfolgreich!"));
+//	//}
+//}
 
 //Updates every frame
 void AMainPlayerController::Tick(float DeltaSeconds)

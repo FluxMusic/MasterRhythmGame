@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "InputMappingContext.h"
+//#include "MIDIDevice/Public/MIDIDeviceInputController.h"
+//#include "MIDIDevice/Public/MIDIDeviceManager.h"
 #include "GameFramework/PlayerController.h"
 #include "MainPlayerController.generated.h"
 
@@ -27,6 +29,14 @@ protected:
 	//Initialize the Mapping Context and the Input Actions
 	void InitInputAction(void);
 
+	////Initialize the MIDI Controller
+	//void InitMidi(void);
+
+	//// Finds MIDI Devices and logs them
+	//void DisplayMidiDevicesIDs(void);
+
+	//void CreateMidiController(void);
+
 	// Called every frame
 	void Tick(float DeltaSeconds) override;
 
@@ -38,6 +48,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, DisplayName = "UI SFX", Category = "Components")
 	TObjectPtr<class UAudioComponent> USfxComponent = nullptr;
+
+	//UPROPERTY(VisibleAnywhere, DisplayName = "Midi Controller", Category = "Components")
+	//TObjectPtr<class UMIDIDeviceInputController> MidiController = nullptr;
 
 	UPROPERTY(VisibleAnywhere, DisplayName = "Audio Component Auto Activation", Category = "Components")
 	bool bAutoActivate = false;
