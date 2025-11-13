@@ -5,19 +5,18 @@
 #include "CoreMinimal.h"
 #include "InputMappingContext.h"
 #include "MIDIDevice/Public/MIDIDeviceInputController.h"
-#include "MIDIDevice/Public/MIDIDeviceManager.h"
 #include "GameFramework/PlayerController.h"
-#include "MainPlayerController.generated.h"
+#include "MainMenuController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class MASTERRHYTHMGAME_API AMainPlayerController : public APlayerController
+class MASTERRHYTHMGAME_API AMainMenuController : public APlayerController
 {
 	GENERATED_BODY()
 public:
-	AMainPlayerController();
+	AMainMenuController();
 
 protected:
 
@@ -38,7 +37,7 @@ protected:
 	void CreateMidiController(void);
 
 	// Called every frame
-	void Tick(float DeltaSeconds) override;
+	virtual void Tick(float DeltaSeconds) override;
 
 private:
 	const FString Music_Name = FString(TEXT("Music"));

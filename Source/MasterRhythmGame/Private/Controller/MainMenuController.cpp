@@ -1,17 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Controller/MainPlayerController.h"
+#include "Controller/MainMenuController.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
-#include "InputAction.h"
 #include "MIDIDevice/Public/MIDIDeviceInputController.h"
 #include "MIDIDevice/Public/MIDIDeviceManager.h"
 
 // Sets default values
-AMainPlayerController::AMainPlayerController()
+AMainMenuController::AMainMenuController()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -22,7 +21,7 @@ AMainPlayerController::AMainPlayerController()
 }
 
 //Called when the game starts or when spawned
-void AMainPlayerController::BeginPlay()
+void AMainMenuController::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -36,7 +35,7 @@ void AMainPlayerController::BeginPlay()
 }
 
 //Binds the Input Actions to their related Methods
-void AMainPlayerController::SetupInputComponent()
+void AMainMenuController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
@@ -47,21 +46,21 @@ void AMainPlayerController::SetupInputComponent()
 }
 
 //Initialize the Mapping Context and the Input Actions
-void AMainPlayerController::InitInputAction()
+void AMainMenuController::InitInputAction()
 {
 	// Initialize everything
 	DefaultMappingContext = LoadObject<UInputMappingContext>(nullptr, TEXT("/Game/Input/IMC_Character.IMC_Character"));
 
 }
 
-void AMainPlayerController::InitMidi()
+void AMainMenuController::InitMidi()
 {
-	//DisplayMidiDevicesIDs();
+	DisplayMidiDevicesIDs();
 
 	CreateMidiController();
 }
 
-void AMainPlayerController::DisplayMidiDevicesIDs()
+void AMainMenuController::DisplayMidiDevicesIDs()
 {
 	TArray<FFoundMIDIDevice> InputDevices;
 
@@ -74,7 +73,7 @@ void AMainPlayerController::DisplayMidiDevicesIDs()
 	}
 }
 
-void AMainPlayerController::CreateMidiController()
+void AMainMenuController::CreateMidiController()
 {
 	MidiController = UMIDIDeviceManager::CreateMIDIDeviceInputController(1, 1024);
 
@@ -90,7 +89,7 @@ void AMainPlayerController::CreateMidiController()
 }
 
 //Updates every frame
-void AMainPlayerController::Tick(float DeltaSeconds)
+void AMainMenuController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 }

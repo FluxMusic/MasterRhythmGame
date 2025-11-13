@@ -2,9 +2,9 @@
 
 
 #include "GameModeBase/MainMenuGameModeBase.h"
-#include "Controller/MainPlayerController.h"
+#include "Controller/MainMenuController.h"
 
 AMainMenuGameModeBase::AMainMenuGameModeBase()
 {
-	PlayerControllerClass = AMainPlayerController::StaticClass();
+	PlayerControllerClass = AMainMenuController::StaticClass();
 }
