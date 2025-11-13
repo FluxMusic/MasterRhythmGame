@@ -8,6 +8,16 @@
 #include "GameFramework/PlayerController.h"
 #include "MainMenuController.generated.h"
 
+enum class EControllerState
+{
+	MainMenu,
+	CreditsMenu,
+	AudioMenu,
+	GraphicsMenu,
+	LoadMenu,
+	SettingMenu
+};
+
 /**
  * 
  */
@@ -39,6 +49,23 @@ protected:
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
+	UFUNCTION()
+	void HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Note, int32 Velocity);
+
+	UFUNCTION()
+	void HandleNoteOff(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Note, int32 Velocity);
+
+	UFUNCTION()
+	void HandlePitchBend(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Pitch);
+	
+	UFUNCTION()
+	void HandleAftertouch(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Note, int32 Amount);
+
+	UFUNCTION()
+	void HandleControlChange(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Type, int32 Value);
+
+	void MainMenuControl(int32 Note);
+
 private:
 	const FString Music_Name = FString(TEXT("Music"));
 
@@ -53,6 +80,11 @@ private:
 
 	UPROPERTY(VisibleAnywhere, DisplayName = "Audio Component Auto Activation", Category = "Components")
 	bool bAutoActivate = false;
+
+	UPROPERTY(VisibleAnywhere, DisplayName = "MainMenuIndex", Category = "Components")
+	int32 MainMenuIndex { 0 };
+
+	EControllerState ControllerState{ EControllerState::MainMenu };
 
 #pragma region InputAction
 

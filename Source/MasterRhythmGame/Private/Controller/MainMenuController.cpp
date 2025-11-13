@@ -6,6 +6,7 @@
 #include "EnhancedInputSubsystemInterface.h"
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
+#include "PropertyAccess.h"
 #include "MIDIDevice/Public/MIDIDeviceInputController.h"
 #include "MIDIDevice/Public/MIDIDeviceManager.h"
 
@@ -80,6 +81,11 @@ void AMainMenuController::CreateMidiController()
 	if (MidiController != nullptr)
 	{
 		UE_LOG(LogTemp, Log, TEXT("Successfully connected with MIDI Controller."));
+		MidiController->OnMIDINoteOn.AddDynamic(this, &AMainMenuController::HandleNoteOn);
+		MidiController->OnMIDINoteOff.AddDynamic(this, &AMainMenuController::HandleNoteOff);
+		MidiController->OnMIDIPitchBend.AddDynamic(this, &AMainMenuController::HandlePitchBend);
+		MidiController->OnMIDIAftertouch.AddDynamic(this, &AMainMenuController::HandleAftertouch);
+		MidiController->OnMIDIControlChange.AddDynamic(this, &AMainMenuController::HandleControlChange);
 	}
 	else
 	{
@@ -92,4 +98,110 @@ void AMainMenuController::CreateMidiController()
 void AMainMenuController::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+}
+
+void AMainMenuController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Note, int32 Velocity)
+{
+	UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
+	UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
+	UE_LOG(LogTemp, Log, TEXT("Velocity: %d"), Velocity);
+
+	switch(ControllerState)
+	{
+	case EControllerState::MainMenu:
+		{
+			MainMenuControl(Note);
+			break;
+		}
+	case EControllerState::AudioMenu:
+		{
+			//TODO
+			break;
+		}
+	case EControllerState::CreditsMenu:
+		{
+			//TODO
+			break;
+		}
+	case EControllerState::GraphicsMenu:
+		{
+			//TODO
+			break;
+		}
+	case EControllerState::LoadMenu:
+		{
+			//TODO
+			break;
+		}
+	case EControllerState::SettingMenu:
+		{
+			//TODO
+			break;
+		}
+	}
+
+}
+
+void AMainMenuController::HandleNoteOff(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Note, int32 Velocity)
+{
+	UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
+	UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
+	UE_LOG(LogTemp, Log, TEXT("Velocity: %d"), Velocity);
+}
+
+void AMainMenuController::HandlePitchBend(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Pitch)
+{
+	UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
+	UE_LOG(LogTemp, Log, TEXT("Pitch: %d"),    Pitch);
+}
+
+void AMainMenuController::HandleAftertouch(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Note, int32 Amount)
+{
+	UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
+	UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
+	UE_LOG(LogTemp, Log, TEXT("Amount: %d"),   Amount);
+}
+
+void AMainMenuController::HandleControlChange(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Type, int32 Value)
+{
+	UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
+	UE_LOG(LogTemp, Log, TEXT("Type: %d"),     Type);
+	UE_LOG(LogTemp, Log, TEXT("Value: %d"),    Value);
+}
+
+void AMainMenuController::MainMenuControl(int32 Note)
+{
+	Note = Note % 12;
+
+	switch(Note)
+	{
+		case 0:
+			{
+			MainMenuIndex++;
+			MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
+			UE_LOG(LogTemp, Log, TEXT("MainMenuIndex: %d"), MainMenuIndex);
+
+			// Switch
+			break;
+			}
+		case 2:
+			{
+			MainMenuIndex--;
+			MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
+			UE_LOG(LogTemp, Log, TEXT("MainMenuIndex: %d"), MainMenuIndex);
+
+			// Switch 
+			break;
+			}
+		case 11:
+			{
+			//TODO: Cast to MainMenuHUD -> Check which one of the buttons got focus then go into it
+			break;
+			}
+		default:
+			{
+			// Should not land here
+			break;
+			}
+	}
 }
