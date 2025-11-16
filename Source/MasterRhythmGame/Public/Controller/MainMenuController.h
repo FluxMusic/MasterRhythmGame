@@ -66,6 +66,16 @@ protected:
 
 	void MainMenuControl(int32 Note);
 
+	void AudioMenuControl(int32 Note);
+
+	void SettingMenuControl(int32 Note);
+
+	void CreditMenuControl(int32 Note);
+
+	void GraphicMenuControl(int32 Note);
+
+	void LoadMenuControl(int32 Note);
+
 private:
 	const FString Music_Name = FString(TEXT("Music"));
 
@@ -83,6 +93,21 @@ private:
 
 	UPROPERTY(VisibleAnywhere, DisplayName = "MainMenuIndex", Category = "Components")
 	int32 MainMenuIndex { 0 };
+
+	UPROPERTY(VisibleAnywhere, DisplayName = "AudioMenuIndex", Category = "Components")
+	int32 AudioMenuIndex { 0 };
+
+	UPROPERTY(VisibleAnywhere, DisplayName = "SettingMenuIndex", Category = "Components")
+	int32 SettingMenuIndex { 0 };
+
+	UPROPERTY(VisibleAnywhere, DisplayName = "SettingMenuIndex", Category = "Components")
+	int32 CreditMenuIndex { 0 };
+
+	UPROPERTY(VisibleAnywhere, DisplayName = "GraphicMenuIndex", Category = "Components")
+	int32 GraphicMenuIndex { 0 };
+
+	UPROPERTY(VisibleAnywhere, DisplayName = "LoadMenuIndex", Category = "Components")
+	int32 LoadMenuIndex { 0 };
 
 	EControllerState ControllerState{ EControllerState::MainMenu };
 

@@ -2,6 +2,9 @@
 
 
 #include "Controller/MainMenuController.h"
+
+#include <rapidjson/reader.h>
+
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "EnhancedInputComponent.h"
@@ -106,6 +109,8 @@ void AMainMenuController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceCon
 	UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
 	UE_LOG(LogTemp, Log, TEXT("Velocity: %d"), Velocity);
 
+	Note = Note % 12;
+
 	switch(ControllerState)
 	{
 	case EControllerState::MainMenu:
@@ -115,27 +120,27 @@ void AMainMenuController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceCon
 		}
 	case EControllerState::AudioMenu:
 		{
-			//TODO
+			AudioMenuControl(Note);
 			break;
 		}
 	case EControllerState::CreditsMenu:
 		{
-			//TODO
+			CreditMenuControl(Note);
 			break;
 		}
 	case EControllerState::GraphicsMenu:
 		{
-			//TODO
+			GraphicMenuControl(Note);
 			break;
 		}
 	case EControllerState::LoadMenu:
 		{
-			//TODO
+			LoadMenuControl(Note);
 			break;
 		}
 	case EControllerState::SettingMenu:
 		{
-			//TODO
+			SettingMenuControl(Note);
 			break;
 		}
 	}
@@ -171,7 +176,6 @@ void AMainMenuController::HandleControlChange(UMIDIDeviceInputController* MIDIDe
 
 void AMainMenuController::MainMenuControl(int32 Note)
 {
-	Note = Note % 12;
 
 	switch(Note)
 	{
@@ -202,6 +206,162 @@ void AMainMenuController::MainMenuControl(int32 Note)
 			{
 			// Should not land here
 			break;
+			}
+	}
+}
+
+void AMainMenuController::AudioMenuControl(int32 Note)
+{
+	switch (Note)
+	{
+		case 0:
+			{
+			AudioMenuIndex++;
+			AudioMenuIndex = FMath::Clamp(AudioMenuIndex, 0, 3);
+			UE_LOG(LogTemp, Log, TEXT("AudioMenuIndex: %d"), AudioMenuIndex);
+
+			//Switch
+			break;
+
+			}
+		case 2:
+			{
+			AudioMenuIndex--;
+			AudioMenuIndex = FMath::Clamp(AudioMenuIndex, 0, 3);
+			UE_LOG(LogTemp, Log, TEXT("AudioMenuIndex: %d"), AudioMenuIndex);
+
+			//Switch
+			break;
+			}
+		case 11:
+			{
+				//TODO: Cast to MainMenuHUD 
+				break;
+			}
+		default:
+			{
+			// Should not land here
+			break;
+			}
+	}
+}
+
+void AMainMenuController::SettingMenuControl(int32 Note)
+{
+	switch (Note)
+	{
+		case 0:
+			{
+				SettingMenuIndex++;
+				SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
+				UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
+
+				//Switch
+				break;
+			}
+		case 2:
+			{
+				SettingMenuIndex--;
+				SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
+				UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
+
+				//Switch
+				break;
+			}
+		case 11:
+			{
+				//TODO: Cast to MainMenuHUD
+				break;
+			}
+		default:
+			{
+				// Should not land here
+				break;
+			}
+	}
+}
+
+void AMainMenuController::CreditMenuControl(int32 Note)
+{
+	switch (Note)
+	{
+		case 0:
+			{
+				//TODO: Cast to MainMenuHUD
+			}
+		case 11:
+			{
+				//TODO: Cast to MainMenuHUD
+			}
+		default:
+			{
+				// Should not land here
+				break;
+			}
+	}
+}
+
+void AMainMenuController::GraphicMenuControl(int32 Note)
+{
+	switch (Note)
+	{
+		case 0:
+		{
+			GraphicMenuIndex++;
+			GraphicMenuIndex = FMath::Clamp(GraphicMenuIndex, 0, 9);
+			UE_LOG(LogTemp, Log, TEXT("GraphicMenuIndex: %d"), GraphicMenuIndex);
+
+			//Switch
+			break;
+		}
+		case 2:
+		{
+			GraphicMenuIndex--;
+			GraphicMenuIndex = FMath::Clamp(GraphicMenuIndex, 0, 9);
+			UE_LOG(LogTemp, Log, TEXT("GraphicMenuIndex: %d"), GraphicMenuIndex);
+
+			//Switch
+			break;
+		}
+		case 11:
+			{
+				//TODO: Cast to MenuHUD
+				break;
+			}
+		default:
+		{
+			//Should not land here
+			break;
+		}
+	}
+}
+
+void AMainMenuController::LoadMenuControl(int32 Note)
+{
+	switch (Note)
+	{
+		case 0:
+			{
+			LoadMenuIndex++;
+			LoadMenuIndex = FMath::Clamp(LoadMenuIndex, 0, 4);
+			UE_LOG(LogTemp, Log, TEXT("LoadMenuIndex: %d"), LoadMenuIndex);
+
+			//Switch
+			break;
+			}
+		case 2:
+			{
+			LoadMenuIndex--;
+			LoadMenuIndex = FMath::Clamp(LoadMenuIndex, 0, 4);
+			UE_LOG(LogTemp, Log, TEXT("LoadMenuIndex: %d"), LoadMenuIndex);
+
+			//Switch
+			break;
+			}
+		default:
+			{
+				//Should not land here
+				break;
 			}
 	}
 }
