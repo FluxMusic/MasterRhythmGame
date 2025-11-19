@@ -2,14 +2,12 @@
 
 
 #include "HUD/MainMenuHUD.h"
-
-#include "Components/Button.h"
 #include "UI/MainMenu/MainMenuWidget.h"
+#include "UI/MainMenu/CreditsWidget.h"
 
 
 AMainMenuHUD::AMainMenuHUD()
 {
-	MainMenuWidgetClass = ConstructorHelpers::FClassFinder<UMainMenuWidget>(*ObjectPath).Class;
 }
 
 void AMainMenuHUD::BeginPlay()
@@ -25,5 +23,14 @@ void AMainMenuHUD::BeginPlay()
 			MainMenuInstance->AddToViewport();
 		}
 	}
-
+	if (CreditsWidgetClass)
+	{
+		CreditsMenuInstance = CreateWidget<UCreditsWidget>(GetWorld(), CreditsWidgetClass);
+		
+		if (CreditsMenuInstance != nullptr)
+		{
+			CreditsMenuInstance->AddToViewport();
+			CreditsMenuInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
 }

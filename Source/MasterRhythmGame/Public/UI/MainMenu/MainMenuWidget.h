@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "MainMenuWidget.generated.h"
 
+class AMainMenuHUD;
 /**
  * 
  */
@@ -14,6 +15,21 @@ class MASTERRHYTHMGAME_API UMainMenuWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+	UFUNCTION()
+	void NewGameButtonClicked();
+
+	UFUNCTION()
+	void LoadGameButtonClicked();
+
+	UFUNCTION()
+	void CreditsButtonClicked();
+
+	UFUNCTION()
+	void SettingButtonClicked();
+
+	UFUNCTION()
+	void EscapeButtonClicked();
+
 	UFUNCTION()
 	void NewGameHovered();
 
@@ -63,20 +79,10 @@ private:
 	//Native Constructor
 	virtual void NativeConstruct() override;
 
-	UFUNCTION()
-	void NewGameButtonClicked();
 
-	UFUNCTION()
-	void LoadGameButtonClicked();
-
-	UFUNCTION()
-	void CreditsButtonClicked();
-
-	UFUNCTION()
-	void SettingButtonClicked();
-
-	UFUNCTION()
-	void EscapeButtonClicked();
 
 	const FName LevelName = FName(TEXT(""));
+
+	UPROPERTY()
+	TObjectPtr<AMainMenuHUD> MainMenuHud{ nullptr };
 };

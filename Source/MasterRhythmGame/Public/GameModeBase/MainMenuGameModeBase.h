@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "HUD/MainMenuHUD.h"
 #include "MainMenuGameModeBase.generated.h"
 
 /**
@@ -15,4 +16,10 @@ class MASTERRHYTHMGAME_API AMainMenuGameModeBase : public AGameModeBase
 	GENERATED_BODY()
 public:
 	AMainMenuGameModeBase();
+
+protected:
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "HUD")
+	TSubclassOf<AMainMenuHUD> MainMenuHudClass;
 };

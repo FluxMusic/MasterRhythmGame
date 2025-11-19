@@ -8,5 +8,14 @@
 AMainMenuGameModeBase::AMainMenuGameModeBase()
 {
 	PlayerControllerClass = AMainMenuController::StaticClass();
-	HUDClass = AMainMenuHUD::StaticClass();
+}
+
+void AMainMenuGameModeBase::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (MainMenuHudClass)
+	{
+		HUDClass = MainMenuHudClass;
+	}
 }

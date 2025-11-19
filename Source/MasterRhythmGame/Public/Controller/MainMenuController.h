@@ -29,6 +29,10 @@ class MASTERRHYTHMGAME_API AMainMenuController : public APlayerController
 public:
 	AMainMenuController();
 
+	EControllerState GetControllerState() const { return ControllerState; }
+
+	void SetControllerState(EControllerState NewState) { ControllerState = NewState; }
+
 protected:
 
 	virtual void BeginPlay() override;

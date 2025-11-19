@@ -19,8 +19,6 @@ AMainMenuController::AMainMenuController()
 	
 	InitInputAction();
 
-	//MusicComponent = CreateDefaultSubobject<UAudioComponent>(*MusicName);
-
 }
 
 //Called when the game starts or when spawned
@@ -32,7 +30,7 @@ void AMainMenuController::BeginPlay()
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
-		// add mapping context
+		// Add mapping context
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	}
 
@@ -117,7 +115,7 @@ void AMainMenuController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceCon
 
 	Note = Note % 12;
 
-	switch(ControllerState)
+	switch(GetControllerState())
 	{
 	case EControllerState::MainMenu:
 		{
@@ -185,34 +183,53 @@ void AMainMenuController::MainMenuControl(int32 Note)
 
 	switch(Note)
 	{
-		case 0:
-			{
+	case 0:
+		{
 			MainMenuIndex++;
 			MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
 			UE_LOG(LogTemp, Log, TEXT("MainMenuIndex: %d"), MainMenuIndex);
 
 			// Switch
 			break;
-			}
-		case 2:
-			{
+		}
+	case 2:
+		{
 			MainMenuIndex--;
 			MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
 			UE_LOG(LogTemp, Log, TEXT("MainMenuIndex: %d"), MainMenuIndex);
 
 			// Switch 
 			break;
-			}
-		case 11:
+		}
+	case 11:
+		{
+			if (MainMenuHud->MainMenuInstance->NewGame->HasKeyboardFocus())
 			{
-			//TODO: Cast to MainMenuHUD -> Check which one of the buttons got focus then go into it
-			break;
+				MainMenuHud->MainMenuInstance->NewGameButtonClicked();
 			}
-		default:
+			if (MainMenuHud->MainMenuInstance->LoadGame->HasKeyboardFocus())
 			{
+				MainMenuHud->MainMenuInstance->LoadGameButtonClicked();
+			}
+			if (MainMenuHud->MainMenuInstance->Setting->HasKeyboardFocus())
+			{
+				MainMenuHud->MainMenuInstance->SettingButtonClicked();
+			}
+			if (MainMenuHud->MainMenuInstance->Credits->HasKeyboardFocus())
+			{
+				MainMenuHud->MainMenuInstance->CreditsButtonClicked();
+			}
+			if (MainMenuHud->MainMenuInstance->Escape->HasKeyboardFocus())
+			{
+				MainMenuHud->MainMenuInstance->EscapeButtonClicked();
+			}
+
+		}
+	default:
+		{
 			// Should not land here
 			break;
-			}
+		}
 	}
 
 	MainMenuSwitchButton(MainMenuIndex);
@@ -291,21 +308,30 @@ void AMainMenuController::SettingMenuControl(int32 Note)
 
 void AMainMenuController::CreditMenuControl(int32 Note)
 {
-	switch (Note)
+	if (MainMenuHud != nullptr)
 	{
+		switch (Note)
+		{
 		case 0:
-			{
-				//TODO: Cast to MainMenuHUD
-			}
+		{
+			MainMenuHud->CreditsMenuInstance->ReturnMainMenu->SetKeyboardFocus();
+			MainMenuHud->CreditsMenuInstance->ReturnMainMenu->SetBackgroundColor(FLinearColor::Green);
+			break;
+		}
 		case 11:
+		{
+			if (MainMenuHud->CreditsMenuInstance->ReturnMainMenu->HasKeyboardFocus())
 			{
-				//TODO: Cast to MainMenuHUD
+				MainMenuHud->CreditsMenuInstance->ReturnMainMenuButtonClicked();
 			}
+			break;
+		}
 		default:
-			{
-				// Should not land here
-				break;
-			}
+		{
+			// Should not land here
+			break;
+		}
+		}
 	}
 }
 

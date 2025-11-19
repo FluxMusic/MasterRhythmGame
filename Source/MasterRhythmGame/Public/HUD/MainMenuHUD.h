@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "UI/MainMenu/MainMenuWidget.h"
+#include "UI/MainMenu/CreditsWidget.h"
 #include "MainMenuHUD.generated.h"
 
 /**
@@ -23,10 +24,13 @@ public:
 	UPROPERTY()
 	TObjectPtr<UMainMenuWidget> MainMenuInstance { nullptr };
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UCreditsWidget> CreditsWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UCreditsWidget> CreditsMenuInstance { nullptr };
+
 
 protected:
 	virtual void BeginPlay() override;
-
-private:
-	const FString ObjectPath = FString(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/UI/MainMenu/WBP_MainMenu.WBP_MainMenu_C'"));
 };

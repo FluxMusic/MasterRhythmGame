@@ -3,11 +3,21 @@
 
 #include "UI/MainMenu/MainMenuWidget.h"
 #include "Components/Button.h"
+#include "HUD/MainMenuHUD.h"
 #include "Kismet/GameplayStatics.h"
+#include "Controller/MainMenuController.h"
+
 
 void UMainMenuWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+
+	AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
+
+	if (PlayerController != nullptr)
+	{
+		MainMenuHud = Cast<AMainMenuHUD>(PlayerController->GetHUD());
+	}
 
 	NewGame->OnClicked.AddDynamic(this,  &UMainMenuWidget::NewGameButtonClicked);
 	LoadGame->OnClicked.AddDynamic(this, &UMainMenuWidget::LoadGameButtonClicked);
@@ -38,19 +48,41 @@ void UMainMenuWidget::NewGameButtonClicked()
 
 void UMainMenuWidget::LoadGameButtonClicked()
 {
+	AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
+
 	UKismetSystemLibrary::PrintString(this, FString(TEXT("TODO")), true, true,FLinearColor::Blue, 10.0);
+	if (PlayerController != nullptr)
+	{
+		PlayerController->SetControllerState(EControllerState::LoadMenu);
+	}
 }
 
 void UMainMenuWidget::CreditsButtonClicked()
 {
+	AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
+
 	UWidget::SetVisibility(ESlateVisibility::Hidden);
-	//TODO: Set Visibility for Credits Widget
+	if (MainMenuHud != nullptr)
+	{
+		MainMenuHud->CreditsMenuInstance->SetVisibility(ESlateVisibility::Visible);
+	}
+	if (PlayerController != nullptr)
+	{
+		PlayerController->SetControllerState(EControllerState::CreditsMenu);
+	}
 }
 
 void UMainMenuWidget::SettingButtonClicked()
 {
+	AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
+	
 	UWidget::SetVisibility(ESlateVisibility::Hidden);
 	//TODO: Set Visibility for Setting Widget
+
+	if (PlayerController != nullptr)
+	{
+		PlayerController->SetControllerState(EControllerState::SettingMenu);
+	}
 }
 
 void UMainMenuWidget::EscapeButtonClicked()
