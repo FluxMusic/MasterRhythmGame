@@ -2,14 +2,12 @@
 
 
 #include "Controller/MainMenuController.h"
-
-#include <rapidjson/reader.h>
-
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputSubsystemInterface.h"
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
-#include "PropertyAccess.h"
+#include "Components/Button.h"
+#include "Kismet/GameplayStatics.h"
 #include "MIDIDevice/Public/MIDIDeviceInputController.h"
 #include "MIDIDevice/Public/MIDIDeviceManager.h"
 
@@ -21,7 +19,8 @@ AMainMenuController::AMainMenuController()
 	
 	InitInputAction();
 
-	//MusicComponent = CreateDefaultSubobject<UAudioComponent>(*Music_Name);
+	//MusicComponent = CreateDefaultSubobject<UAudioComponent>(*MusicName);
+
 }
 
 //Called when the game starts or when spawned
@@ -35,6 +34,13 @@ void AMainMenuController::BeginPlay()
 	{
 		// add mapping context
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
+	}
+
+	AMainMenuController* PlayerController = Cast<AMainMenuController>(this);
+
+	if (PlayerController != nullptr)
+	{
+		MainMenuHud = Cast<AMainMenuHUD>(PlayerController->GetHUD());
 	}
 }
 
@@ -208,6 +214,8 @@ void AMainMenuController::MainMenuControl(int32 Note)
 			break;
 			}
 	}
+
+	MainMenuSwitchButton(MainMenuIndex);
 }
 
 void AMainMenuController::AudioMenuControl(int32 Note)
@@ -363,5 +371,59 @@ void AMainMenuController::LoadMenuControl(int32 Note)
 				//Should not land here
 				break;
 			}
+	}
+}
+
+void AMainMenuController::MainMenuSwitchButton(int32 InMainMenuIndex)
+{
+	if (MainMenuHud != nullptr)
+	{
+		switch (InMainMenuIndex)
+		{
+			// New Game
+		case 0:
+		{
+			MainMenuHud->MainMenuInstance->NewGame->SetKeyboardFocus();
+			MainMenuHud->MainMenuInstance->NewGameHovered();
+			break;
+		}
+		// Load Game
+		case 1:
+		{
+			MainMenuHud->MainMenuInstance->LoadGame->SetKeyboardFocus();
+			MainMenuHud->MainMenuInstance->LoadGameHovered();
+			break;
+		}
+		// Setting
+		case 2:
+		{
+			MainMenuHud->MainMenuInstance->Setting->SetKeyboardFocus();
+			MainMenuHud->MainMenuInstance->SettingHovered();
+			break;
+		}
+		// Credit
+		case 3:
+		{
+			MainMenuHud->MainMenuInstance->Credits->SetKeyboardFocus();
+			MainMenuHud->MainMenuInstance->CreditHovered();
+			break;
+		}
+		// Escape
+		case 4:
+		{
+			MainMenuHud->MainMenuInstance->Escape->SetKeyboardFocus();
+			MainMenuHud->MainMenuInstance->EscapeHovered();
+			break;
+		}
+		default:
+		{
+			// Should not land here
+			break;
+		}
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("Couldn´t load MainMenuHUD"));
 	}
 }

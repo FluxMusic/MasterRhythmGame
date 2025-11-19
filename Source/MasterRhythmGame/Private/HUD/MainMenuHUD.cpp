@@ -3,9 +3,27 @@
 
 #include "HUD/MainMenuHUD.h"
 
-#include "Blueprint/UserWidget.h"
+#include "Components/Button.h"
+#include "UI/MainMenu/MainMenuWidget.h"
+
 
 AMainMenuHUD::AMainMenuHUD()
 {
-	//CreateWidget()
+	MainMenuWidgetClass = ConstructorHelpers::FClassFinder<UMainMenuWidget>(*ObjectPath).Class;
+}
+
+void AMainMenuHUD::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (MainMenuWidgetClass)
+	{
+		MainMenuInstance = CreateWidget<UMainMenuWidget>(GetWorld(), MainMenuWidgetClass);
+
+		if (MainMenuInstance != nullptr)
+		{
+			MainMenuInstance->AddToViewport();
+		}
+	}
+
 }
