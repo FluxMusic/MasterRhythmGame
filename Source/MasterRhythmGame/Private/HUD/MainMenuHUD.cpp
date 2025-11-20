@@ -21,6 +21,7 @@ void AMainMenuHUD::BeginPlay()
 		if (MainMenuInstance != nullptr)
 		{
 			MainMenuInstance->AddToViewport();
+			MainMenuInstance->SetVisibility(ESlateVisibility::Visible);
 		}
 	}
 	if (CreditsWidgetClass)
@@ -31,6 +32,33 @@ void AMainMenuHUD::BeginPlay()
 		{
 			CreditsMenuInstance->AddToViewport();
 			CreditsMenuInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+	if (MainMenuSettingWidgetClass)
+	{
+		MainMenuSettingInstance = CreateWidget<UMainMenuSetting>(GetWorld(), MainMenuSettingWidgetClass);
+		if (MainMenuSettingInstance != nullptr)
+		{
+			MainMenuSettingInstance->AddToViewport();
+			MainMenuSettingInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+	if (GraphicSettingClass)
+	{
+		GraphicSettingInstance = CreateWidget<UGraphicSettingWidget>(GetWorld(), GraphicSettingClass);
+		if (GraphicSettingInstance != nullptr)
+		{
+			GraphicSettingInstance->AddToViewport();
+			GraphicSettingInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+	if (AudioSettingClass)
+	{
+		AudioSettingInstance = CreateWidget<UAudioSettingWidget>(GetWorld(), AudioSettingClass);
+		if (AudioSettingInstance != nullptr)
+		{
+			AudioSettingInstance->AddToViewport();
+			AudioSettingInstance->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
 }

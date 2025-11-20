@@ -19,6 +19,8 @@ void UMainMenuWidget::NativeConstruct()
 		MainMenuHud = Cast<AMainMenuHUD>(PlayerController->GetHUD());
 	}
 
+	NewGame->SetBackgroundColor(FLinearColor::Green);
+
 	NewGame->OnClicked.AddDynamic(this,  &UMainMenuWidget::NewGameButtonClicked);
 	LoadGame->OnClicked.AddDynamic(this, &UMainMenuWidget::LoadGameButtonClicked);
 	Setting->OnClicked.AddDynamic(this,  &UMainMenuWidget::SettingButtonClicked);
@@ -51,10 +53,10 @@ void UMainMenuWidget::LoadGameButtonClicked()
 	AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
 
 	UKismetSystemLibrary::PrintString(this, FString(TEXT("TODO")), true, true,FLinearColor::Blue, 10.0);
-	if (PlayerController != nullptr)
+	/*if (PlayerController != nullptr)
 	{
 		PlayerController->SetControllerState(EControllerState::LoadMenu);
-	}
+	}*/
 }
 
 void UMainMenuWidget::CreditsButtonClicked()
@@ -77,8 +79,10 @@ void UMainMenuWidget::SettingButtonClicked()
 	AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
 	
 	UWidget::SetVisibility(ESlateVisibility::Hidden);
-	//TODO: Set Visibility for Setting Widget
-
+	if (MainMenuHud != nullptr)
+	{
+		MainMenuHud->MainMenuSettingInstance->SetVisibility(ESlateVisibility::Visible);
+	}
 	if (PlayerController != nullptr)
 	{
 		PlayerController->SetControllerState(EControllerState::SettingMenu);

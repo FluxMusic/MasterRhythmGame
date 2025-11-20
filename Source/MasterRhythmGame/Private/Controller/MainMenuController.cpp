@@ -109,9 +109,9 @@ void AMainMenuController::Tick(float DeltaSeconds)
 
 void AMainMenuController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Note, int32 Velocity)
 {
-	UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
-	UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
-	UE_LOG(LogTemp, Log, TEXT("Velocity: %d"), Velocity);
+	//UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
+	//UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
+	//UE_LOG(LogTemp, Log, TEXT("Velocity: %d"), Velocity);
 
 	Note = Note % 12;
 
@@ -153,29 +153,29 @@ void AMainMenuController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceCon
 
 void AMainMenuController::HandleNoteOff(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Note, int32 Velocity)
 {
-	UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
-	UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
-	UE_LOG(LogTemp, Log, TEXT("Velocity: %d"), Velocity);
+	//UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
+	//UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
+	//UE_LOG(LogTemp, Log, TEXT("Velocity: %d"), Velocity);
 }
 
 void AMainMenuController::HandlePitchBend(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Pitch)
 {
-	UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
-	UE_LOG(LogTemp, Log, TEXT("Pitch: %d"),    Pitch);
+	//UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
+	//UE_LOG(LogTemp, Log, TEXT("Pitch: %d"),    Pitch);
 }
 
 void AMainMenuController::HandleAftertouch(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Note, int32 Amount)
 {
-	UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
-	UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
-	UE_LOG(LogTemp, Log, TEXT("Amount: %d"),   Amount);
+	//UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
+	//UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
+	//UE_LOG(LogTemp, Log, TEXT("Amount: %d"),   Amount);
 }
 
 void AMainMenuController::HandleControlChange(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Type, int32 Value)
 {
-	UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
-	UE_LOG(LogTemp, Log, TEXT("Type: %d"),     Type);
-	UE_LOG(LogTemp, Log, TEXT("Value: %d"),    Value);
+	//UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
+	//UE_LOG(LogTemp, Log, TEXT("Type: %d"),     Type);
+	//UE_LOG(LogTemp, Log, TEXT("Value: %d"),    Value);
 }
 
 void AMainMenuController::MainMenuControl(int32 Note)
@@ -206,24 +206,28 @@ void AMainMenuController::MainMenuControl(int32 Note)
 			if (MainMenuHud->MainMenuInstance->NewGame->HasKeyboardFocus())
 			{
 				MainMenuHud->MainMenuInstance->NewGameButtonClicked();
+				break;
 			}
 			if (MainMenuHud->MainMenuInstance->LoadGame->HasKeyboardFocus())
 			{
 				MainMenuHud->MainMenuInstance->LoadGameButtonClicked();
+				break;
 			}
 			if (MainMenuHud->MainMenuInstance->Setting->HasKeyboardFocus())
 			{
 				MainMenuHud->MainMenuInstance->SettingButtonClicked();
+				break;
 			}
 			if (MainMenuHud->MainMenuInstance->Credits->HasKeyboardFocus())
 			{
 				MainMenuHud->MainMenuInstance->CreditsButtonClicked();
+				break;
 			}
 			if (MainMenuHud->MainMenuInstance->Escape->HasKeyboardFocus())
 			{
 				MainMenuHud->MainMenuInstance->EscapeButtonClicked();
+				break;
 			}
-
 		}
 	default:
 		{

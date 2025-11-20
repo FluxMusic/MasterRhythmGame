@@ -6,6 +6,9 @@
 #include "GameFramework/HUD.h"
 #include "UI/MainMenu/MainMenuWidget.h"
 #include "UI/MainMenu/CreditsWidget.h"
+#include "UI/Settings/AudioSettingWidget.h"
+#include "UI/Settings/GraphicSettingWidget.h"
+#include "UI/Settings/MainMenuSetting.h"
 #include "MainMenuHUD.generated.h"
 
 /**
@@ -30,6 +33,23 @@ public:
 	UPROPERTY()
 	TObjectPtr<UCreditsWidget> CreditsMenuInstance { nullptr };
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UMainMenuSetting> MainMenuSettingWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UMainMenuSetting> MainMenuSettingInstance { nullptr };
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UGraphicSettingWidget> GraphicSettingClass;
+
+	UPROPERTY()
+	TObjectPtr<UGraphicSettingWidget> GraphicSettingInstance { nullptr };
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UAudioSettingWidget> AudioSettingClass;
+
+	UPROPERTY()
+	TObjectPtr<UAudioSettingWidget> AudioSettingInstance { nullptr };
 
 protected:
 	virtual void BeginPlay() override;
