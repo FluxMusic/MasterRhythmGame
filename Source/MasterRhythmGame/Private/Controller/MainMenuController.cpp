@@ -19,6 +19,7 @@ AMainMenuController::AMainMenuController()
 	
 	InitInputAction();
 
+	bShowMouseCursor = true;
 }
 
 //Called when the game starts or when spawned
@@ -299,8 +300,27 @@ void AMainMenuController::SettingMenuControl(int32 Note)
 			}
 		case 11:
 			{
-				//TODO: Cast to MainMenuHUD
-				break;
+				if (MainMenuHud != nullptr)
+				{
+					if (MainMenuHud->MainMenuSettingInstance->Graphic->HasKeyboardFocus())
+					{
+						SetControllerState(EControllerState::GraphicsMenu);
+						MainMenuHud->MainMenuSettingInstance->GraphicSettingClicked();
+						break;
+					}
+					if (MainMenuHud->MainMenuSettingInstance->Audio->HasKeyboardFocus())
+					{
+						SetControllerState(EControllerState::AudioMenu);
+						MainMenuHud->MainMenuSettingInstance->AudioSettingClicked();
+						break;
+					}
+					if (MainMenuHud->MainMenuSettingInstance->MainMenu->HasKeyboardFocus())
+					{
+						SetControllerState(EControllerState::MainMenu);
+						MainMenuHud->MainMenuSettingInstance->ReturnMainMenuClicked();
+						break;
+					}
+				}
 			}
 		default:
 			{
@@ -308,33 +328,29 @@ void AMainMenuController::SettingMenuControl(int32 Note)
 				break;
 			}
 	}
+	MainSettingSwitchButton(SettingMenuIndex);
 }
 
 void AMainMenuController::CreditMenuControl(int32 Note)
 {
 	if (MainMenuHud != nullptr)
 	{
+		MainMenuHud->CreditsMenuInstance->ReturnMainMenu->SetKeyboardFocus();
 		switch (Note)
 		{
-		case 0:
-		{
-			MainMenuHud->CreditsMenuInstance->ReturnMainMenu->SetKeyboardFocus();
-			MainMenuHud->CreditsMenuInstance->ReturnMainMenu->SetBackgroundColor(FLinearColor::Green);
-			break;
-		}
-		case 11:
-		{
-			if (MainMenuHud->CreditsMenuInstance->ReturnMainMenu->HasKeyboardFocus())
+			case 11:
 			{
-				MainMenuHud->CreditsMenuInstance->ReturnMainMenuButtonClicked();
+				if (MainMenuHud->CreditsMenuInstance->ReturnMainMenu->HasKeyboardFocus())
+				{
+					MainMenuHud->CreditsMenuInstance->ReturnMainMenuButtonClicked();
+				}
+				break;
 			}
-			break;
-		}
-		default:
-		{
-			// Should not land here
-			break;
-		}
+			default:
+			{
+				// Should not land here
+				break;
+			}
 		}
 	}
 }
@@ -411,49 +427,77 @@ void AMainMenuController::MainMenuSwitchButton(int32 InMainMenuIndex)
 		switch (InMainMenuIndex)
 		{
 			// New Game
-		case 0:
-		{
-			MainMenuHud->MainMenuInstance->NewGame->SetKeyboardFocus();
-			MainMenuHud->MainMenuInstance->NewGameHovered();
-			break;
-		}
-		// Load Game
-		case 1:
-		{
-			MainMenuHud->MainMenuInstance->LoadGame->SetKeyboardFocus();
-			MainMenuHud->MainMenuInstance->LoadGameHovered();
-			break;
-		}
-		// Setting
-		case 2:
-		{
-			MainMenuHud->MainMenuInstance->Setting->SetKeyboardFocus();
-			MainMenuHud->MainMenuInstance->SettingHovered();
-			break;
-		}
-		// Credit
-		case 3:
-		{
-			MainMenuHud->MainMenuInstance->Credits->SetKeyboardFocus();
-			MainMenuHud->MainMenuInstance->CreditHovered();
-			break;
-		}
-		// Escape
-		case 4:
-		{
-			MainMenuHud->MainMenuInstance->Escape->SetKeyboardFocus();
-			MainMenuHud->MainMenuInstance->EscapeHovered();
-			break;
-		}
-		default:
-		{
-			// Should not land here
-			break;
-		}
+			case 0:
+			{
+				MainMenuHud->MainMenuInstance->NewGame->SetKeyboardFocus();
+				MainMenuHud->MainMenuInstance->NewGameHovered();
+				break;
+			}
+			// Load Game
+			case 1:
+			{
+				MainMenuHud->MainMenuInstance->LoadGame->SetKeyboardFocus();
+				MainMenuHud->MainMenuInstance->LoadGameHovered();
+				break;
+			}
+			// Setting
+			case 2:
+			{
+				MainMenuHud->MainMenuInstance->Setting->SetKeyboardFocus();
+				MainMenuHud->MainMenuInstance->SettingHovered();
+				break;
+			}
+			// Credit
+			case 3:
+			{
+				MainMenuHud->MainMenuInstance->Credits->SetKeyboardFocus();
+				MainMenuHud->MainMenuInstance->CreditHovered();
+				break;
+			}
+			// Escape
+			case 4:
+			{
+				MainMenuHud->MainMenuInstance->Escape->SetKeyboardFocus();
+				MainMenuHud->MainMenuInstance->EscapeHovered();
+				break;
+			}
+			default:
+			{
+				// Should not land here
+				break;
+			}
 		}
 	}
 	else
 	{
 		UE_LOG(LogTemp, Log, TEXT("Couldn´t load MainMenuHUD"));
+	}
+}
+
+void AMainMenuController::MainSettingSwitchButton(int32 InMainSettingIndex)
+{
+	if (MainMenuHud != nullptr)
+	{
+		switch (InMainSettingIndex)
+		{
+			case 0:
+			{
+				MainMenuHud->MainMenuSettingInstance->Graphic->SetKeyboardFocus();
+				MainMenuHud->MainMenuSettingInstance->GraphicButtonHovered();
+				break;
+			}
+			case 1:
+			{
+				MainMenuHud->MainMenuSettingInstance->Audio->SetKeyboardFocus();
+				MainMenuHud->MainMenuSettingInstance->AudioButtonHovered();
+				break;
+			}
+			case 2:
+			{
+				MainMenuHud->MainMenuSettingInstance->MainMenu->SetKeyboardFocus();
+				MainMenuHud->MainMenuSettingInstance->ReturnMainMenuButtonHovered();
+				break;
+			}
+		}
 	}
 }

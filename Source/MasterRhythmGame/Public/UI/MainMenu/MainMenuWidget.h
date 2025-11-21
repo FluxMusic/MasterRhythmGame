@@ -61,7 +61,7 @@ public:
 	void EscapeUnhovered();
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* Credits{ nullptr };
+	class UButton* Credits { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UButton* Escape { nullptr };
@@ -79,10 +79,8 @@ private:
 	//Native Constructor
 	virtual void NativeConstruct() override;
 
-
-
 	const FName LevelName = FName(TEXT(""));
 
 	UPROPERTY()
-	TObjectPtr<AMainMenuHUD> MainMenuHud{ nullptr };
+	TObjectPtr<AMainMenuHUD> MainMenuHud { nullptr };
 };

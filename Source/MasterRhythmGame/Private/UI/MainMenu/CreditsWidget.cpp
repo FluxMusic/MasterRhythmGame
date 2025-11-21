@@ -19,6 +19,7 @@ void UCreditsWidget::NativeConstruct()
 	ReturnMainMenu->OnClicked.AddDynamic(this, &UCreditsWidget::ReturnMainMenuButtonClicked);
 	ReturnMainMenu->OnHovered.AddDynamic(this, &UCreditsWidget::MainMenuOnHovered);
 	ReturnMainMenu->OnUnhovered.AddDynamic(this, &UCreditsWidget::MainMenuOnUnhovered);
+	ReturnMainMenu->SetBackgroundColor(FLinearColor::Green);
 }
 
 void UCreditsWidget::ReturnMainMenuButtonClicked()

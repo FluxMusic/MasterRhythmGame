@@ -83,6 +83,8 @@ protected:
 
 	void MainMenuSwitchButton(int32 InMainMenuIndex);
 
+	void MainSettingSwitchButton(int32 InMainSettingIndex);
+
 private:
 	const FString MusicName = FString(TEXT("Music"));
 

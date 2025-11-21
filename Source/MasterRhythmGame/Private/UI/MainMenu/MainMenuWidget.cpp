@@ -57,6 +57,7 @@ void UMainMenuWidget::LoadGameButtonClicked()
 	{
 		PlayerController->SetControllerState(EControllerState::LoadMenu);
 	}*/
+	// TODO: Open Worldmap Level
 }
 
 void UMainMenuWidget::CreditsButtonClicked()

@@ -61,4 +61,5 @@ void AMainMenuHUD::BeginPlay()
 			AudioSettingInstance->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+
 }
