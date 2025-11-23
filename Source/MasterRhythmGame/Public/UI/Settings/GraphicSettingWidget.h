@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "GraphicSettingWidget.generated.h"
 
+class AMainMenuHUD;
 /**
  * 
  */
@@ -14,7 +15,6 @@ class MASTERRHYTHMGAME_API UGraphicSettingWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
-
 	UFUNCTION()
 	void ReturnMainMenuClicked();
 
@@ -138,7 +138,24 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TEnumAsByte<EWindowMode::Type> WindowMode = EWindowMode::Fullscreen;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ResolutionIndex { 0 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FIntPoint Resolution { 1920, 1080 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 GraphicsIndex { 0 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bVSync { true };
+
 private:
 	//Native Constructor
 	virtual void NativeConstruct() override;
+
+	void SwitchResolution(int32 InResolutionIndex);
+
+	UPROPERTY()
+	TObjectPtr<AMainMenuHUD> MainMenuHud { nullptr };
 };

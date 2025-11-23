@@ -17,6 +17,8 @@ void UMainMenuSetting::NativeConstruct()
 	WBP_AudioSettingWidget->SetVisibility(ESlateVisibility::Hidden);
 	WBP_GraphicSettingWidget->SetVisibility(ESlateVisibility::Hidden);
 
+	Graphic->SetBackgroundColor(FLinearColor::Green);
+
 	Graphic->OnClicked.AddDynamic(this, &UMainMenuSetting::GraphicSettingClicked);
 	Audio->OnClicked.AddDynamic(this, &UMainMenuSetting::AudioSettingClicked);
 	MainMenu->OnClicked.AddDynamic(this, &UMainMenuSetting::ReturnMainMenuClicked);
@@ -37,6 +39,7 @@ void UMainMenuSetting::GraphicSettingClicked()
 {
 	WBP_GraphicSettingWidget->SetVisibility(ESlateVisibility::Visible);
 	WBP_AudioSettingWidget->SetVisibility(ESlateVisibility::Hidden);
+	WBP_GraphicSettingWidget->WindowModeDown->SetBackgroundColor(FLinearColor::Green);
 }
 
 void UMainMenuSetting::AudioSettingClicked()

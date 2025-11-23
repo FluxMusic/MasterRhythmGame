@@ -181,7 +181,6 @@ void AMainMenuController::HandleControlChange(UMIDIDeviceInputController* MIDIDe
 
 void AMainMenuController::MainMenuControl(int32 Note)
 {
-
 	switch(Note)
 	{
 	case 0:
@@ -285,8 +284,6 @@ void AMainMenuController::SettingMenuControl(int32 Note)
 				SettingMenuIndex++;
 				SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
 				UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
-
-				//Switch
 				break;
 			}
 		case 2:
@@ -294,8 +291,6 @@ void AMainMenuController::SettingMenuControl(int32 Note)
 				SettingMenuIndex--;
 				SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
 				UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
-
-				//Switch
 				break;
 			}
 		case 11:
@@ -305,18 +300,21 @@ void AMainMenuController::SettingMenuControl(int32 Note)
 					if (MainMenuHud->MainMenuSettingInstance->Graphic->HasKeyboardFocus())
 					{
 						SetControllerState(EControllerState::GraphicsMenu);
+						GraphicMenuIndex = 0;
 						MainMenuHud->MainMenuSettingInstance->GraphicSettingClicked();
 						break;
 					}
 					if (MainMenuHud->MainMenuSettingInstance->Audio->HasKeyboardFocus())
 					{
 						SetControllerState(EControllerState::AudioMenu);
+						AudioMenuIndex = 0;
 						MainMenuHud->MainMenuSettingInstance->AudioSettingClicked();
 						break;
 					}
 					if (MainMenuHud->MainMenuSettingInstance->MainMenu->HasKeyboardFocus())
 					{
 						SetControllerState(EControllerState::MainMenu);
+						MainMenuIndex = 0;
 						MainMenuHud->MainMenuSettingInstance->ReturnMainMenuClicked();
 						break;
 					}
@@ -342,9 +340,10 @@ void AMainMenuController::CreditMenuControl(int32 Note)
 			{
 				if (MainMenuHud->CreditsMenuInstance->ReturnMainMenu->HasKeyboardFocus())
 				{
+					MainMenuIndex = 0;
 					MainMenuHud->CreditsMenuInstance->ReturnMainMenuButtonClicked();
+					break;
 				}
-				break;
 			}
 			default:
 			{
@@ -364,8 +363,6 @@ void AMainMenuController::GraphicMenuControl(int32 Note)
 			GraphicMenuIndex++;
 			GraphicMenuIndex = FMath::Clamp(GraphicMenuIndex, 0, 9);
 			UE_LOG(LogTemp, Log, TEXT("GraphicMenuIndex: %d"), GraphicMenuIndex);
-
-			//Switch
 			break;
 		}
 		case 2:
@@ -373,14 +370,65 @@ void AMainMenuController::GraphicMenuControl(int32 Note)
 			GraphicMenuIndex--;
 			GraphicMenuIndex = FMath::Clamp(GraphicMenuIndex, 0, 9);
 			UE_LOG(LogTemp, Log, TEXT("GraphicMenuIndex: %d"), GraphicMenuIndex);
-
-			//Switch
 			break;
 		}
 		case 11:
 			{
-				//TODO: Cast to MenuHUD
-				break;
+				if (MainMenuHud != nullptr)
+				{
+					if (MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->WindowModeDown->HasKeyboardFocus())
+					{
+						MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->WindowModeDownClicked();
+						break;
+					}
+					if (MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->WindowModeUp->HasKeyboardFocus())
+					{
+						MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->WindowModeUpClicked();
+						break;
+					}
+					if (MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->ResolutionDown->HasKeyboardFocus())
+					{
+						MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->ResolutionDownClicked();
+						break;
+					}
+					if (MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->ResolutionUp->HasKeyboardFocus())
+					{
+						MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->ResolutionUpClicked();
+						break;
+					}
+					if (MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->GraphicDown->HasKeyboardFocus())
+					{
+						MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->GraphicDownClicked();
+						break;
+					}
+					if (MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->GraphicUp->HasKeyboardFocus())
+					{
+						MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->GraphicUpClicked();
+						break;
+					}
+					if (MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->VSyncDown->HasKeyboardFocus())
+					{
+						MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->VSyncDownClicked();
+						break;
+					}
+					if (MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->VSyncUp->HasKeyboardFocus())
+					{
+						MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->VSyncUpClicked();
+						break;
+					}
+					if (MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->Apply->HasKeyboardFocus())
+					{
+						MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->ApplyClicked();
+						break;
+					}
+					if (MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->MainMenu->HasKeyboardFocus())
+					{
+						GraphicMenuIndex = 0;
+						MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->ReturnMainMenuUnhovered();
+						MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->ReturnMainMenuClicked();
+						break;
+					}
+				}
 			}
 		default:
 		{
@@ -388,6 +436,7 @@ void AMainMenuController::GraphicMenuControl(int32 Note)
 			break;
 		}
 	}
+	GraphicMenuSwitchButton(GraphicMenuIndex);
 }
 
 void AMainMenuController::LoadMenuControl(int32 Note)
@@ -496,6 +545,96 @@ void AMainMenuController::MainSettingSwitchButton(int32 InMainSettingIndex)
 			{
 				MainMenuHud->MainMenuSettingInstance->MainMenu->SetKeyboardFocus();
 				MainMenuHud->MainMenuSettingInstance->ReturnMainMenuButtonHovered();
+				break;
+			}
+			default:
+			{
+				// Should not land here
+				break;
+			}
+		}
+	}
+}
+
+void AMainMenuController::GraphicMenuSwitchButton(int32 InGraphicSettingIndex)
+{
+	if (MainMenuHud != nullptr)
+	{
+		switch (InGraphicSettingIndex)
+		{
+			// Window Mode Down
+			case 0:
+			{
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->WindowModeDown->SetKeyboardFocus();
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->WindowModeDownHovered();
+				break;
+			}
+			// Window Mode Up
+			case 1:
+			{
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->WindowModeUp->SetKeyboardFocus();
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->WindowModeUpHovered();
+				break;
+			}
+			// Resolution Mode Down
+			case 2:
+			{
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->ResolutionDown->SetKeyboardFocus();
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->ResolutionDownHovered();
+				break;
+			}
+			// Resolution Mode Up
+			case 3:
+			{
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->ResolutionUp->SetKeyboardFocus();
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->ResolutionUpHovered();
+				break;
+			}
+			// Graphic Mode Down
+			case 4:
+			{
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->GraphicDown->SetKeyboardFocus();
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->GraphicDownHovered();
+				break;
+			}
+			// Graphic Mode Up
+			case 5:
+			{
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->GraphicUp->SetKeyboardFocus();
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->GraphicUpHovered();
+				break;
+			}
+			// VSync Mode Down
+			case 6:
+			{
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->VSyncDown->SetKeyboardFocus();
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->VSyncDownHovered();
+				break;
+			}
+			// VSync Mode Up
+			case 7:
+			{
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->VSyncUp->SetKeyboardFocus();
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->VSyncUpHovered();
+				break;
+			}
+			// Apply Button
+			case 8:
+			{
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->Apply->SetKeyboardFocus();
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->ApplyHovered();
+				break;
+			}
+			// Return Button
+			case 9:
+			{
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->MainMenu->SetKeyboardFocus();
+				MainMenuHud->MainMenuSettingInstance->WBP_GraphicSettingWidget->ReturnMainMenuHovered();
+				break;
+			}
+			default:
+			{
+				// Should not land here
 				break;
 			}
 		}
