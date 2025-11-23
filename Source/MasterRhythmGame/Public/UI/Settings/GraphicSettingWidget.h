@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "GraphicSettingWidget.generated.h"
 
+class UButton;
 class AMainMenuHUD;
 /**
  * 

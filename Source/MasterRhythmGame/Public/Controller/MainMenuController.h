@@ -9,6 +9,47 @@
 #include "HUD/MainMenuHUD.h"
 #include "MainMenuController.generated.h"
 
+enum class ENote : uint8
+{
+	C = 0,
+	D = 2,
+	E = 4,
+	F = 5,
+	G = 7,
+	A = 9,
+	B = 11
+};
+
+enum class EMainMenuItem : uint8
+{
+	NewGame = 0,
+	LoadGame = 1,
+	Setting = 2,
+	Credits = 3,
+	Escape = 4
+};
+
+enum class EMainSettingItem : uint8
+{
+	Graphic = 0,
+	Audio = 1,
+	MainMenu = 2
+};
+
+enum class EGraphicSettingItem : uint8
+{
+	WindowModeDown = 0,
+	WindowModeUp = 1,
+	ResolutionDown = 2,
+	ResolutionUp = 3,
+	GraphicDown = 4,
+	GraphicUp = 5,
+	VSyncDown = 6,
+	VSyncUp = 7,
+	Apply = 8,
+	Return = 9
+};
+
 enum class EControllerState
 {
 	MainMenu,
@@ -69,23 +110,24 @@ protected:
 	UFUNCTION()
 	void HandleControlChange(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Type, int32 Value);
 
-	void MainMenuControl(int32 Note);
+	void MainMenuControl(ENote Note);
 
-	void AudioMenuControl(int32 Note);
+	void AudioMenuControl(ENote Note);
 
-	void SettingMenuControl(int32 Note);
+	void SettingMenuControl(ENote Note);
 
-	void CreditMenuControl(int32 Note);
+	void CreditMenuControl(ENote Note);
 
-	void GraphicMenuControl(int32 Note);
+	void GraphicMenuControl(ENote Note);
 
-	void LoadMenuControl(int32 Note);
+	void LoadMenuControl(ENote Note);
 
-	void MainMenuSwitchButton(int32 InMainMenuIndex);
+	// Now use strongly-typed enums for the switch helpers
+	void MainMenuSwitchButton(EMainMenuItem InMainMenuItem);
 
-	void MainSettingSwitchButton(int32 InMainSettingIndex);
+	void MainSettingSwitchButton(EMainSettingItem InMainSettingItem);
 
-	void GraphicMenuSwitchButton(int32 InGraphicSettingIndex);
+	void GraphicMenuSwitchButton(EGraphicSettingItem InGraphicSettingItem);
 
 private:
 	const FString MusicName = FString(TEXT("Music"));

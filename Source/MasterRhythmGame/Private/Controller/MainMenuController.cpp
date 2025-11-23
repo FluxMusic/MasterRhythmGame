@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.		
 
 
 #include "Controller/MainMenuController.h"
@@ -15,7 +15,7 @@ AMainMenuController::AMainMenuController()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	
+
 	InitInputAction();
 
 	bShowMouseCursor = true;
@@ -109,42 +109,61 @@ void AMainMenuController::Tick(float DeltaSeconds)
 
 void AMainMenuController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Note, int32 Velocity)
 {
-	//UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
-	//UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
-	//UE_LOG(LogTemp, Log, TEXT("Velocity: %d"), Velocity);
+	// Convert incoming MIDI note number to semitone class (0-11) and map to ENote.
+	const int32 Semitone = Note % 12;
+	ENote NoteEnum;
+	bool bMapped = true;
 
-	Note = Note % 12;
-
-	switch(GetControllerState())
+	switch (Semitone)
 	{
-	case EControllerState::MainMenu:
+		case 0:  NoteEnum = ENote::C; break;
+		case 2:  NoteEnum = ENote::D; break;
+		case 4:  NoteEnum = ENote::E; break;
+		case 5:  NoteEnum = ENote::F; break;
+		case 7:  NoteEnum = ENote::G; break;
+		case 9:  NoteEnum = ENote::A; break;
+		case 11: NoteEnum = ENote::B; break;
+		default:
+			bMapped = false;
+			break;
+	}
+
+	if (!bMapped)
+	{
+		// Ignore notes that are not part of the defined C-D-E-F-G-A-B set.
+		return;
+	}
+
+	switch (GetControllerState())
+	{
+		case EControllerState::MainMenu:
 		{
-			MainMenuControl(Note);
+			MainMenuControl(NoteEnum);
 			break;
 		}
-	case EControllerState::AudioMenu:
+		case EControllerState::AudioMenu:
 		{
-			AudioMenuControl(Note);
+			AudioMenuControl(NoteEnum);
 			break;
 		}
-	case EControllerState::CreditsMenu:
+		case EControllerState::CreditsMenu:
 		{
-			CreditMenuControl(Note);
+			CreditMenuControl(NoteEnum);
 			break;
 		}
-	case EControllerState::GraphicsMenu:
+		case EControllerState::GraphicsMenu:
 		{
-			GraphicMenuControl(Note);
+			GraphicMenuControl(NoteEnum);
 			break;
 		}
-	case EControllerState::LoadMenu:
+		case EControllerState::LoadMenu:
 		{
-			LoadMenuControl(Note);
+			LoadMenuControl(NoteEnum);
 			break;
 		}
-	case EControllerState::SettingMenu:
+		case EControllerState::SettingMenu:
 		{
-			SettingMenuControl(Note);
+			SettingMenuControl(NoteEnum);
 			break;
 		}
 	}
@@ -178,11 +197,11 @@ void AMainMenuController::HandleControlChange(UMIDIDeviceInputController* MIDIDe
 	//UE_LOG(LogTemp, Log, TEXT("Value: %d"),    Value);
 }
 
-void AMainMenuController::MainMenuControl(int32 Note)
+void AMainMenuController::MainMenuControl(ENote Note)
 {
-	switch(Note)
+	switch (Note)
 	{
-		case 0:
+		case ENote::C:
 		{
 			MainMenuIndex++;
 			MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
@@ -191,7 +210,7 @@ void AMainMenuController::MainMenuControl(int32 Note)
 			// Switch
 			break;
 		}
-		case 2:
+		case ENote::D:
 		{
 			MainMenuIndex--;
 			MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
@@ -200,7 +219,7 @@ void AMainMenuController::MainMenuControl(int32 Note)
 			// Switch 
 			break;
 		}
-		case 11:
+		case ENote::B:
 		{
 			if (MainMenuHud->GetMainMenuInstance()->GetNewGameButton()->HasKeyboardFocus())
 			{
@@ -242,33 +261,34 @@ void AMainMenuController::MainMenuControl(int32 Note)
 			break;
 		}
 	}
-	MainMenuSwitchButton(MainMenuIndex);
+	// use enum overload, mapping index -> enum
+	MainMenuSwitchButton(static_cast<EMainMenuItem>(MainMenuIndex));
 }
 
-void AMainMenuController::AudioMenuControl(int32 Note)
+void AMainMenuController::AudioMenuControl(ENote Note)
 {
 	switch (Note)
 	{
-		case 0:
+		case ENote::C:
 		{
-		AudioMenuIndex++;
-		AudioMenuIndex = FMath::Clamp(AudioMenuIndex, 0, 3);
-		UE_LOG(LogTemp, Log, TEXT("AudioMenuIndex: %d"), AudioMenuIndex);
+			AudioMenuIndex++;
+			AudioMenuIndex = FMath::Clamp(AudioMenuIndex, 0, 3);
+			UE_LOG(LogTemp, Log, TEXT("AudioMenuIndex: %d"), AudioMenuIndex);
 
-		//Switch
-		break;
+			//Switch
+			break;
 
 		}
-		case 2:
+		case ENote::D:
 		{
-		AudioMenuIndex--;
-		AudioMenuIndex = FMath::Clamp(AudioMenuIndex, 0, 3);
-		UE_LOG(LogTemp, Log, TEXT("AudioMenuIndex: %d"), AudioMenuIndex);
+			AudioMenuIndex--;
+			AudioMenuIndex = FMath::Clamp(AudioMenuIndex, 0, 3);
+			UE_LOG(LogTemp, Log, TEXT("AudioMenuIndex: %d"), AudioMenuIndex);
 
-		//Switch
-		break;
+			//Switch
+			break;
 		}
-		case 11:
+		case ENote::B:
 		{
 			if (MainMenuHud != nullptr)
 			{
@@ -278,76 +298,77 @@ void AMainMenuController::AudioMenuControl(int32 Note)
 		}
 		default:
 		{
-		// Should not land here
-		break;
+			// Should not land here
+			break;
 		}
 	}
 }
 
-void AMainMenuController::SettingMenuControl(int32 Note)
+void AMainMenuController::SettingMenuControl(ENote Note)
 {
 	switch (Note)
 	{
-		case 0:
+		case ENote::C:
+		{
+			SettingMenuIndex++;
+			SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
+			UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
+			break;
+		}
+		case ENote::D:
+		{
+			SettingMenuIndex--;
+			SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
+			UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
+			break;
+		}
+		case ENote::B:
+		{
+			if (MainMenuHud != nullptr)
 			{
-				SettingMenuIndex++;
-				SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
-				UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
-				break;
-			}
-		case 2:
-			{
-				SettingMenuIndex--;
-				SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
-				UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
-				break;
-			}
-		case 11:
-			{
-				if (MainMenuHud != nullptr)
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicButton()->HasKeyboardFocus())
 				{
-					if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicButton()->HasKeyboardFocus())
-					{
-						SetControllerState(EControllerState::GraphicsMenu);
-						SettingMenuIndex = 0;
-						GraphicMenuIndex = 0;
-						MainMenuHud->GetMainMenuSettingInstance()->GraphicSettingClicked();
-						break;
-					}
-					if (MainMenuHud->GetMainMenuSettingInstance()->GetAudioButton()->HasKeyboardFocus())
-					{
-						SetControllerState(EControllerState::AudioMenu);
-						SettingMenuIndex = 0;
-						AudioMenuIndex = 0;
-						MainMenuHud->GetMainMenuSettingInstance()->AudioSettingClicked();
-						break;
-					}
-					if (MainMenuHud->GetMainMenuSettingInstance()->GetMainMenuButton()->HasKeyboardFocus())
-					{
-						SetControllerState(EControllerState::MainMenu);
-						SettingMenuIndex = 0;
-						MainMenuHud->GetMainMenuSettingInstance()->ReturnMainMenuClicked();
-						break;
-					}
+					SetControllerState(EControllerState::GraphicsMenu);
+					SettingMenuIndex = 0;
+					GraphicMenuIndex = 0;
+					MainMenuHud->GetMainMenuSettingInstance()->GraphicSettingClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetAudioButton()->HasKeyboardFocus())
+				{
+					SetControllerState(EControllerState::AudioMenu);
+					SettingMenuIndex = 0;
+					AudioMenuIndex = 0;
+					MainMenuHud->GetMainMenuSettingInstance()->AudioSettingClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					SetControllerState(EControllerState::MainMenu);
+					SettingMenuIndex = 0;
+					MainMenuHud->GetMainMenuSettingInstance()->ReturnMainMenuClicked();
+					break;
 				}
 			}
+		}
 		default:
-			{
-				// Should not land here
-				break;
-			}
+		{
+			// Should not land here
+			break;
+		}
 	}
-	MainSettingSwitchButton(SettingMenuIndex);
+	// map index -> enum
+	MainSettingSwitchButton(static_cast<EMainSettingItem>(SettingMenuIndex));
 }
 
-void AMainMenuController::CreditMenuControl(int32 Note)
+void AMainMenuController::CreditMenuControl(ENote Note)
 {
 	if (MainMenuHud != nullptr)
 	{
 		MainMenuHud->GetCreditsMenuInstance()->GetReturnMainMenuButton()->SetKeyboardFocus();
 		switch (Note)
 		{
-			case 11:
+			case ENote::B:
 			{
 				if (MainMenuHud->GetCreditsMenuInstance()->GetReturnMainMenuButton()->HasKeyboardFocus())
 				{
@@ -365,157 +386,153 @@ void AMainMenuController::CreditMenuControl(int32 Note)
 	}
 }
 
-void AMainMenuController::GraphicMenuControl(int32 Note)
+void AMainMenuController::GraphicMenuControl(ENote Note)
 {
 	switch (Note)
 	{
-		case 0:
+		case ENote::C:
 		{
 			GraphicMenuIndex++;
 			GraphicMenuIndex = FMath::Clamp(GraphicMenuIndex, 0, 9);
 			UE_LOG(LogTemp, Log, TEXT("GraphicMenuIndex: %d"), GraphicMenuIndex);
 			break;
 		}
-		case 2:
+		case ENote::D:
 		{
 			GraphicMenuIndex--;
 			GraphicMenuIndex = FMath::Clamp(GraphicMenuIndex, 0, 9);
 			UE_LOG(LogTemp, Log, TEXT("GraphicMenuIndex: %d"), GraphicMenuIndex);
 			break;
 		}
-		case 11:
+		case ENote::B:
+		{
+			if (MainMenuHud != nullptr)
 			{
-				if (MainMenuHud != nullptr)
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->HasKeyboardFocus())
 				{
-					if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->HasKeyboardFocus())
-					{
-						MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeDownClicked();
-						break;
-					}
-					if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->HasKeyboardFocus())
-					{
-						MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeUpClicked();
-						break;
-					}
-					if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->HasKeyboardFocus())
-					{
-						MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionDownClicked();
-						break;
-					}
-					if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->HasKeyboardFocus())
-					{
-						MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionUpClicked();
-						break;
-					}
-					if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->HasKeyboardFocus())
-					{
-						MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicDownClicked();
-						break;
-					}
-					if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->HasKeyboardFocus())
-					{
-						MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicUpClicked();
-						break;
-					}
-					if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->HasKeyboardFocus())
-					{
-						MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncDownClicked();
-						break;
-					}
-					if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->HasKeyboardFocus())
-					{
-						MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncUpClicked();
-						break;
-					}
-					if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->HasKeyboardFocus())
-					{
-						MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ApplyClicked();
-						break;
-					}
-					if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HasKeyboardFocus())
-					{
-						GraphicMenuIndex = 0;
-						MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuUnhovered();
-						MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuClicked();
-						break;
-					}
+					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeDownClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->HasKeyboardFocus())
+				{
+					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeUpClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->HasKeyboardFocus())
+				{
+					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionDownClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->HasKeyboardFocus())
+				{
+					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionUpClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->HasKeyboardFocus())
+				{
+					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicDownClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->HasKeyboardFocus())
+				{
+					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicUpClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->HasKeyboardFocus())
+				{
+					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncDownClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->HasKeyboardFocus())
+				{
+					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncUpClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->HasKeyboardFocus())
+				{
+					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ApplyClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					GraphicMenuIndex = 0;
+					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuUnhovered();
+					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuClicked();
+					break;
 				}
 			}
+		}
 		default:
 		{
 			//Should not land here
 			break;
 		}
 	}
-	GraphicMenuSwitchButton(GraphicMenuIndex);
+	// map index -> enum
+	GraphicMenuSwitchButton(static_cast<EGraphicSettingItem>(GraphicMenuIndex));
 }
 
-void AMainMenuController::LoadMenuControl(int32 Note)
+void AMainMenuController::LoadMenuControl(ENote Note)
 {
 	switch (Note)
 	{
-		case 0:
-			{
+		case ENote::C:
+		{
 			LoadMenuIndex++;
 			LoadMenuIndex = FMath::Clamp(LoadMenuIndex, 0, 4);
 			UE_LOG(LogTemp, Log, TEXT("LoadMenuIndex: %d"), LoadMenuIndex);
 
 			//Switch
 			break;
-			}
-		case 2:
-			{
+		}
+		case ENote::D:
+		{
 			LoadMenuIndex--;
 			LoadMenuIndex = FMath::Clamp(LoadMenuIndex, 0, 4);
 			UE_LOG(LogTemp, Log, TEXT("LoadMenuIndex: %d"), LoadMenuIndex);
 
 			//Switch
 			break;
-			}
+		}
 		default:
-			{
-				//Should not land here
-				break;
-			}
+		{
+			//Should not land here
+			break;
+		}
 	}
 }
 
-void AMainMenuController::MainMenuSwitchButton(int32 InMainMenuIndex)
+void AMainMenuController::MainMenuSwitchButton(EMainMenuItem InMainMenuItem)
 {
 	if (MainMenuHud != nullptr)
 	{
-		switch (InMainMenuIndex)
+		switch (InMainMenuItem)
 		{
-			// New Game
-			case 0:
+			case EMainMenuItem::NewGame:
 			{
 				MainMenuHud->GetMainMenuInstance()->GetNewGameButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuInstance()->NewGameHovered();
 				break;
 			}
-			// Load Game
-			case 1:
+			case EMainMenuItem::LoadGame:
 			{
 				MainMenuHud->GetMainMenuInstance()->GetLoadGameButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuInstance()->LoadGameHovered();
 				break;
 			}
-			// Setting
-			case 2:
+			case EMainMenuItem::Setting:
 			{
 				MainMenuHud->GetMainMenuInstance()->GetSettingButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuInstance()->SettingHovered();
 				break;
 			}
-			// Credit
-			case 3:
+			case EMainMenuItem::Credits:
 			{
 				MainMenuHud->GetMainMenuInstance()->GetCreditsButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuInstance()->CreditHovered();
 				break;
 			}
-			// Escape
-			case 4:
+			case EMainMenuItem::Escape:
 			{
 				MainMenuHud->GetMainMenuInstance()->GetEscapeButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuInstance()->EscapeHovered();
@@ -530,25 +547,25 @@ void AMainMenuController::MainMenuSwitchButton(int32 InMainMenuIndex)
 	}
 }
 
-void AMainMenuController::MainSettingSwitchButton(int32 InMainSettingIndex)
+void AMainMenuController::MainSettingSwitchButton(EMainSettingItem InMainSettingItem)
 {
 	if (MainMenuHud != nullptr)
 	{
-		switch (InMainSettingIndex)
+		switch (InMainSettingItem)
 		{
-			case 0:
+			case EMainSettingItem::Graphic:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->GraphicButtonHovered();
 				break;
 			}
-			case 1:
+			case EMainSettingItem::Audio:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetAudioButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->AudioButtonHovered();
 				break;
 			}
-			case 2:
+			case EMainSettingItem::MainMenu:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetMainMenuButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->ReturnMainMenuButtonHovered();
@@ -563,77 +580,67 @@ void AMainMenuController::MainSettingSwitchButton(int32 InMainSettingIndex)
 	}
 }
 
-void AMainMenuController::GraphicMenuSwitchButton(int32 InGraphicSettingIndex)
+void AMainMenuController::GraphicMenuSwitchButton(EGraphicSettingItem InGraphicSettingItem)
 {
 	if (MainMenuHud != nullptr)
 	{
-		switch (InGraphicSettingIndex)
+		switch (InGraphicSettingItem)
 		{
-			// Window Mode Down
-			case 0:
+			case EGraphicSettingItem::WindowModeDown:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeDownHovered();
 				break;
 			}
-			// Window Mode Up
-			case 1:
+			case EGraphicSettingItem::WindowModeUp:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeUpHovered();
 				break;
 			}
-			// Resolution Mode Down
-			case 2:
+			case EGraphicSettingItem::ResolutionDown:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionDownHovered();
 				break;
 			}
-			// Resolution Mode Up
-			case 3:
+			case EGraphicSettingItem::ResolutionUp:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionUpHovered();
 				break;
 			}
-			// Graphic Mode Down
-			case 4:
+			case EGraphicSettingItem::GraphicDown:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicDownHovered();
 				break;
 			}
-			// Graphic Mode Up
-			case 5:
+			case EGraphicSettingItem::GraphicUp:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicUpHovered();
 				break;
 			}
-			// VSync Mode Down
-			case 6:
+			case EGraphicSettingItem::VSyncDown:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncDownHovered();
 				break;
 			}
-			// VSync Mode Up
-			case 7:
+			case EGraphicSettingItem::VSyncUp:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncUpHovered();
 				break;
 			}
-			// Apply Button
-			case 8:
+			case EGraphicSettingItem::Apply:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ApplyHovered();
 				break;
 			}
-			// Return Button
-			case 9:
+			case EGraphicSettingItem::Return:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuHovered();

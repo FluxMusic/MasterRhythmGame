@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "CreditsWidget.generated.h"
 
+class UButton;
 class AMainMenuHUD;
 /**
  * 

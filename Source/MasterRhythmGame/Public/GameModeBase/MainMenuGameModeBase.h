@@ -17,9 +17,10 @@ class MASTERRHYTHMGAME_API AMainMenuGameModeBase : public AGameModeBase
 public:
 	AMainMenuGameModeBase();
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "HUD")
+	TSubclassOf<AMainMenuHUD> MainMenuHudClass;
+
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "HUD")
-	TSubclassOf<AMainMenuHUD> MainMenuHudClass;
 };
