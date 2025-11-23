@@ -39,7 +39,7 @@ void UMainMenuSetting::GraphicSettingClicked()
 {
 	WBP_GraphicSettingWidget->SetVisibility(ESlateVisibility::Visible);
 	WBP_AudioSettingWidget->SetVisibility(ESlateVisibility::Hidden);
-	WBP_GraphicSettingWidget->WindowModeDown->SetBackgroundColor(FLinearColor::Green);
+	WBP_GraphicSettingWidget->GetWindowModeDownButton()->SetBackgroundColor(FLinearColor::Green);
 }
 
 void UMainMenuSetting::AudioSettingClicked()
@@ -55,7 +55,7 @@ void UMainMenuSetting::ReturnMainMenuClicked()
 	WBP_AudioSettingWidget->SetVisibility(ESlateVisibility::Hidden);
 	if (MainMenuHud != nullptr)
 	{
-		MainMenuHud->MainMenuInstance->SetVisibility(ESlateVisibility::Visible);
+		MainMenuHud->GetMainMenuInstance()->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 

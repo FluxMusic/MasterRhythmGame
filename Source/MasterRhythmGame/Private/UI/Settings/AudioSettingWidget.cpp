@@ -18,10 +18,18 @@ void UAudioSettingWidget::OnValueChangedMaster(float Value)
 
 void UAudioSettingWidget::OnValueChangedMusic(float Value)
 {
+	if (MusicSubmix != nullptr)
+	{
+		MusicSubmix->SetSubmixOutputVolume(this, Value);
+	}
 }
 
 void UAudioSettingWidget::OnValueChangedSfx(float Value)
 {
+	if (SfxSubmix != nullptr)
+	{
+		SfxSubmix->SetSubmixOutputVolume(this, Value);
+	}
 }
 
 void UAudioSettingWidget::ReturnMenu()
@@ -35,4 +43,6 @@ void UAudioSettingWidget::NativeConstruct()
 	MasterVolumeSlider->OnValueChanged.AddDynamic(this, &UAudioSettingWidget::OnValueChangedMaster);
 	MusicVolumeSlider->OnValueChanged.AddDynamic(this, &UAudioSettingWidget::OnValueChangedMusic);
 	SfxVolumeSlider->OnValueChanged.AddDynamic(this, &UAudioSettingWidget::OnValueChangedSfx);
+
+	MainMenu->OnClicked.AddDynamic(this, &UAudioSettingWidget::ReturnMenu);
 }

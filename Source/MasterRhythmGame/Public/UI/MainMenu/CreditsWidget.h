@@ -16,11 +16,10 @@ class MASTERRHYTHMGAME_API UCreditsWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(meta = (BindWidget))
-	class UButton* ReturnMainMenu { nullptr };
-
 	UFUNCTION()
 	void ReturnMainMenuButtonClicked();
+
+	UButton* GetReturnMainMenuButton() const { return ReturnMainMenu; }
 
 private:
 	//Native Constructor
@@ -31,6 +30,9 @@ private:
 
 	UFUNCTION()
 	void MainMenuOnUnhovered();
+
+	UPROPERTY(meta = (BindWidget))
+	class UButton* ReturnMainMenu{ nullptr };
 
 	UPROPERTY()
 	TObjectPtr<AMainMenuHUD> MainMenuHud { nullptr };

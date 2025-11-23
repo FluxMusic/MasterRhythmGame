@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "MainMenuWidget.generated.h"
 
+class UButton;
 class AMainMenuHUD;
 /**
  * 
@@ -60,24 +61,42 @@ public:
 	UFUNCTION()
 	void EscapeUnhovered();
 
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* Credits { nullptr };
+	// --- Credits Button ---
+	UButton* GetCreditsButton() const { return Credits; }
 
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* Escape { nullptr };
+	// --- Escape Button ---
+	UButton* GetEscapeButton() const { return Escape; }
 
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* LoadGame { nullptr };
-	
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* NewGame { nullptr };
-	
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* Setting { nullptr };
+	// --- LoadGame Button ---
+	UButton* GetLoadGameButton() const { return LoadGame; }
+
+	// --- NewGame Button ---
+	UButton* GetNewGameButton() const { return NewGame; }
+
+	// --- Settings Button ---
+	UButton* GetSettingButton() const { return Setting; }
+
+	// --- Level Name ---
+	FName GetLevelName() const { return LevelName; }
 
 private:
 	//Native Constructor
 	virtual void NativeConstruct() override;
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UButton* Credits{ nullptr };
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UButton* Escape{ nullptr };
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UButton* LoadGame{ nullptr };
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UButton* NewGame{ nullptr };
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UButton* Setting{ nullptr };
 
 	const FName LevelName = FName(TEXT(""));
 

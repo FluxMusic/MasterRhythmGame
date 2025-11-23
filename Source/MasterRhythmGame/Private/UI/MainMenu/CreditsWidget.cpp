@@ -27,7 +27,7 @@ void UCreditsWidget::ReturnMainMenuButtonClicked()
 	UWidget::SetVisibility(ESlateVisibility::Hidden);
 	if (MainMenuHud != nullptr)
 	{
-		MainMenuHud->MainMenuInstance->SetVisibility(ESlateVisibility::Visible);
+		MainMenuHud->GetMainMenuInstance()->SetVisibility(ESlateVisibility::Visible);
 		AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
 		if (PlayerController != nullptr)
 		{

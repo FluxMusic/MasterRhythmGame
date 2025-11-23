@@ -67,7 +67,7 @@ void UMainMenuWidget::CreditsButtonClicked()
 	UWidget::SetVisibility(ESlateVisibility::Hidden);
 	if (MainMenuHud != nullptr)
 	{
-		MainMenuHud->CreditsMenuInstance->SetVisibility(ESlateVisibility::Visible);
+		MainMenuHud->GetCreditsMenuInstance()->SetVisibility(ESlateVisibility::Visible);
 	}
 	if (PlayerController != nullptr)
 	{
@@ -82,7 +82,7 @@ void UMainMenuWidget::SettingButtonClicked()
 	UWidget::SetVisibility(ESlateVisibility::Hidden);
 	if (MainMenuHud != nullptr)
 	{
-		MainMenuHud->MainMenuSettingInstance->SetVisibility(ESlateVisibility::Visible);
+		MainMenuHud->GetMainMenuSettingInstance()->SetVisibility(ESlateVisibility::Visible);
 	}
 	if (PlayerController != nullptr)
 	{
