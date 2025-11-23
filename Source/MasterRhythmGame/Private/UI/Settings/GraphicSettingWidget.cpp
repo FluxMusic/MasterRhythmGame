@@ -239,7 +239,7 @@ void UGraphicSettingWidget::ResolutionUpUnhovered()
 
 void UGraphicSettingWidget::GraphicDownClicked()
 {
-	GraphicsIndex++;
+	GraphicsIndex--;
 	GraphicsIndex = FMath::Clamp(GraphicsIndex, 0, 4);
 }
 

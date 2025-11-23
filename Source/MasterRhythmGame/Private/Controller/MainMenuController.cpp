@@ -183,7 +183,7 @@ void AMainMenuController::MainMenuControl(int32 Note)
 {
 	switch(Note)
 	{
-	case 0:
+		case 0:
 		{
 			MainMenuIndex++;
 			MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
@@ -192,7 +192,7 @@ void AMainMenuController::MainMenuControl(int32 Note)
 			// Switch
 			break;
 		}
-	case 2:
+		case 2:
 		{
 			MainMenuIndex--;
 			MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
@@ -201,41 +201,48 @@ void AMainMenuController::MainMenuControl(int32 Note)
 			// Switch 
 			break;
 		}
-	case 11:
+		case 11:
 		{
 			if (MainMenuHud->MainMenuInstance->NewGame->HasKeyboardFocus())
 			{
+				MainMenuIndex = 0;
 				MainMenuHud->MainMenuInstance->NewGameButtonClicked();
 				break;
 			}
 			if (MainMenuHud->MainMenuInstance->LoadGame->HasKeyboardFocus())
 			{
+				MainMenuIndex = 0;
+				MainMenuHud->MainMenuInstance->LoadGameUnhovered();
 				MainMenuHud->MainMenuInstance->LoadGameButtonClicked();
 				break;
 			}
 			if (MainMenuHud->MainMenuInstance->Setting->HasKeyboardFocus())
 			{
+				MainMenuIndex = 0;
+				MainMenuHud->MainMenuInstance->SettingUnhovered();
 				MainMenuHud->MainMenuInstance->SettingButtonClicked();
 				break;
 			}
 			if (MainMenuHud->MainMenuInstance->Credits->HasKeyboardFocus())
 			{
+				MainMenuIndex = 0;
+				MainMenuHud->MainMenuInstance->CreditUnhovered();
 				MainMenuHud->MainMenuInstance->CreditsButtonClicked();
 				break;
 			}
 			if (MainMenuHud->MainMenuInstance->Escape->HasKeyboardFocus())
 			{
+				MainMenuIndex = 0;
 				MainMenuHud->MainMenuInstance->EscapeButtonClicked();
 				break;
 			}
 		}
-	default:
+		default:
 		{
 			// Should not land here
 			break;
 		}
 	}
-
 	MainMenuSwitchButton(MainMenuIndex);
 }
 
@@ -264,8 +271,11 @@ void AMainMenuController::AudioMenuControl(int32 Note)
 			}
 		case 11:
 			{
-				//TODO: Cast to MainMenuHUD 
-				break;
+				if (MainMenuHud != nullptr)
+				{
+
+					break;
+				}
 			}
 		default:
 			{
@@ -300,6 +310,7 @@ void AMainMenuController::SettingMenuControl(int32 Note)
 					if (MainMenuHud->MainMenuSettingInstance->Graphic->HasKeyboardFocus())
 					{
 						SetControllerState(EControllerState::GraphicsMenu);
+						SettingMenuIndex = 0;
 						GraphicMenuIndex = 0;
 						MainMenuHud->MainMenuSettingInstance->GraphicSettingClicked();
 						break;
@@ -307,6 +318,7 @@ void AMainMenuController::SettingMenuControl(int32 Note)
 					if (MainMenuHud->MainMenuSettingInstance->Audio->HasKeyboardFocus())
 					{
 						SetControllerState(EControllerState::AudioMenu);
+						SettingMenuIndex = 0;
 						AudioMenuIndex = 0;
 						MainMenuHud->MainMenuSettingInstance->AudioSettingClicked();
 						break;
@@ -314,7 +326,7 @@ void AMainMenuController::SettingMenuControl(int32 Note)
 					if (MainMenuHud->MainMenuSettingInstance->MainMenu->HasKeyboardFocus())
 					{
 						SetControllerState(EControllerState::MainMenu);
-						MainMenuIndex = 0;
+						SettingMenuIndex = 0;
 						MainMenuHud->MainMenuSettingInstance->ReturnMainMenuClicked();
 						break;
 					}
@@ -516,10 +528,6 @@ void AMainMenuController::MainMenuSwitchButton(int32 InMainMenuIndex)
 				break;
 			}
 		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Log, TEXT("Couldn´t load MainMenuHUD"));
 	}
 }
 
