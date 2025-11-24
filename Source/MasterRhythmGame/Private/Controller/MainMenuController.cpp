@@ -7,6 +7,7 @@
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
 #include "Components/Button.h"
+#include "Components/Slider.h"
 #include "MIDIDevice/Public/MIDIDeviceInputController.h"
 #include "MIDIDevice/Public/MIDIDeviceManager.h"
 
@@ -172,73 +173,77 @@ void AMainMenuController::HandleAftertouch(UMIDIDeviceInputController* MIDIDevic
 
 void AMainMenuController::HandleControlChange(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Type, int32 Value)
 {
-	//UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
-	//UE_LOG(LogTemp, Log, TEXT("Type: %d"),     Type);
-	//UE_LOG(LogTemp, Log, TEXT("Value: %d"),    Value);
+	float NormalizedValue = static_cast<float>(Value) / 127.0f;
+	NormalizedValue = FMath::Clamp(NormalizedValue, 0.0f, 1.0f);
+
+	AudioSoundControl(Type, NormalizedValue);
 }
 
 void AMainMenuController::MainMenuControl(ENote Note)
 {
-	switch (Note)
+	if (MainMenuHud != nullptr)
 	{
-		case ENote::C:
+		switch (Note)
 		{
-			MainMenuIndex++;
-			MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
-			UE_LOG(LogTemp, Log, TEXT("MainMenuIndex: %d"), MainMenuIndex);
+			case ENote::C:
+			{
+				MainMenuIndex++;
+				MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
+				UE_LOG(LogTemp, Log, TEXT("MainMenuIndex: %d"), MainMenuIndex);
 
-			// Switch
-			break;
-		}
-		case ENote::D:
-		{
-			MainMenuIndex--;
-			MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
-			UE_LOG(LogTemp, Log, TEXT("MainMenuIndex: %d"), MainMenuIndex);
+				// Switch
+				break;
+			}
+			case ENote::D:
+			{
+				MainMenuIndex--;
+				MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
+				UE_LOG(LogTemp, Log, TEXT("MainMenuIndex: %d"), MainMenuIndex);
 
-			// Switch 
-			break;
-		}
-		case ENote::B:
-		{
-			if (MainMenuHud->GetMainMenuInstance()->GetNewGameButton()->HasKeyboardFocus())
-			{
-				MainMenuIndex = 0;
-				MainMenuHud->GetMainMenuInstance()->NewGameButtonClicked();
+				// Switch 
 				break;
 			}
-			if (MainMenuHud->GetMainMenuInstance()->GetLoadGameButton()->HasKeyboardFocus())
+			case ENote::B:
 			{
-				MainMenuIndex = 0;
-				MainMenuHud->GetMainMenuInstance()->LoadGameUnhovered();
-				MainMenuHud->GetMainMenuInstance()->LoadGameButtonClicked();
+				if (MainMenuHud->GetMainMenuInstance()->GetNewGameButton()->HasKeyboardFocus())
+				{
+					MainMenuIndex = 0;
+					MainMenuHud->GetMainMenuInstance()->NewGameButtonClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuInstance()->GetLoadGameButton()->HasKeyboardFocus())
+				{
+					MainMenuIndex = 0;
+					MainMenuHud->GetMainMenuInstance()->LoadGameUnhovered();
+					MainMenuHud->GetMainMenuInstance()->LoadGameButtonClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuInstance()->GetSettingButton()->HasKeyboardFocus())
+				{
+					MainMenuIndex = 0;
+					MainMenuHud->GetMainMenuInstance()->SettingUnhovered();
+					MainMenuHud->GetMainMenuInstance()->SettingButtonClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuInstance()->GetCreditsButton()->HasKeyboardFocus())
+				{
+					MainMenuIndex = 0;
+					MainMenuHud->GetMainMenuInstance()->CreditUnhovered();
+					MainMenuHud->GetMainMenuInstance()->CreditsButtonClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuInstance()->GetEscapeButton()->HasKeyboardFocus())
+				{
+					MainMenuIndex = 0;
+					MainMenuHud->GetMainMenuInstance()->EscapeButtonClicked();
+					break;
+				}
+			}
+			default:
+			{
+				// Should not land here
 				break;
 			}
-			if (MainMenuHud->GetMainMenuInstance()->GetSettingButton()->HasKeyboardFocus())
-			{
-				MainMenuIndex = 0;
-				MainMenuHud->GetMainMenuInstance()->SettingUnhovered();
-				MainMenuHud->GetMainMenuInstance()->SettingButtonClicked();
-				break;
-			}
-			if (MainMenuHud->GetMainMenuInstance()->GetCreditsButton()->HasKeyboardFocus())
-			{
-				MainMenuIndex = 0;
-				MainMenuHud->GetMainMenuInstance()->CreditUnhovered();
-				MainMenuHud->GetMainMenuInstance()->CreditsButtonClicked();
-				break;
-			}
-			if (MainMenuHud->GetMainMenuInstance()->GetEscapeButton()->HasKeyboardFocus())
-			{
-				MainMenuIndex = 0;
-				MainMenuHud->GetMainMenuInstance()->EscapeButtonClicked();
-				break;
-			}
-		}
-		default:
-		{
-			// Should not land here
-			break;
 		}
 	}
 	// use enum overload, mapping index -> enum
@@ -272,8 +277,27 @@ void AMainMenuController::AudioMenuControl(ENote Note)
 		{
 			if (MainMenuHud != nullptr)
 			{
-
-				break;
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMasterVolumeSlider()->HasKeyboardFocus())
+				{
+					AudioMenuIndex = 0;
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMusicVolumeSlider()->HasKeyboardFocus())
+				{
+					AudioMenuIndex = 0;
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetSfxVolumeSlider()->HasKeyboardFocus())
+				{
+					AudioMenuIndex = 0;
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					AudioMenuIndex = 0;
+					MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->ReturnMenu();
+					break;
+				}
 			}
 		}
 		default:
@@ -282,6 +306,7 @@ void AMainMenuController::AudioMenuControl(ENote Note)
 			break;
 		}
 	}
+	SwitchAudioMenuButton(static_cast<EAudioSettingItem>(AudioMenuIndex));
 }
 
 void AMainMenuController::SettingMenuControl(ENote Note)
@@ -623,13 +648,77 @@ void AMainMenuController::GraphicMenuSwitchButton(EGraphicSettingItem InGraphicS
 			case EGraphicSettingItem::Return:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnSettingMenuHovered();
 				break;
 			}
 			default:
 			{
 				// Should not land here
 				break;
+			}
+		}
+	}
+}
+
+void AMainMenuController::SwitchAudioMenuButton(EAudioSettingItem InAudioSettingItem)
+{
+	if (MainMenuHud != nullptr)
+	{
+		switch (InAudioSettingItem)
+		{
+			case EAudioSettingItem::MasterVolumeSlider:
+			{
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMasterVolumeSlider()->SetKeyboardFocus();
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->MasterVolumeSliderHovered();
+
+				break;
+			}
+			case EAudioSettingItem::MusicVolumeSlider:
+			{
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMusicVolumeSlider()->SetKeyboardFocus();
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->MusicVolumeSliderHovered();
+				break;
+			}
+			case EAudioSettingItem::SfxVolumeSlider:
+			{
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetSfxVolumeSlider()->SetKeyboardFocus();
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->SfxVolumeSliderHovered();
+
+				break;
+			}
+			case EAudioSettingItem::Return:
+			{
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->ReturnSettingMenuHovered();
+				break;
+			}
+			default:
+			{
+				// Should not land here
+				break;
+			}
+		}
+	}
+}
+
+void AMainMenuController::AudioSoundControl(int32 Type, float SoundValue)
+{
+	if (Type == 1)
+	{
+		if (MainMenuHud != nullptr)
+		{
+			// TODO: Safe the Value in the GameInstance later!
+			if (MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMasterVolumeSlider()->HasKeyboardFocus())
+			{
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMasterVolumeSlider()->SetValue(SoundValue);
+			}
+			if (MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMusicVolumeSlider()->HasKeyboardFocus())
+			{
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMusicVolumeSlider()->SetValue(SoundValue);
+			}
+			if (MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetSfxVolumeSlider()->HasKeyboardFocus())
+			{
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetSfxVolumeSlider()->SetValue(SoundValue);
 			}
 		}
 	}

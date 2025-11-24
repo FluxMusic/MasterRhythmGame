@@ -55,6 +55,14 @@ enum class EGraphicSettingItem : uint8
 	Return = 9
 };
 
+enum class EAudioSettingItem : uint8
+{
+	MasterVolumeSlider = 0,
+	MusicVolumeSlider = 1,
+	SfxVolumeSlider = 2,
+	Return = 3
+};
+
 enum class EControllerState
 {
 	MainMenu,
@@ -133,6 +141,10 @@ protected:
 	void MainSettingSwitchButton(EMainSettingItem InMainSettingItem);
 
 	void GraphicMenuSwitchButton(EGraphicSettingItem InGraphicSettingItem);
+
+	void SwitchAudioMenuButton(EAudioSettingItem InAudioSettingItem);
+
+	void AudioSoundControl(int32 Type, float SoundValue);
 
 private:
 	const FString MusicName = FString(TEXT("Music"));

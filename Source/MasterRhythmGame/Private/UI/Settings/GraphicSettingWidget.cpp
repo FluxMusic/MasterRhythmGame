@@ -52,7 +52,7 @@ void UGraphicSettingWidget::NativeConstruct()
 	WindowModeDown->SetBackgroundColor(FLinearColor::Green);
 
 	MainMenu->OnClicked.AddDynamic(this, &UGraphicSettingWidget::ReturnMainMenuClicked);
-	MainMenu->OnHovered.AddDynamic(this, &UGraphicSettingWidget::ReturnMainMenuHovered);
+	MainMenu->OnHovered.AddDynamic(this, &UGraphicSettingWidget::ReturnSettingMenuHovered);
 	MainMenu->OnUnhovered.AddDynamic(this, &UGraphicSettingWidget::ReturnMainMenuUnhovered);
 
 	WindowModeDown->OnClicked.AddDynamic(this, &UGraphicSettingWidget::WindowModeDownClicked);
@@ -104,7 +104,7 @@ void UGraphicSettingWidget::ReturnMainMenuClicked()
 	ReturnMainMenuUnhovered();
 }
 
-void UGraphicSettingWidget::ReturnMainMenuHovered()
+void UGraphicSettingWidget::ReturnSettingMenuHovered()
 {
 	MainMenu->SetBackgroundColor(FLinearColor::Green);
 

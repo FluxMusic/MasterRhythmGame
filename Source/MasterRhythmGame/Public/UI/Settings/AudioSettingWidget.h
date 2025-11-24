@@ -30,6 +30,30 @@ public:
 	UFUNCTION()
 	void ReturnMenu();
 
+	UFUNCTION()
+	void ReturnSettingMenuHovered();
+
+	UFUNCTION()
+	void MasterVolumeSliderHovered();
+
+	UFUNCTION()
+	void MusicVolumeSliderHovered();
+
+	UFUNCTION()
+	void SfxVolumeSliderHovered();
+
+	UFUNCTION()
+	void ReturnMenuUnhovered();
+
+	UFUNCTION()
+	void MasterVolumeSliderUnhovered();
+
+	UFUNCTION()
+	void MusicVolumeSliderUnhovered();
+
+	UFUNCTION()
+	void SfxVolumeSliderUnhovered();
+
 	// --- Master Volume Slider ---
 	USlider* GetMasterVolumeSlider() const { return MasterVolumeSlider; }
 

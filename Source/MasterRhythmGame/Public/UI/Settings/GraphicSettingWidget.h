@@ -20,7 +20,7 @@ public:
 	void ReturnMainMenuClicked();
 
 	UFUNCTION()
-	void ReturnMainMenuHovered();
+	void ReturnSettingMenuHovered();
 
 	UFUNCTION()
 	void ReturnMainMenuUnhovered();

@@ -34,6 +34,69 @@ void UAudioSettingWidget::OnValueChangedSfx(float Value)
 
 void UAudioSettingWidget::ReturnMenu()
 {
+	SetVisibility(ESlateVisibility::Hidden);
+	AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
+	if (PlayerController != nullptr)
+	{
+		PlayerController->SetControllerState(EControllerState::SettingMenu);
+	}
+	ReturnMenuUnhovered();
+}
+
+void UAudioSettingWidget::ReturnSettingMenuHovered()
+{
+	MainMenu->SetBackgroundColor(FLinearColor::Green);
+
+	MasterVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	MusicVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	SfxVolumeSlider->SetSliderBarColor(FLinearColor::White);
+}
+
+void UAudioSettingWidget::MasterVolumeSliderHovered()
+{
+	MasterVolumeSlider->SetSliderBarColor(FLinearColor::Green);
+
+	MusicVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	SfxVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	MainMenu->SetBackgroundColor(FLinearColor::White);
+}
+
+void UAudioSettingWidget::MusicVolumeSliderHovered()
+{
+	MusicVolumeSlider->SetSliderBarColor(FLinearColor::Green);
+
+	MasterVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	SfxVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	MainMenu->SetBackgroundColor(FLinearColor::White);
+}
+
+void UAudioSettingWidget::SfxVolumeSliderHovered()
+{
+	SfxVolumeSlider->SetSliderBarColor(FLinearColor::Green);
+
+	MasterVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	MusicVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	MainMenu->SetBackgroundColor(FLinearColor::White);
+}
+
+void UAudioSettingWidget::ReturnMenuUnhovered()
+{
+	MainMenu->SetBackgroundColor(FLinearColor::White);
+}
+
+void UAudioSettingWidget::MasterVolumeSliderUnhovered()
+{
+	MasterVolumeSlider->SetSliderBarColor(FLinearColor::White);
+}
+
+void UAudioSettingWidget::MusicVolumeSliderUnhovered()
+{
+	MusicVolumeSlider->SetSliderBarColor(FLinearColor::White);
+}
+
+void UAudioSettingWidget::SfxVolumeSliderUnhovered()
+{
+	SfxVolumeSlider->SetSliderBarColor(FLinearColor::White);
 }
 
 void UAudioSettingWidget::NativeConstruct()
@@ -45,4 +108,6 @@ void UAudioSettingWidget::NativeConstruct()
 	SfxVolumeSlider->OnValueChanged.AddDynamic(this, &UAudioSettingWidget::OnValueChangedSfx);
 
 	MainMenu->OnClicked.AddDynamic(this, &UAudioSettingWidget::ReturnMenu);
+
+	MasterVolumeSlider->SetSliderBarColor(FLinearColor::Green);
 }
