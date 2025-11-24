@@ -111,28 +111,8 @@ void AMainMenuController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceCon
 {
 	// Convert incoming MIDI note number to semitone class (0-11) and map to ENote.
 	const int32 Semitone = Note % 12;
-	ENote NoteEnum;
-	bool bMapped = true;
-
-	switch (Semitone)
-	{
-		case 0:  NoteEnum = ENote::C; break;
-		case 2:  NoteEnum = ENote::D; break;
-		case 4:  NoteEnum = ENote::E; break;
-		case 5:  NoteEnum = ENote::F; break;
-		case 7:  NoteEnum = ENote::G; break;
-		case 9:  NoteEnum = ENote::A; break;
-		case 11: NoteEnum = ENote::B; break;
-		default:
-			bMapped = false;
-			break;
-	}
-
-	if (!bMapped)
-	{
-		// Ignore notes that are not part of the defined C-D-E-F-G-A-B set.
-		return;
-	}
+	
+	ENote NoteEnum = static_cast<ENote>(Semitone);
 
 	switch (GetControllerState())
 	{
