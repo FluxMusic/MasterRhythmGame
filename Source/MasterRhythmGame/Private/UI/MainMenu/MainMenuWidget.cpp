@@ -52,19 +52,22 @@ void UMainMenuWidget::LoadGameButtonClicked()
 {
 	AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
 
-	UKismetSystemLibrary::PrintString(this, FString(TEXT("TODO")), true, true,FLinearColor::Blue, 10.0);
-	/*if (PlayerController != nullptr)
+	SetVisibility(ESlateVisibility::Hidden);
+	if (MainMenuHud != nullptr)
+	{
+		MainMenuHud->GetLoadMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+	}
+	if (PlayerController != nullptr)
 	{
 		PlayerController->SetControllerState(EControllerState::LoadMenu);
-	}*/
-	// TODO: Open Worldmap Level
+	}
 }
 
 void UMainMenuWidget::CreditsButtonClicked()
 {
 	AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
 
-	UWidget::SetVisibility(ESlateVisibility::Hidden);
+	SetVisibility(ESlateVisibility::Hidden);
 	if (MainMenuHud != nullptr)
 	{
 		MainMenuHud->GetCreditsMenuInstance()->SetVisibility(ESlateVisibility::Visible);

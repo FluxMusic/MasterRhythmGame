@@ -34,6 +34,14 @@ enum class EMainMenuItem : uint8
 	Escape = 4
 };
 
+enum class ELoadGameMenuItem : uint8
+{
+	FirstLevel = 0,
+	SecondLevel = 1,
+	ThirdLevel = 2,
+	MainMenu = 3
+};
+
 enum class EMainSettingItem : uint8
 {
 	Graphic = 0,
@@ -141,6 +149,8 @@ protected:
 	void MainSettingSwitchButton(EMainSettingItem InMainSettingItem);
 
 	void GraphicMenuSwitchButton(EGraphicSettingItem InGraphicSettingItem);
+
+	void LoadMenuSwitchButton(ELoadGameMenuItem InLoadGameItem);
 
 	void SwitchAudioMenuButton(EAudioSettingItem InAudioSettingItem);
 

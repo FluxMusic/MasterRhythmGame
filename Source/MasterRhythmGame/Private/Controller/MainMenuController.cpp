@@ -486,8 +486,6 @@ void AMainMenuController::LoadMenuControl(ENote Note)
 			LoadMenuIndex++;
 			LoadMenuIndex = FMath::Clamp(LoadMenuIndex, 0, 4);
 			UE_LOG(LogTemp, Log, TEXT("LoadMenuIndex: %d"), LoadMenuIndex);
-
-			//Switch
 			break;
 		}
 		case ENote::D:
@@ -495,9 +493,35 @@ void AMainMenuController::LoadMenuControl(ENote Note)
 			LoadMenuIndex--;
 			LoadMenuIndex = FMath::Clamp(LoadMenuIndex, 0, 4);
 			UE_LOG(LogTemp, Log, TEXT("LoadMenuIndex: %d"), LoadMenuIndex);
-
-			//Switch
 			break;
+		}
+		case ENote::B:
+		{	if (MainMenuHud != nullptr)
+			{
+
+				if (MainMenuHud->GetLoadMenuInstance()->GetLoadFirstButton()->HasKeyboardFocus())
+				{
+					MainMenuHud->GetLoadMenuInstance()->LoadFirstSaveButtonClicked();
+					break;
+				}
+				if (MainMenuHud->GetLoadMenuInstance()->GetLoadSecondButton()->HasKeyboardFocus())
+				{
+					MainMenuHud->GetLoadMenuInstance()->LoadSecondSaveButtonClicked();
+					break;
+				}
+				if (MainMenuHud->GetLoadMenuInstance()->GetLoadThirdButton()->HasKeyboardFocus())
+				{
+					MainMenuHud->GetLoadMenuInstance()->LoadThirdSaveButtonClicked();
+					break;
+				}
+				if (MainMenuHud->GetLoadMenuInstance()->GetReturnMainMenuButton()->HasKeyboardFocus())
+				{
+					LoadMenuIndex = 0;
+					MainMenuHud->GetLoadMenuInstance()->ReturnMainMenuButtonUnhovered();
+					MainMenuHud->GetLoadMenuInstance()->ReturnMainMenuButtonClicked();
+					break;
+				}
+			}
 		}
 		default:
 		{
@@ -505,6 +529,7 @@ void AMainMenuController::LoadMenuControl(ENote Note)
 			break;
 		}
 	}
+	LoadMenuSwitchButton(static_cast<ELoadGameMenuItem>(LoadMenuIndex));
 }
 
 void AMainMenuController::MainMenuSwitchButton(EMainMenuItem InMainMenuItem)
@@ -660,6 +685,45 @@ void AMainMenuController::GraphicMenuSwitchButton(EGraphicSettingItem InGraphicS
 	}
 }
 
+void AMainMenuController::LoadMenuSwitchButton(ELoadGameMenuItem InLoadGameItem)
+{
+	if (MainMenuHud != nullptr)
+	{
+		switch (InLoadGameItem)
+		{
+			case ELoadGameMenuItem::FirstLevel:
+			{
+				MainMenuHud->GetLoadMenuInstance()->GetLoadFirstButton()->SetKeyboardFocus();
+				MainMenuHud->GetLoadMenuInstance()->LoadFirstSaveButtonHovered();
+				break;
+			}
+			case ELoadGameMenuItem::SecondLevel:
+			{
+				MainMenuHud->GetLoadMenuInstance()->GetLoadSecondButton()->SetKeyboardFocus();
+				MainMenuHud->GetLoadMenuInstance()->LoadSecondSaveButtonHovered();
+				break;
+			}
+			case ELoadGameMenuItem::ThirdLevel:
+			{
+				MainMenuHud->GetLoadMenuInstance()->GetLoadThirdButton()->SetKeyboardFocus();
+				MainMenuHud->GetLoadMenuInstance()->LoadThirdSaveButtonHovered();
+				break;
+			}
+			case ELoadGameMenuItem::MainMenu:
+			{
+				MainMenuHud->GetLoadMenuInstance()->GetReturnMainMenuButton()->SetKeyboardFocus();
+				MainMenuHud->GetLoadMenuInstance()->ReturnMainMenuButtonHovered();
+				break;
+			}
+			default:
+			{
+				// Should not land here
+				break;
+			}
+		}
+	}
+}
+
 void AMainMenuController::SwitchAudioMenuButton(EAudioSettingItem InAudioSettingItem)
 {
 	if (MainMenuHud != nullptr)
@@ -703,6 +767,7 @@ void AMainMenuController::SwitchAudioMenuButton(EAudioSettingItem InAudioSetting
 
 void AMainMenuController::AudioSoundControl(int32 Type, float SoundValue)
 {
+	// Modwheel
 	if (Type == 1)
 	{
 		if (MainMenuHud != nullptr)

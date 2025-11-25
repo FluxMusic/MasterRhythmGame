@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "UI/MainMenu/MainMenuWidget.h"
 #include "UI/MainMenu/CreditsWidget.h"
+#include "UI/MainMenu/LoadMenuWidget.h"
 #include "UI/Settings/AudioSettingWidget.h"
 #include "UI/Settings/GraphicSettingWidget.h"
 #include "UI/Settings/MainMenuSetting.h"
@@ -61,6 +62,13 @@ public:
 	UAudioSettingWidget* GetAudioSettingInstance() const { return AudioSettingInstance; }
 	void SetAudioSettingInstance(UAudioSettingWidget* InInstance) { AudioSettingInstance = InInstance; }
 
+	// --- Load Menu Class ---
+	TSubclassOf<ULoadMenuWidget> GetLoadMenuClass() const { return LoadMenuClass; }
+	void SetLoadMenuClass(TSubclassOf<ULoadMenuWidget> InClass) { LoadMenuClass = InClass; }
+
+	// --- Load Menu Instance ---
+	ULoadMenuWidget* GetLoadMenuInstance() const { return LoadMenuInstance; }
+	void SetLoadMenuInstance(ULoadMenuWidget* InInstance) { LoadMenuInstance = InInstance; }
 
 protected:
 	virtual void BeginPlay() override;
@@ -70,29 +78,35 @@ private:
 	TSubclassOf<UMainMenuWidget> MainMenuWidgetClass;
 
 	UPROPERTY()
-	TObjectPtr<UMainMenuWidget> MainMenuInstance{ nullptr };
+	TObjectPtr<UMainMenuWidget> MainMenuInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UCreditsWidget> CreditsWidgetClass;
 
 	UPROPERTY()
-	TObjectPtr<UCreditsWidget> CreditsMenuInstance{ nullptr };
+	TObjectPtr<UCreditsWidget> CreditsMenuInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UMainMenuSetting> MainMenuSettingWidgetClass;
 
 	UPROPERTY()
-	TObjectPtr<UMainMenuSetting> MainMenuSettingInstance{ nullptr };
+	TObjectPtr<UMainMenuSetting> MainMenuSettingInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGraphicSettingWidget> GraphicSettingClass;
 
 	UPROPERTY()
-	TObjectPtr<UGraphicSettingWidget> GraphicSettingInstance{ nullptr };
+	TObjectPtr<UGraphicSettingWidget> GraphicSettingInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UAudioSettingWidget> AudioSettingClass;
 
 	UPROPERTY()
-	TObjectPtr<UAudioSettingWidget> AudioSettingInstance{ nullptr };
+	TObjectPtr<UAudioSettingWidget> AudioSettingInstance { nullptr };
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ULoadMenuWidget> LoadMenuClass;
+
+	UPROPERTY()
+	TObjectPtr<ULoadMenuWidget> LoadMenuInstance { nullptr };
 };

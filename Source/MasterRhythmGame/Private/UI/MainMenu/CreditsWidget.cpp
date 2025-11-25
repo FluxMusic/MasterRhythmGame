@@ -24,7 +24,7 @@ void UCreditsWidget::NativeConstruct()
 
 void UCreditsWidget::ReturnMainMenuButtonClicked()
 {
-	UWidget::SetVisibility(ESlateVisibility::Hidden);
+	SetVisibility(ESlateVisibility::Hidden);
 	if (MainMenuHud != nullptr)
 	{
 		MainMenuHud->GetMainMenuInstance()->SetVisibility(ESlateVisibility::Visible);

@@ -61,5 +61,13 @@ void AMainMenuHUD::BeginPlay()
 			AudioSettingInstance->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
-
+	if (LoadMenuClass)
+	{
+		LoadMenuInstance = CreateWidget<ULoadMenuWidget>(GetWorld(), LoadMenuClass);
+		if (LoadMenuInstance != nullptr)
+		{
+			LoadMenuInstance->AddToViewport();
+			LoadMenuInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
 }
