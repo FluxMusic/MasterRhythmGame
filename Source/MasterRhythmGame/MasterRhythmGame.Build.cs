@@ -8,7 +8,7 @@ public class MasterRhythmGame : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "MIDIDevice" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "MIDIDevice", "Harmonix"  });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 	}

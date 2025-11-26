@@ -29,6 +29,10 @@
 		{
 			"Name": "MIDIDevice",
 			"Enabled": true
+		},
+		{
+			"Name": "Harmonix",
+			"Enabled": true
 		}
 	]
 }
