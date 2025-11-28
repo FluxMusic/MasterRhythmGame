@@ -3,3 +3,22 @@
 
 #include "HUD/WorldMapHUD.h"
 
+AWorldMapHUD::AWorldMapHUD()
+{
+}
+
+void AWorldMapHUD::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (PauseMenuWidgetClass)
+	{
+		PauseMenuInstance = CreateWidget<UPauseMenuWidget>(GetWorld(), PauseMenuWidgetClass);
+
+		if (PauseMenuInstance != nullptr)
+		{
+			PauseMenuInstance->AddToViewport();
+			PauseMenuInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+}
