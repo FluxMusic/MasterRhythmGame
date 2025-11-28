@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "SplineActor.generated.h"
 
+class USplineComponent;
+
 UCLASS()
 class MASTERRHYTHMGAME_API ASplineActor : public AActor
 {
@@ -14,6 +16,9 @@ class MASTERRHYTHMGAME_API ASplineActor : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ASplineActor();
+
+	//UPROPERTY()
+	//void GetSplinesY(int32 Int, FVector& Height);
 
 protected:
 	// Called when the game starts or when spawned

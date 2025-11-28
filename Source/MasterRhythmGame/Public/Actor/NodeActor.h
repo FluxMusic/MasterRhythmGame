@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "NodeActor.generated.h"
 
+class USplineComponent;
+class UTimelineComponent;
+
 UCLASS()
 class MASTERRHYTHMGAME_API ANodeActor : public AActor
 {
@@ -15,6 +18,9 @@ public:
 	// Sets default values for this actor's properties
 	ANodeActor();
 
+	UFUNCTION()
+	void SetBarLength(double BPM);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -23,4 +29,20 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
+
+	UPROPERTY()
+	TObjectPtr<UStaticMeshComponent> Note;
+
+	UPROPERTY()
+	TObjectPtr<USceneComponent> DefaultSceneRoot;
+
+	UPROPERTY()
+	TObjectPtr<UTimelineComponent> Timeline;
+
+	UPROPERTY()
+	TObjectPtr<USplineComponent> SplineRef;
+
+	UPROPERTY()
+	bool bIsSentBack;
 };

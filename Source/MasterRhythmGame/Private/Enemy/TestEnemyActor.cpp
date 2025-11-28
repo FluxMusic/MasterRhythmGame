@@ -11,6 +11,14 @@ ATestEnemyActor::ATestEnemyActor()
 
 }
 
+int32 ATestEnemyActor::CalcHealth(int32 Value, int32 OutputValue)
+{
+	Value--;
+	Health += Value;
+	OutputValue = Health;
+	return OutputValue;
+}
+
 // Called when the game starts or when spawned
 void ATestEnemyActor::BeginPlay()
 {

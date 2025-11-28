@@ -11,6 +11,10 @@ ASplineActor::ASplineActor()
 
 }
 
+//void ASplineActor::GetSplinesY(int32 Int, FVector& Height)
+//{
+//}
+
 // Called when the game starts or when spawned
 void ASplineActor::BeginPlay()
 {

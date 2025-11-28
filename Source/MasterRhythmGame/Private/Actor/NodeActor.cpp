@@ -11,6 +11,10 @@ ANodeActor::ANodeActor()
 
 }
 
+void ANodeActor::SetBarLength(double BPM)
+{
+}
+
 // Called when the game starts or when spawned
 void ANodeActor::BeginPlay()
 {
