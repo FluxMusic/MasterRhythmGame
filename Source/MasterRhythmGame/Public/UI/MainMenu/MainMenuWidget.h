@@ -98,7 +98,7 @@ private:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UButton* Setting{ nullptr };
 
-	const FName LevelName = FName(TEXT(""));
+	const FName LevelName = FName(TEXT("WorldMap"));
 
 	UPROPERTY()
 	TObjectPtr<AMainMenuHUD> MainMenuHud { nullptr };

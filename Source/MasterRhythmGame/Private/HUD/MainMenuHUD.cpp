@@ -36,7 +36,7 @@ void AMainMenuHUD::BeginPlay()
 	}
 	if (MainMenuSettingWidgetClass)
 	{
-		MainMenuSettingInstance = CreateWidget<UMainMenuSetting>(GetWorld(), MainMenuSettingWidgetClass);
+		MainMenuSettingInstance = CreateWidget<UMainMenuSettingWidget>(GetWorld(), MainMenuSettingWidgetClass);
 		if (MainMenuSettingInstance != nullptr)
 		{
 			MainMenuSettingInstance->AddToViewport();

@@ -9,7 +9,7 @@
 #include "UI/MainMenu/LoadMenuWidget.h"
 #include "UI/Settings/AudioSettingWidget.h"
 #include "UI/Settings/GraphicSettingWidget.h"
-#include "UI/Settings/MainMenuSetting.h"
+#include "UI/Settings/MainMenuSettingWidget.h"
 #include "MainMenuHUD.generated.h"
 
 /**
@@ -39,12 +39,12 @@ public:
 	void SetCreditsMenuInstance(UCreditsWidget* InInstance) { CreditsMenuInstance = InInstance; }
 
 	// --- Main Menu Settings Widget Class ---
-	TSubclassOf<UMainMenuSetting> GetMainMenuSettingWidgetClass() const { return MainMenuSettingWidgetClass; }
-	void SetMainMenuSettingWidgetClass(TSubclassOf<UMainMenuSetting> InClass) { MainMenuSettingWidgetClass = InClass; }
+	TSubclassOf<UMainMenuSettingWidget> GetMainMenuSettingWidgetClass() const { return MainMenuSettingWidgetClass; }
+	void SetMainMenuSettingWidgetClass(TSubclassOf<UMainMenuSettingWidget> InClass) { MainMenuSettingWidgetClass = InClass; }
 
 	// --- Main Menu Settings Instance ---
-	UMainMenuSetting* GetMainMenuSettingInstance() const { return MainMenuSettingInstance; }
-	void SetMainMenuSettingInstance(UMainMenuSetting* InInstance) { MainMenuSettingInstance = InInstance; }
+	UMainMenuSettingWidget* GetMainMenuSettingInstance() const { return MainMenuSettingInstance; }
+	void SetMainMenuSettingInstance(UMainMenuSettingWidget* InInstance) { MainMenuSettingInstance = InInstance; }
 
 	// --- Graphic Setting Class ---
 	TSubclassOf<UGraphicSettingWidget> GetGraphicSettingClass() const { return GraphicSettingClass; }
@@ -87,10 +87,10 @@ private:
 	TObjectPtr<UCreditsWidget> CreditsMenuInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UMainMenuSetting> MainMenuSettingWidgetClass;
+	TSubclassOf<UMainMenuSettingWidget> MainMenuSettingWidgetClass;
 
 	UPROPERTY()
-	TObjectPtr<UMainMenuSetting> MainMenuSettingInstance { nullptr };
+	TObjectPtr<UMainMenuSettingWidget> MainMenuSettingInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGraphicSettingWidget> GraphicSettingClass;

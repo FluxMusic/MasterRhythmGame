@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "MainMenuSetting.generated.h"
+#include "MainMenuSettingWidget.generated.h"
 
 class UAudioSettingWidget;
 class UGraphicSettingWidget;
@@ -14,7 +14,7 @@ class AMainMenuHUD;
  * 
  */
 UCLASS()
-class MASTERRHYTHMGAME_API UMainMenuSetting : public UUserWidget
+class MASTERRHYTHMGAME_API UMainMenuSettingWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
