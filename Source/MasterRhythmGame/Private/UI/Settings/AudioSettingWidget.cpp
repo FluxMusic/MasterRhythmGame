@@ -6,6 +6,7 @@
 #include "Components/Button.h"
 #include "Components/Slider.h"
 #include "Controller/MainMenuController.h"
+#include "Controller/WorldMapController.h"
 #include "Sound/SoundSubmix.h"
 
 void UAudioSettingWidget::OnValueChangedMaster(float Value)
@@ -39,6 +40,12 @@ void UAudioSettingWidget::ReturnMenu()
 	if (PlayerController != nullptr)
 	{
 		PlayerController->SetControllerState(EControllerState::SettingMenu);
+	}
+
+	AWorldMapController* WorldMapController = Cast<AWorldMapController>(GetOwningPlayer());
+	if (WorldMapController != nullptr)
+	{
+		WorldMapController->SetControllerState(EControllerStateWorldMap::SettingMenu);
 	}
 	ReturnMenuUnhovered();
 }

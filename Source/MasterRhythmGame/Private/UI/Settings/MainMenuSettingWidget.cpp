@@ -4,6 +4,7 @@
 #include "HUD/MainMenuHUD.h"
 #include "Components/Button.h"
 #include "Controller/MainMenuController.h"
+#include "Controller/WorldMapController.h"
 
 void UMainMenuSettingWidget::NativeConstruct()
 {
@@ -12,6 +13,13 @@ void UMainMenuSettingWidget::NativeConstruct()
 	if (PlayerController != nullptr)
 	{
 		MainMenuHud = Cast<AMainMenuHUD>(PlayerController->GetHUD());
+	}
+
+	AWorldMapController* WorldMapPlayerController = Cast<AWorldMapController>(GetOwningPlayer());
+
+	if (WorldMapPlayerController != nullptr)
+	{
+		WorldMapHud = Cast<AWorldMapHUD>(WorldMapPlayerController->GetHUD());
 	}
 
 	WBP_AudioSettingWidget->SetVisibility(ESlateVisibility::Hidden);
@@ -56,6 +64,15 @@ void UMainMenuSettingWidget::ReturnMainMenuClicked()
 	if (MainMenuHud != nullptr)
 	{
 		MainMenuHud->GetMainMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+	}
+	if (WorldMapHud != nullptr)
+	{
+		WorldMapHud->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+		AWorldMapController* WorldMapPlayerController = Cast<AWorldMapController>(GetOwningPlayer());
+		if (WorldMapPlayerController != nullptr)
+		{
+			WorldMapPlayerController->SetControllerState(EControllerStateWorldMap::PauseMenu);
+		}
 	}
 }
 

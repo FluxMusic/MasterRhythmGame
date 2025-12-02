@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "PauseMenuWidget.generated.h"
 
+class AGameHUD;
 class AWorldMapHUD;
 class UButton;
 /**
@@ -112,6 +113,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AWorldMapHUD> WorldMapHud { nullptr };
+
+	UPROPERTY()
+	TObjectPtr<AGameHUD> GameHUD { nullptr };
 
 	const FName LevelName = FName(TEXT("MainMenu"));
 };

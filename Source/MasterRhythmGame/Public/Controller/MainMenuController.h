@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "InputMappingContext.h"
 #include "MIDIDevice/Public/MIDIDeviceInputController.h"
 #include "GameFramework/PlayerController.h"
 #include "HUD/MainMenuHUD.h"
@@ -102,9 +101,6 @@ protected:
 	// Sets the Input Component
 	virtual void SetupInputComponent() override;
 
-	//Initialize the Mapping Context and the Input Actions
-	void InitInputAction();
-
 	//Initialize the MIDI Controller
 	void InitMidi();
 
@@ -193,14 +189,4 @@ private:
 	int32 LoadMenuIndex { 0 };
 
 	EControllerState ControllerState{ EControllerState::MainMenu };
-
-
-
-#pragma region InputAction
-
-	UPROPERTY(EditAnywhere, DisplayName = "MappingContext", Category = "InputAction", meta = (AllowPrivateAccess = true))
-	UInputMappingContext* DefaultMappingContext { nullptr };
-
-
-#pragma endregion
 };

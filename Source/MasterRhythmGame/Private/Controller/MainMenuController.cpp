@@ -2,10 +2,7 @@
 
 
 #include "Controller/MainMenuController.h"
-#include "EnhancedInputSubsystems.h"
-#include "EnhancedInputSubsystemInterface.h"
 #include "EnhancedInputComponent.h"
-#include "InputMappingContext.h"
 #include "Components/Button.h"
 #include "Components/Slider.h"
 #include "MIDIDevice/Public/MIDIDeviceInputController.h"
@@ -17,8 +14,6 @@ AMainMenuController::AMainMenuController()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	InitInputAction();
-
 	bShowMouseCursor = true;
 }
 
@@ -28,12 +23,6 @@ void AMainMenuController::BeginPlay()
 	Super::BeginPlay();
 
 	InitMidi();
-
-	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
-	{
-		// Add mapping context
-		Subsystem->AddMappingContext(DefaultMappingContext, 0);
-	}
 
 	AMainMenuController* PlayerController = Cast<AMainMenuController>(this);
 
@@ -52,14 +41,6 @@ void AMainMenuController::SetupInputComponent()
 	{
 		// All Input Actions in here
 	}
-}
-
-//Initialize the Mapping Context and the Input Actions
-void AMainMenuController::InitInputAction()
-{
-	// Initialize everything
-	DefaultMappingContext = LoadObject<UInputMappingContext>(nullptr, TEXT("/Game/Input/IMC_Character.IMC_Character"));
-
 }
 
 void AMainMenuController::InitMidi()
@@ -148,7 +129,6 @@ void AMainMenuController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceCon
 			break;
 		}
 	}
-
 }
 
 void AMainMenuController::HandleNoteOff(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Note, int32 Velocity)
@@ -191,7 +171,6 @@ void AMainMenuController::MainMenuControl(ENote Note)
 				MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
 				UE_LOG(LogTemp, Log, TEXT("MainMenuIndex: %d"), MainMenuIndex);
 
-				// Switch
 				break;
 			}
 			case ENote::D:
@@ -200,7 +179,6 @@ void AMainMenuController::MainMenuControl(ENote Note)
 				MainMenuIndex = FMath::Clamp(MainMenuIndex, 0, 4);
 				UE_LOG(LogTemp, Log, TEXT("MainMenuIndex: %d"), MainMenuIndex);
 
-				// Switch 
 				break;
 			}
 			case ENote::B:

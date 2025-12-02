@@ -21,4 +21,40 @@ void AWorldMapHUD::BeginPlay()
 			PauseMenuInstance->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+	if (WorldMapWidgetClass)
+	{
+		WorldMapWidgetInstance = CreateWidget<UWorldMapWidget_TEMPORARILY>(GetWorld(), WorldMapWidgetClass);
+
+		if (WorldMapWidgetInstance != nullptr)
+		{
+			WorldMapWidgetInstance->AddToViewport();
+		}
+	}
+	if (MainMenuSettingWidgetClass)
+	{
+		MainMenuSettingInstance = CreateWidget<UMainMenuSettingWidget>(GetWorld(), MainMenuSettingWidgetClass);
+		if (MainMenuSettingInstance != nullptr)
+		{
+			MainMenuSettingInstance->AddToViewport();
+			MainMenuSettingInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+	if (GraphicSettingClass)
+	{
+		GraphicSettingInstance = CreateWidget<UGraphicSettingWidget>(GetWorld(), GraphicSettingClass);
+		if (GraphicSettingInstance != nullptr)
+		{
+			GraphicSettingInstance->AddToViewport();
+			GraphicSettingInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+	if (AudioSettingClass)
+	{
+		AudioSettingInstance = CreateWidget<UAudioSettingWidget>(GetWorld(), AudioSettingClass);
+		if (AudioSettingInstance != nullptr)
+		{
+			AudioSettingInstance->AddToViewport();
+			AudioSettingInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
 }

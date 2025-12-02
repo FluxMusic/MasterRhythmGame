@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "AudioSettingWidget.generated.h"
 
+class AWorldMapHUD;
 class UButton;
 class USlider;
 class AMainMenuHUD;
@@ -104,4 +105,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AMainMenuHUD> MainMenuHud { nullptr };
+
+	UPROPERTY()
+	TObjectPtr<AWorldMapHUD> WorldMapHud{ nullptr };
 };

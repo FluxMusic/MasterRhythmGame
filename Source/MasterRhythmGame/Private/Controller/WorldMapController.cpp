@@ -2,4 +2,793 @@
 
 
 #include "Controller/WorldMapController.h"
+#include "MIDIDeviceManager.h"
+#include "Components/Button.h"
+#include "Components/Slider.h"
+#include "Controller/MainMenuController.h"
 
+AWorldMapController::AWorldMapController()
+{
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+	bShowMouseCursor = true;
+}
+
+void AWorldMapController::BeginPlay()
+{
+	Super::BeginPlay();
+
+	InitMidi();
+
+	AWorldMapController* PlayerController = Cast<AWorldMapController>(this);
+
+	if (PlayerController != nullptr)
+	{
+		WorldMapHUD = Cast<AWorldMapHUD>(PlayerController->GetHUD());
+	}
+}
+
+void AWorldMapController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+}
+
+void AWorldMapController::InitMidi()
+{
+	DisplayMidiDevicesIDs();
+
+	CreateMidiController();
+}
+
+void AWorldMapController::DisplayMidiDevicesIDs()
+{
+	TArray<FFoundMIDIDevice> InputDevices;
+
+	UMIDIDeviceManager::FindMIDIDevices(InputDevices);
+
+	for (auto InputDevice : InputDevices)
+	{
+		UE_LOG(LogTemp, Log, TEXT("ID: %d"), InputDevice.DeviceID);
+		UE_LOG(LogTemp, Log, TEXT("ID: %s"), *InputDevice.DeviceName);
+	}
+}
+
+void AWorldMapController::CreateMidiController()
+{
+	MidiController = UMIDIDeviceManager::CreateMIDIDeviceInputController(1, 1024);
+
+	if (MidiController != nullptr)
+	{
+		UE_LOG(LogTemp, Log, TEXT("Successfully connected with MIDI Controller."));
+		MidiController->OnMIDINoteOn.AddDynamic(this, &AWorldMapController::HandleNoteOn);
+		MidiController->OnMIDINoteOff.AddDynamic(this, &AWorldMapController::HandleNoteOff);
+		MidiController->OnMIDIPitchBend.AddDynamic(this, &AWorldMapController::HandlePitchBend);
+		MidiController->OnMIDIAftertouch.AddDynamic(this, &AWorldMapController::HandleAftertouch);
+		MidiController->OnMIDIControlChange.AddDynamic(this, &AWorldMapController::HandleControlChange);
+	}
+	else
+	{
+		// Should not happen
+		UE_LOG(LogTemp, Log, TEXT("Failed to connect with MIDI Controller."));
+	}
+}
+
+void AWorldMapController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+}
+
+void AWorldMapController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel,
+	int32 Note, int32 Velocity)
+{
+	// Convert incoming MIDI note number to semitone class (0-11) and map to ENote.
+	const int32 Semitone = Note % 12;
+
+	ENote NoteEnum = static_cast<ENote>(Semitone);
+
+	switch (GetControllerState())
+	{
+		case EControllerStateWorldMap::WorldMap:
+		{
+			WorldMapControl(NoteEnum);
+			break;
+		}
+		case EControllerStateWorldMap::PauseMenu:
+		{
+			PauseMenuControl(NoteEnum);
+			break;
+		}
+		case EControllerStateWorldMap::SettingMenu:
+		{
+			SettingMenuControl(NoteEnum);
+			break;
+		}
+		case EControllerStateWorldMap::AudioMenu:
+		{
+			AudioMenuControl(NoteEnum);
+			break;
+		}
+		case EControllerStateWorldMap::GraphicsMenu:
+		{
+			GraphicMenuControl(NoteEnum);
+			break;
+		}
+	}
+}
+
+void AWorldMapController::HandleNoteOff(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp,
+	int32 Channel, int32 Note, int32 Velocity)
+{
+	//UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
+	//UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
+	//UE_LOG(LogTemp, Log, TEXT("Velocity: %d"), Velocity);
+}
+
+void AWorldMapController::HandlePitchBend(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp,
+	int32 Channel, int32 Pitch)
+{
+	//UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
+	//UE_LOG(LogTemp, Log, TEXT("Pitch: %d"),    Pitch);
+}
+
+void AWorldMapController::HandleAftertouch(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp,
+	int32 Channel, int32 Note, int32 Amount)
+{
+	//UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
+	//UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
+	//UE_LOG(LogTemp, Log, TEXT("Amount: %d"),   Amount);
+	//UE_LOG(LogTemp, Log, TEXT("Amount: %d"),   Amount);
+}
+
+void AWorldMapController::HandleControlChange(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp,
+	int32 Channel, int32 Type, int32 Value)
+{
+	float NormalizedValue = static_cast<float>(Value) / 127.0f;
+	NormalizedValue = FMath::Clamp(NormalizedValue, 0.0f, 1.0f);
+
+	AudioSoundControl(Type, NormalizedValue);
+}
+
+void AWorldMapController::WorldMapControl(ENote Note)
+{
+	if (WorldMapHUD != nullptr)
+	{
+		switch (Note)
+		{
+			case ENote::C:
+			{
+				WorldMapIndex++;
+				WorldMapIndex = FMath::Clamp(WorldMapIndex, 0, 6);
+				UE_LOG(LogTemp, Log, TEXT("WorldMapIndex: %d"), WorldMapIndex);
+				break;
+			}
+			case ENote::D:
+			{
+				WorldMapIndex--;
+				WorldMapIndex = FMath::Clamp(WorldMapIndex, 0, 6);
+				UE_LOG(LogTemp, Log, TEXT("WorldMapIndex: %d"), WorldMapIndex);
+				break;
+			}
+			// Later use instead of C+D -> E+F+G+Gb for WASD control
+			//case ENote::E:
+			//{	
+			//	break;
+			//}
+			//case ENote::F:
+			//{	
+			//	break;
+			//}
+			//case ENote::G:
+			//{	
+			//	break;
+			//}
+			//case ENote::GSharp:
+			//{	
+			//	break;
+			//}
+			case ENote::CSharp:
+			{
+				SetControllerState(EControllerStateWorldMap::PauseMenu);
+				if (WorldMapHUD != nullptr)
+				{
+					WorldMapHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+					WorldMapHUD->GetWorldMapInstance()->SetVisibility(ESlateVisibility::Hidden);
+				}
+				break;
+			}
+			case ENote::B:
+			{
+				if (WorldMapHUD->GetWorldMapInstance()->GetLevelOneButton()->HasKeyboardFocus())
+				{
+					WorldMapIndex = 0;
+					WorldMapHUD->GetWorldMapInstance()->LevelOneButtonClicked();
+					break;
+				}
+				if (WorldMapHUD->GetWorldMapInstance()->GetLevelTwoButton()->HasKeyboardFocus())
+				{
+					WorldMapIndex = 0;
+					WorldMapHUD->GetWorldMapInstance()->LevelTwoButtonClicked();
+					break;
+				}
+				if (WorldMapHUD->GetWorldMapInstance()->GetLevelThreeButton()->HasKeyboardFocus())
+				{
+					WorldMapIndex = 0;
+					break;
+				}
+				if (WorldMapHUD->GetWorldMapInstance()->GetLevelFourButton()->HasKeyboardFocus())
+				{
+					WorldMapIndex = 0;
+					WorldMapHUD->GetWorldMapInstance()->LevelThreeButtonClicked();
+					break;
+				}
+				if (WorldMapHUD->GetWorldMapInstance()->GetLevelFiveButton()->HasKeyboardFocus())
+				{
+					WorldMapIndex = 0;
+					WorldMapHUD->GetWorldMapInstance()->LevelFourButtonClicked();
+					break;
+				}
+				if (WorldMapHUD->GetWorldMapInstance()->GetLevelSixButton()->HasKeyboardFocus())
+				{
+					WorldMapIndex = 0;
+					WorldMapHUD->GetWorldMapInstance()->LevelFiveButtonClicked();
+					break;
+				}
+				if (WorldMapHUD->GetWorldMapInstance()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					WorldMapIndex = 0;
+					WorldMapHUD->GetWorldMapInstance()->MainMenuButtonClicked();
+					break;
+				}
+			}
+			default:
+			{
+				// Should not land here
+				break;
+			}
+		}
+	}
+	WorldMapSwitchButton(static_cast<EWorldMapItem>(WorldMapIndex));
+}
+
+void AWorldMapController::PauseMenuControl(ENote Note)
+{
+	if (WorldMapHUD != nullptr)
+	{
+		switch (Note)
+		{
+			case ENote::C:
+			{
+				PauseMenuIndex++;
+				PauseMenuIndex = FMath::Clamp(PauseMenuIndex, 0, 5);
+				UE_LOG(LogTemp, Log, TEXT("PauseMenuIndex: %d"), PauseMenuIndex);
+				break;
+			}
+			case ENote::D:
+			{
+				PauseMenuIndex--;
+				PauseMenuIndex = FMath::Clamp(PauseMenuIndex, 0, 5);
+				UE_LOG(LogTemp, Log, TEXT("PauseMenuIndex: %d"), PauseMenuIndex); break;
+			}
+			case ENote::B:
+			{
+				if (WorldMapHUD->GetPauseMenuInstance()->GetResumeButton()->HasKeyboardFocus())
+				{
+					PauseMenuIndex = 0;
+					WorldMapHUD->GetPauseMenuInstance()->ResumeButtonClicked();
+					break;
+				}
+				if (WorldMapHUD->GetPauseMenuInstance()->GetSaveGameButton()->HasKeyboardFocus())
+				{
+					PauseMenuIndex = 0;
+					WorldMapHUD->GetPauseMenuInstance()->SaveGameButtonClicked();
+					break;
+				}
+				if (WorldMapHUD->GetPauseMenuInstance()->GetLoadGameButton()->HasKeyboardFocus())
+				{
+					PauseMenuIndex = 0;
+					WorldMapHUD->GetPauseMenuInstance()->LoadGameButtonClicked();
+					break;
+				}
+				if (WorldMapHUD->GetPauseMenuInstance()->GetSettingsButton()->HasKeyboardFocus())
+				{
+					PauseMenuIndex = 0;
+					WorldMapHUD->GetPauseMenuInstance()->SettingsButtonClicked();
+					break;
+				}
+				if (WorldMapHUD->GetPauseMenuInstance()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					PauseMenuIndex = 0;
+					WorldMapHUD->GetPauseMenuInstance()->MainMenuButtonClicked();
+					break;
+				}
+				if (WorldMapHUD->GetPauseMenuInstance()->GetQuitButton()->HasKeyboardFocus())
+				{
+					PauseMenuIndex = 0;
+					WorldMapHUD->GetPauseMenuInstance()->QuitButtonClicked();
+					break;
+				}
+			}
+			default:
+			{
+				// Should not land here
+				break;
+			}
+		}
+	}
+	PauseMenuSwitchButton(static_cast<EPauseMenuItem>(PauseMenuIndex));
+}
+
+void AWorldMapController::MainSettingSwitchButton(EMainSettingItem InMainSettingItem)
+{
+	if (WorldMapHUD != nullptr)
+	{
+		switch (InMainSettingItem)
+		{
+			case EMainSettingItem::Graphic:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GraphicButtonHovered();
+				break;
+			}
+			case EMainSettingItem::Audio:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->AudioButtonHovered();
+				break;
+			}
+			case EMainSettingItem::MainMenu:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetMainMenuButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->ReturnMainMenuButtonHovered();
+				break;
+			}
+			default:
+			{
+				// Should not land here
+				break;
+			}
+		}
+	}
+}
+
+void AWorldMapController::GraphicMenuSwitchButton(EGraphicSettingItem InGraphicSettingItem)
+{
+	if (WorldMapHUD != nullptr)
+	{
+		switch (InGraphicSettingItem)
+		{
+			case EGraphicSettingItem::WindowModeDown:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeDownHovered();
+				break;
+			}
+			case EGraphicSettingItem::WindowModeUp:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeUpHovered();
+				break;
+			}
+			case EGraphicSettingItem::ResolutionDown:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionDownHovered();
+				break;
+			}
+			case EGraphicSettingItem::ResolutionUp:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionUpHovered();
+				break;
+			}
+			case EGraphicSettingItem::GraphicDown:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicDownHovered();
+				break;
+			}
+			case EGraphicSettingItem::GraphicUp:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicUpHovered();
+				break;
+			}
+			case EGraphicSettingItem::VSyncDown:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncDownHovered();
+				break;
+			}
+			case EGraphicSettingItem::VSyncUp:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncUpHovered();
+				break;
+			}
+			case EGraphicSettingItem::Apply:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ApplyHovered();
+				break;
+			}
+			case EGraphicSettingItem::Return:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnSettingMenuHovered();
+				break;
+			}
+			default:
+			{
+				// Should not land here
+				break;
+			}
+		}
+	}
+}
+
+void AWorldMapController::AudioMenuControl(ENote Note)
+{
+	switch (Note)
+	{
+		case ENote::C:
+		{
+			AudioMenuIndex++;
+			AudioMenuIndex = FMath::Clamp(AudioMenuIndex, 0, 3);
+			UE_LOG(LogTemp, Log, TEXT("AudioMenuIndex: %d"), AudioMenuIndex);
+
+			//Switch
+			break;
+
+		}
+		case ENote::D:
+		{
+			AudioMenuIndex--;
+			AudioMenuIndex = FMath::Clamp(AudioMenuIndex, 0, 3);
+			UE_LOG(LogTemp, Log, TEXT("AudioMenuIndex: %d"), AudioMenuIndex);
+
+			//Switch
+			break;
+		}
+		case ENote::B:
+		{
+			if (WorldMapHUD != nullptr)
+			{
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMasterVolumeSlider()->HasKeyboardFocus())
+				{
+					AudioMenuIndex = 0;
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMusicVolumeSlider()->HasKeyboardFocus())
+				{
+					AudioMenuIndex = 0;
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetSfxVolumeSlider()->HasKeyboardFocus())
+				{
+					AudioMenuIndex = 0;
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					AudioMenuIndex = 0;
+					WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->ReturnMenu();
+					break;
+				}
+			}
+		}
+		default:
+		{
+			// Should not land here
+			break;
+		}
+	}
+	SwitchAudioMenuButton(static_cast<EAudioSettingItem>(AudioMenuIndex));
+}
+
+void AWorldMapController::SettingMenuControl(ENote Note)
+{
+	switch (Note)
+	{
+		case ENote::C:
+		{
+			SettingMenuIndex++;
+			SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
+			UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
+			break;
+		}
+		case ENote::D:
+		{
+			SettingMenuIndex--;
+			SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
+			UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
+			break;
+		}
+		case ENote::B:
+		{
+			if (WorldMapHUD != nullptr)
+			{
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicButton()->HasKeyboardFocus())
+				{
+					SetControllerState(EControllerStateWorldMap::GraphicsMenu);
+					SettingMenuIndex = 0;
+					GraphicMenuIndex = 0;
+					WorldMapHUD->GetMainMenuSettingInstance()->GraphicSettingClicked();
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetAudioButton()->HasKeyboardFocus())
+				{
+					SetControllerState(EControllerStateWorldMap::AudioMenu);
+					SettingMenuIndex = 0;
+					AudioMenuIndex = 0;
+					WorldMapHUD->GetMainMenuSettingInstance()->AudioSettingClicked();
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					SetControllerState(EControllerStateWorldMap::PauseMenu);
+					SettingMenuIndex = 0;
+					PauseMenuIndex = 0;
+					WorldMapHUD->GetMainMenuSettingInstance()->ReturnMainMenuClicked();
+					break;
+				}
+			}
+		}
+		default:
+		{
+			// Should not land here
+			break;
+		}
+	}
+	MainSettingSwitchButton(static_cast<EMainSettingItem>(SettingMenuIndex));
+}
+
+void AWorldMapController::GraphicMenuControl(ENote Note)
+{
+	switch (Note)
+	{
+		case ENote::C:
+		{
+			GraphicMenuIndex++;
+			GraphicMenuIndex = FMath::Clamp(GraphicMenuIndex, 0, 9);
+			UE_LOG(LogTemp, Log, TEXT("GraphicMenuIndex: %d"), GraphicMenuIndex);
+			break;
+		}
+		case ENote::D:
+		{
+			GraphicMenuIndex--;
+			GraphicMenuIndex = FMath::Clamp(GraphicMenuIndex, 0, 9);
+			UE_LOG(LogTemp, Log, TEXT("GraphicMenuIndex: %d"), GraphicMenuIndex);
+			break;
+		}
+		case ENote::B:
+		{
+			if (WorldMapHUD != nullptr)
+			{
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->HasKeyboardFocus())
+				{
+					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeDownClicked();
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->HasKeyboardFocus())
+				{
+					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeUpClicked();
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->HasKeyboardFocus())
+				{
+					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionDownClicked();
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->HasKeyboardFocus())
+				{
+					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionUpClicked();
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->HasKeyboardFocus())
+				{
+					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicDownClicked();
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->HasKeyboardFocus())
+				{
+					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicUpClicked();
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->HasKeyboardFocus())
+				{
+					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncDownClicked();
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->HasKeyboardFocus())
+				{
+					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncUpClicked();
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->HasKeyboardFocus())
+				{
+					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ApplyClicked();
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					GraphicMenuIndex = 0;
+					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuUnhovered();
+					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuClicked();
+					break;
+				}
+			}
+		}
+		default:
+		{
+			//Should not land here
+			break;
+		}
+	}
+	// map index -> enum
+	GraphicMenuSwitchButton(static_cast<EGraphicSettingItem>(GraphicMenuIndex));
+}
+
+void AWorldMapController::SwitchAudioMenuButton(EAudioSettingItem InAudioSettingItem)
+{
+	if (WorldMapHUD != nullptr)
+	{
+		switch (InAudioSettingItem)
+		{
+			case EAudioSettingItem::MasterVolumeSlider:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMasterVolumeSlider()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->MasterVolumeSliderHovered();
+
+				break;
+			}
+			case EAudioSettingItem::MusicVolumeSlider:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMusicVolumeSlider()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->MusicVolumeSliderHovered();
+				break;
+			}
+			case EAudioSettingItem::SfxVolumeSlider:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetSfxVolumeSlider()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->SfxVolumeSliderHovered();
+
+				break;
+			}
+			case EAudioSettingItem::Return:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->ReturnSettingMenuHovered();
+				break;
+			}
+			default:
+			{
+				// Should not land here
+				break;
+			}
+		}
+	}
+}
+
+void AWorldMapController::AudioSoundControl(int32 Type, float SoundValue)
+{
+	// Modwheel
+	if (Type == 1)
+	{
+		if (WorldMapHUD != nullptr)
+		{
+			// TODO: Safe the Value in the GameInstance later!
+			if (WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMasterVolumeSlider()->HasKeyboardFocus())
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMasterVolumeSlider()->SetValue(SoundValue);
+			}
+			if (WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMusicVolumeSlider()->HasKeyboardFocus())
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMusicVolumeSlider()->SetValue(SoundValue);
+			}
+			if (WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetSfxVolumeSlider()->HasKeyboardFocus())
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetSfxVolumeSlider()->SetValue(SoundValue);
+			}
+		}
+	}
+}
+
+void AWorldMapController::WorldMapSwitchButton(EWorldMapItem InWorldMapItem)
+{
+	if (WorldMapHUD != nullptr)
+	{
+		switch (InWorldMapItem)
+		{
+			case EWorldMapItem::LevelOne:
+			{
+				WorldMapHUD->GetWorldMapInstance()->GetLevelOneButton()->SetKeyboardFocus();
+				WorldMapHUD->GetWorldMapInstance()->LevelOneButtonHovered();
+				break;
+			}
+			case EWorldMapItem::LevelTwo:
+			{
+				WorldMapHUD->GetWorldMapInstance()->GetLevelTwoButton()->SetKeyboardFocus();
+				WorldMapHUD->GetWorldMapInstance()->LevelTwoButtonHovered();
+				break;
+			}
+			case EWorldMapItem::LevelThree:
+			{
+				WorldMapHUD->GetWorldMapInstance()->GetLevelThreeButton()->SetKeyboardFocus();
+				WorldMapHUD->GetWorldMapInstance()->LevelThreeButtonHovered(); break;
+			}
+			case EWorldMapItem::LevelFour:
+			{
+				WorldMapHUD->GetWorldMapInstance()->GetLevelFourButton()->SetKeyboardFocus();
+				WorldMapHUD->GetWorldMapInstance()->LevelFourButtonHovered(); break;
+			}
+			case EWorldMapItem::LevelFive:
+			{
+				WorldMapHUD->GetWorldMapInstance()->GetLevelFiveButton()->SetKeyboardFocus();
+				WorldMapHUD->GetWorldMapInstance()->LevelFiveButtonHovered(); break;
+			}
+			case EWorldMapItem::LevelSix:
+			{
+				WorldMapHUD->GetWorldMapInstance()->GetLevelSixButton()->SetKeyboardFocus();
+				WorldMapHUD->GetWorldMapInstance()->LevelSixButtonHovered(); break;
+			}
+			case EWorldMapItem::MainMenu:
+			{
+				WorldMapHUD->GetWorldMapInstance()->GetMainMenuButton()->SetKeyboardFocus();
+				WorldMapHUD->GetWorldMapInstance()->MainMenuButtonHovered(); 
+				break;
+			}
+			default:
+			{
+				// Should not land here
+				break;
+			}
+		}
+	}
+}
+
+void AWorldMapController::PauseMenuSwitchButton(EPauseMenuItem InPauseMenuItem)
+{
+	if (WorldMapHUD != nullptr)
+	{
+		switch (InPauseMenuItem)
+		{
+			case EPauseMenuItem::Resume:
+			{
+				WorldMapHUD->GetPauseMenuInstance()->GetResumeButton()->SetKeyboardFocus();
+				WorldMapHUD->GetPauseMenuInstance()->ResumeButtonHovered();
+				break;
+			}
+			case EPauseMenuItem::Save:
+			{
+				WorldMapHUD->GetPauseMenuInstance()->GetSaveGameButton()->SetKeyboardFocus();
+				WorldMapHUD->GetPauseMenuInstance()->SaveGameButtonHovered();
+				break;
+			}
+			case EPauseMenuItem::Load:
+			{
+				WorldMapHUD->GetPauseMenuInstance()->GetLoadGameButton()->SetKeyboardFocus();
+				WorldMapHUD->GetPauseMenuInstance()->LoadGameButtonHovered();
+				break;
+			}
+			case EPauseMenuItem::Settings:
+			{
+				WorldMapHUD->GetPauseMenuInstance()->GetSettingsButton()->SetKeyboardFocus();
+				WorldMapHUD->GetPauseMenuInstance()->SettingsButtonHovered();
+				break;
+			}
+			case EPauseMenuItem::MainMenu:
+			{
+				WorldMapHUD->GetPauseMenuInstance()->GetMainMenuButton()->SetKeyboardFocus();
+				WorldMapHUD->GetPauseMenuInstance()->MainMenuButtonHovered();
+				break;
+			}
+			case EPauseMenuItem::Quit:
+			{
+				WorldMapHUD->GetPauseMenuInstance()->GetQuitButton()->SetKeyboardFocus();
+				WorldMapHUD->GetPauseMenuInstance()->QuitButtonHovered();
+				break;
+			}
+		}
+	}
+}

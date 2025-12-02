@@ -5,6 +5,7 @@
 #include "Components/Button.h"
 #include "HUD/MainMenuHUD.h"
 #include "Controller/MainMenuController.h"
+#include "Controller/WorldMapController.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -95,11 +96,17 @@ void UGraphicSettingWidget::NativeConstruct()
 void UGraphicSettingWidget::ReturnMainMenuClicked()
 {
 	SetVisibility(ESlateVisibility::Hidden);
-	AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
 
+	AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
 	if (PlayerController != nullptr)
 	{
 		PlayerController->SetControllerState(EControllerState::SettingMenu);
+	}
+
+	AWorldMapController* WorldMapController = Cast<AWorldMapController>(GetOwningPlayer());
+	if (WorldMapController != nullptr)
+	{
+		WorldMapController->SetControllerState(EControllerStateWorldMap::SettingMenu);
 	}
 	ReturnMainMenuUnhovered();
 }
@@ -130,7 +137,6 @@ void UGraphicSettingWidget::WindowModeDownClicked()
 	ModeAsInt--;
 	ModeAsInt = FMath::Clamp(ModeAsInt, 0, 2);
 	WindowMode = static_cast<EWindowMode::Type>(ModeAsInt);
-
 }
 
 void UGraphicSettingWidget::WindowModeDownHovered()
