@@ -44,8 +44,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftObjectPtr<ACameraActor> CameraActor { nullptr };
 
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	//TObjectPtr<UQuartzClockHandle> QuartzClockHandle { nullptr };
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UQuartzClockHandle> QuartzClockHandle { nullptr };
 
 private:
 	UPROPERTY(EditAnywhere)
