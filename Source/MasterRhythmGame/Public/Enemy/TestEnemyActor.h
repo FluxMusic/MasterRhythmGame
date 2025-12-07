@@ -19,7 +19,7 @@ public:
 	ATestEnemyActor();
 
 	UFUNCTION(BlueprintCallable)
-	int32 CalcHealth(int32 Value, int32 OutputValue);
+	int32 CalcHealth(int32 Value);
 
 protected:
 	// Called when the game starts or when spawned
@@ -42,7 +42,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<USplineComponent> SplineRef { nullptr };
 
-	//UPROPERTY()
-	//TObjectPtr<UQuartzClockHandle> QuartzClockHandle;
+	UPROPERTY()
+	TObjectPtr<UQuartzClockHandle> QuartzClockHandle;
 	
 };

@@ -24,6 +24,13 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+		
+	void CreateAndStartQuartzClock(float Bpm);
+
+	UFUNCTION()
+	void ApplyDamage(int32 DamageAmount);
+
+	int32 CalcHealth(int32 InHealth);
 
 	// --- Health accessors ---
 	int32 GetHealth() const { return Health; }
@@ -45,7 +52,7 @@ protected:
 	TSoftObjectPtr<ACameraActor> CameraActor { nullptr };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UQuartzClockHandle> QuartzClockHandle { nullptr };
+	UQuartzClockHandle* QuartzClockHandle { nullptr };
 
 private:
 	UPROPERTY(EditAnywhere)

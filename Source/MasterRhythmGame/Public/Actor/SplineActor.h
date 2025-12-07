@@ -17,8 +17,11 @@ public:
 	// Sets default values for this actor's properties
 	ASplineActor();
 
-	//UPROPERTY()
-	//void GetSplinesY(int32 Int, FVector& Height);
+	UFUNCTION(BlueprintCallable)
+	USplineComponent* GetSplines(int32 Int);
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetSplinesY(int32 Int, FVector& NewParam);
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,4 +31,30 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "DefaultSceneRoot") 
+	TObjectPtr<USceneComponent> DefaultSceneRoot { nullptr };
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline6")
+	TObjectPtr<USplineComponent> Spline6 { nullptr };
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default")
+	TObjectPtr<USplineComponent> Spline5 { nullptr };
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default")
+	TObjectPtr<USplineComponent> Spline4 { nullptr };
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default")
+	TObjectPtr<USplineComponent> Spline3 { nullptr };
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default")
+	TObjectPtr<USplineComponent> Spline2 { nullptr };
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default")
+	TObjectPtr<USplineComponent> Spline1 { nullptr };
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default")
+	TObjectPtr<USplineComponent> Spline { nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", DisplayName = "MeshLength")
+	double MeshLength {  0.0f };
 };
