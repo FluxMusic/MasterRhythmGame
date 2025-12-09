@@ -7,8 +7,8 @@
 #include "GameFramework/PlayerController.h"
 #include "GameController.generated.h"
 
-enum class EMainSettingItem : uint8;
-enum class EPauseMenuItem;
+
+class UInputAction;
 
 enum class EControllerStateGame
 {
@@ -19,10 +19,15 @@ enum class EControllerStateGame
 	AudioMenu
 };
 
+class UInputMappingContext;
+class AGameCharacter;
 class AGameHUD;
 enum class EAudioSettingItem : uint8;
 enum class EGraphicSettingItem : uint8;
 enum class ENote : uint8;
+enum class EMainSettingItem : uint8;
+enum class EPauseMenuItem;
+
 /**
  * 
  */
@@ -69,6 +74,27 @@ protected:
 	UFUNCTION()
 	void HandleControlChange(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Type, int32 Value);
 
+	UFUNCTION()
+	void HandleCAttack();
+
+	UFUNCTION()
+	void HandleDAttack();
+
+	UFUNCTION()
+	void HandleEAttack();
+
+	UFUNCTION()
+	void HandleFAttack();
+
+	UFUNCTION()
+	void HandleGAttack();
+
+	UFUNCTION()
+	void HandleAAttack();
+
+	UFUNCTION()
+	void HandleBAttack();
+
 	void GameControl(ENote Note);
 
 	void PauseMenuControl(ENote Note);
@@ -109,4 +135,41 @@ private:
 	int32 PauseMenuIndex{ 0 };
 
 	EControllerStateGame ControllerState { EControllerStateGame::Game };
+
+	UPROPERTY()
+	TArray<FVector> Points;
+
+	UPROPERTY()
+	TObjectPtr<AGameCharacter> GameCharacter { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "GameCharacter Blueprint Class", Category = "Components")
+	TSubclassOf<AGameCharacter> GameCharacterBPClass { nullptr };
+
+#pragma region InputAction
+
+	UPROPERTY(EditAnywhere, DisplayName = "MappingContext", Category = "InputAction")
+	TObjectPtr<UInputMappingContext> DefaultMappingContext { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "C Action", Category = "InputAction")
+	UInputAction* CAction { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "D Action", Category = "InputAction")
+	UInputAction* DAction { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "E Action", Category = "InputAction")
+	UInputAction* EAction { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "F Action", Category = "InputAction")
+	UInputAction* FAction{ nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "G Action", Category = "InputAction")
+	UInputAction* GAction{ nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "A Action", Category = "InputAction")
+	UInputAction* AAction{ nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "B Action", Category = "InputAction")
+	UInputAction* BAction{ nullptr };
+
+#pragma endregion
 };

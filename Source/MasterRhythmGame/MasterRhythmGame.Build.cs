@@ -10,6 +10,6 @@ public class MasterRhythmGame : ModuleRules
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "MIDIDevice", "Harmonix", "AudioMixer" });
 
-		PrivateDependencyModuleNames.AddRange(new string[] {  });
+		PrivateDependencyModuleNames.AddRange(new string[] { "DerivedDataCache" });
 	}
 }

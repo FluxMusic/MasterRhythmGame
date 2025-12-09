@@ -4,6 +4,7 @@
 #include "Manager/AudioManagerSubsystem.h"
 #include "Quartz/AudioMixerClockHandle.h"
 #include "Quartz/QuartzSubsystem.h"
+#include "Actor/NodeActor.h"
 
 UAudioManagerSubsystem::UAudioManagerSubsystem()
 {

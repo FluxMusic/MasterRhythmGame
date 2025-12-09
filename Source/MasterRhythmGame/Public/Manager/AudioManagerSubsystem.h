@@ -6,6 +6,7 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "AudioManagerSubsystem.generated.h"
 
+class ANodeActor;
 class UQuartzSubsystem;
 class UQuartzClockHandle;
 /**
@@ -18,20 +19,20 @@ class MASTERRHYTHMGAME_API UAudioManagerSubsystem : public UWorldSubsystem
 public:
     UAudioManagerSubsystem();
 
-    // === LIFECYCLE ===
+    // --- Lifecycle ---
     virtual void Initialize(FSubsystemCollectionBase& Collection) override;
     virtual void Deinitialize() override;
 
-    // === QUARTZ CONTROL ===
+    // --- Quartz control ---
     UFUNCTION(BlueprintCallable)
     void StartClock(double InBPM);
 
     UFUNCTION(BlueprintCallable)
     void StopClock();
 
-    // === NOTE SPAWNING ===
+    // --- Note spawning ---
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
-    TSubclassOf<AActor> NoteActorClass;
+    TSubclassOf<ANodeActor> NoteActorClass;
 
 private:
 

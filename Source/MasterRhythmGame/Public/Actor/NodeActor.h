@@ -19,7 +19,19 @@ public:
 	ANodeActor();
 
 	UFUNCTION()
+	void OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void MoveLeft();
+
+	UFUNCTION()
+	void MoveRight();
+
+	UFUNCTION()
 	void SetBarLength(double BPM);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", DisplayName = "Mesh")
+	TObjectPtr<UStaticMeshComponent> NoteMesh { nullptr };
 
 protected:
 	// Called when the game starts or when spawned
@@ -36,6 +48,8 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<USceneComponent> DefaultSceneRoot;
+
+
 
 	UPROPERTY()
 	TObjectPtr<UTimelineComponent> Timeline;

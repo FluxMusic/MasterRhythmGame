@@ -2,20 +2,31 @@
 
 
 #include "Controller/GameController.h"
-
-#include <rapidjson/reader.h>
-
+#include "EnhancedInputSubsystems.h"
 #include "MIDIDeviceManager.h"
+#include "Character/GameCharacter.h"
 #include "Components/Button.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/Slider.h"
 #include "Controller/MainMenuController.h"
 #include "Controller/WorldMapController.h"
 #include "HUD/GameHUD.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
+#include "EnhancedInputComponent.h"
 
 AGameController::AGameController()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	Points.Add(FVector(-2300.0f, -600.0f, 100.0f));
+	Points.Add(FVector(-2300.0f, -600.0f, 250.0f));
+	Points.Add(FVector(-2300.0f, -600.0f, 400.0f));
+	Points.Add(FVector(-2300.0f, -600.0f, 550.0f));
+	Points.Add(FVector(-2300.0f, -600.0f, 700.0f));
+	Points.Add(FVector(-2300.0f, -600.0f, 850.0f));
+	Points.Add(FVector(-2300.0f, -600.0f, 1000.0f));
 }
 
 void AGameController::BeginPlay()
@@ -24,17 +35,40 @@ void AGameController::BeginPlay()
 
 	InitMidi();
 
-	AGameController* PlayerController = Cast<AGameController>(this);
-
-	if (PlayerController != nullptr)
+	GameHud = Cast<AGameHUD>(GetHUD());
+	
+	if (GameCharacterBPClass)
 	{
-		GameHud = Cast<AGameHUD>(PlayerController->GetHUD());
+		// Try to find an existing actor of the specified Blueprint class
+		AActor* Found = UGameplayStatics::GetActorOfClass(GetWorld(), GameCharacterBPClass);
+		GameCharacter = Cast<AGameCharacter>(Found);
+	}
+
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	}
 }
 
 void AGameController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
+
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent))
+	{
+		EnhancedInputComponent->BindAction(CAction, ETriggerEvent::Triggered, this, &AGameController::HandleCAttack);
+		EnhancedInputComponent->BindAction(DAction, ETriggerEvent::Triggered, this, &AGameController::HandleDAttack);
+		EnhancedInputComponent->BindAction(EAction, ETriggerEvent::Triggered, this, &AGameController::HandleEAttack);
+		EnhancedInputComponent->BindAction(FAction, ETriggerEvent::Triggered, this, &AGameController::HandleFAttack);
+		EnhancedInputComponent->BindAction(GAction, ETriggerEvent::Triggered, this, &AGameController::HandleGAttack);
+		EnhancedInputComponent->BindAction(AAction, ETriggerEvent::Triggered, this, &AGameController::HandleAAttack);
+		EnhancedInputComponent->BindAction(BAction, ETriggerEvent::Triggered, this, &AGameController::HandleBAttack);
+
+	}
+	else
+	{
+		return;
+	}
 }
 
 void AGameController::InitMidi()
@@ -153,6 +187,83 @@ void AGameController::HandleControlChange(UMIDIDeviceInputController* MIDIDevice
 	AudioSoundControl(Type, NormalizedValue);
 }
 
+void AGameController::HandleCAttack()
+{
+	if (GameCharacter != nullptr)
+	{
+		if (GameCharacter->GetCapsuleComponent() != nullptr)
+		{
+			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[0]);
+		}
+	}
+}
+
+void AGameController::HandleDAttack()
+{
+	if (GameCharacter != nullptr)
+	{
+		if (GameCharacter->GetCapsuleComponent() != nullptr)
+		{
+			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[1]);
+		}
+	}
+}
+
+void AGameController::HandleEAttack()
+{
+	if (GameCharacter != nullptr)
+	{
+		if (GameCharacter->GetCapsuleComponent() != nullptr)
+		{
+			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[2]);
+		}
+	}
+}
+
+void AGameController::HandleFAttack()
+{
+	if (GameCharacter != nullptr)
+	{
+		if (GameCharacter->GetCapsuleComponent() != nullptr)
+		{
+			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[3]);
+		}
+	}
+}
+
+void AGameController::HandleGAttack()
+{
+	if (GameCharacter != nullptr)
+	{
+		if (GameCharacter->GetCapsuleComponent() != nullptr)
+		{
+			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[4]);
+		}
+	}
+}
+
+void AGameController::HandleAAttack()
+{
+	if (GameCharacter != nullptr)
+	{
+		if (GameCharacter->GetCapsuleComponent() != nullptr)
+		{
+			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[5]);
+		}
+	}
+}
+
+void AGameController::HandleBAttack()
+{
+	if (GameCharacter != nullptr)
+	{
+		if (GameCharacter->GetCapsuleComponent() != nullptr)
+		{
+			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[6]);
+		}
+	}
+}
+
 void AGameController::GameControl(ENote Note)
 {
 	if (GameHud != nullptr)
@@ -161,30 +272,79 @@ void AGameController::GameControl(ENote Note)
 		{
 			case ENote::C:
 			{
+				if (GameCharacter != nullptr)
+				{
+					if (GameCharacter->GetCapsuleComponent() != nullptr)
+					{
+						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[0]);
+					}
+				}
 				break;
 			}
 			case ENote::D:
 			{
+				if (GameCharacter != nullptr)
+				{
+					if (GameCharacter->GetCapsuleComponent() != nullptr)
+					{
+						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[1]);
+					}
+				}
 				break;
 			}
 			case ENote::E:
 			{
+				if (GameCharacter != nullptr)
+				{
+					if (GameCharacter->GetCapsuleComponent() != nullptr)
+					{
+						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[2]);
+					}
+				}
 				break;
 			}
 			case ENote::F:
 			{
+				if (GameCharacter != nullptr)
+				{
+					if (GameCharacter->GetCapsuleComponent() != nullptr)
+					{
+						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[3]);
+					}
+				}
 				break;
 			}
 			case ENote::G:
 			{
+				if (GameCharacter != nullptr)
+				{
+					if (GameCharacter->GetCapsuleComponent() != nullptr)
+					{
+						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[4]);
+					}
+				}
 				break;
 			}
 			case ENote::A:
 			{
+				if (GameCharacter != nullptr)
+				{
+					if (GameCharacter->GetCapsuleComponent() != nullptr)
+					{
+						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[5]);
+					}
+				}
 				break;
 			}
 			case ENote::B:
 			{
+				if (GameCharacter != nullptr)
+				{
+					if (GameCharacter->GetCapsuleComponent() != nullptr)
+					{
+						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[6]);
+					}
+				}
 				break;
 			}
 			default:
