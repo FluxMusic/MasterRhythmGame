@@ -35,7 +35,11 @@ void UPauseMenuWidget::ResumeButtonClicked()
 		if (PlayerController != nullptr)
 		{
 			GameHUD = Cast<AGameHUD>(PlayerController->GetHUD());
-			//PlayerController->SetControllerState(EControllerStateWorldMap::Game);
+			PlayerController->SetControllerState(EControllerStateGame::Game);
+			PlayerController->bShowMouseCursor = false;
+			FInputModeGameOnly GameInputMode;
+			PlayerController->SetInputMode(GameInputMode);
+			UGameplayStatics::SetGamePaused(GetWorld(), false);
 		}
 		if (GameHUD != nullptr)
 		{

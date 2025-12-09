@@ -95,6 +95,9 @@ protected:
 	UFUNCTION()
 	void HandleBAttack();
 
+	UFUNCTION()
+	void HandlePause();
+
 	void GameControl(ENote Note);
 
 	void PauseMenuControl(ENote Note);
@@ -160,16 +163,19 @@ private:
 	UInputAction* EAction { nullptr };
 
 	UPROPERTY(EditAnywhere, DisplayName = "F Action", Category = "InputAction")
-	UInputAction* FAction{ nullptr };
+	UInputAction* FAction { nullptr };
 
 	UPROPERTY(EditAnywhere, DisplayName = "G Action", Category = "InputAction")
-	UInputAction* GAction{ nullptr };
+	UInputAction* GAction { nullptr };
 
 	UPROPERTY(EditAnywhere, DisplayName = "A Action", Category = "InputAction")
-	UInputAction* AAction{ nullptr };
+	UInputAction* AAction { nullptr };
 
 	UPROPERTY(EditAnywhere, DisplayName = "B Action", Category = "InputAction")
-	UInputAction* BAction{ nullptr };
+	UInputAction* BAction { nullptr };
+	
+	UPROPERTY(EditAnywhere, DisplayName = "Pause Action", Category = "InputAction")
+	UInputAction* PauseAction { nullptr };
 
 #pragma endregion
 };

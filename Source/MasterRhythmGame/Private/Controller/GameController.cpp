@@ -63,11 +63,7 @@ void AGameController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(GAction, ETriggerEvent::Triggered, this, &AGameController::HandleGAttack);
 		EnhancedInputComponent->BindAction(AAction, ETriggerEvent::Triggered, this, &AGameController::HandleAAttack);
 		EnhancedInputComponent->BindAction(BAction, ETriggerEvent::Triggered, this, &AGameController::HandleBAttack);
-
-	}
-	else
-	{
-		return;
+		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Triggered, this, &AGameController::HandlePause);
 	}
 }
 
@@ -261,6 +257,29 @@ void AGameController::HandleBAttack()
 		{
 			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[6]);
 		}
+	}
+}
+
+void AGameController::HandlePause()
+{
+	SetControllerState(EControllerStateGame::PauseMenu);
+
+	// Toggle pause state
+	bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
+	UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
+
+	if (bCurrentlyPaused == false)
+	{
+		if (GameHud != nullptr)
+		{
+			GameHud->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+		}
+
+		// Show mouse cursor and switch to GameAndUI input so widgets receive focus
+		bShowMouseCursor = true;
+		FInputModeGameAndUI InputMode;
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		SetInputMode(InputMode);
 	}
 }
 
