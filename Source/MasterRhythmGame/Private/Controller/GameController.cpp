@@ -366,6 +366,11 @@ void AGameController::GameControl(ENote Note)
 				}
 				break;
 			}
+			case ENote::CSharp:
+			{
+				HandlePause();
+				break;
+			}
 			default:
 			{
 				// Should not land here
