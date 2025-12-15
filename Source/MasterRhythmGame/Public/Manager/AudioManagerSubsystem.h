@@ -9,6 +9,8 @@
 class ANodeActor;
 class UQuartzSubsystem;
 class UQuartzClockHandle;
+struct FMetaSoundOutput;
+
 /**
  * 
  */
@@ -30,6 +32,15 @@ public:
     UFUNCTION(BlueprintCallable)
     void StopClock();
 
+    UFUNCTION()
+	void OnQuartzClockBar(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
+
+    UFUNCTION()
+    void OnQuartzClockBeat(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
+
+    UFUNCTION()
+    void OnMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output);
+
     // --- Note spawning ---
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     TSubclassOf<ANodeActor> NoteActorClass;
@@ -43,5 +54,11 @@ private:
     UQuartzClockHandle* ClockHandle;
 
     UPROPERTY()
+	TObjectPtr<UAudioComponent> AudioComponent;
+
+    UPROPERTY()
     double Bpm { 120.f };
+
+    UPROPERTY()
+    int32 NumBarsDelay { 1 };
 };

@@ -5,11 +5,12 @@
 #include "Camera/CameraActor.h"
 #include "Controller/GameController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Manager/AudioManagerSubsystem.h"
 
 // Sets default values
 AGameCharacter::AGameCharacter()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	GetCharacterMovement()->GravityScale = 0;
@@ -22,6 +23,8 @@ void AGameCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+
+	Bpm = 120.0f;
 
 	if (PlayerController != nullptr)
 	{
@@ -49,7 +52,17 @@ void AGameCharacter::BeginPlay()
 			UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::BeginPlay - CameraActor soft reference could not be resolved."));
 		}
 	}
-	//CreateAndStartQuartzClock(Bpm);
+
+	// Use the engine-managed world subsystem. Do not call Initialize() manually.
+	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
+	if (AudioManager != nullptr)
+	{
+		AudioManager->StartClock(Bpm);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::BeginPlay - UAudioManagerSubsystem not available."));
+	}
 }
 
 // Called every frame
@@ -68,32 +81,15 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void AGameCharacter::CreateAndStartQuartzClock(float InBpm)
 {
-
-	FQuartzClockSettings Settings;
-	UQuartzSubsystem* Subsystem = UQuartzSubsystem::Get(GetWorld());
-	if (!Subsystem)
+	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
+	if (AudioManager != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::CreateAndStartQuartzClock - UQuartzSubsystem not available."));
-		return;
+		AudioManager->StartClock(InBpm);
 	}
-
-	// Create a new clock and store the handle (raw pointer for API calls)
-	QuartzClockHandle = Subsystem->CreateNewClock(this, FName("Player"), Settings);
-	if (!QuartzClockHandle)
+	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::CreateAndStartQuartzClock - failed to create clock."));
-		return;
+		UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::CreateAndStartQuartzClock - UAudioManagerSubsystem not available."));
 	}
-
-	// Prepare valid parameters for SetBeatsPerMinute
-	FQuartzQuantizationBoundary QuantBoundary(EQuartzCommandQuantization::Beat, 1.0f, EQuarztQuantizationReference::BarRelative, true);
-	FOnQuartzCommandEventBP EmptyDelegate; // no-op delegate
-
-	// Set BPM (passes raw pointer by reference)
-	QuartzClockHandle->SetBeatsPerMinute(this, QuantBoundary, EmptyDelegate, QuartzClockHandle, InBpm);
-
-	// Start the clock (passes the same raw pointer by reference)
-	QuartzClockHandle->StartClock(this, QuartzClockHandle);
 }
 
 void AGameCharacter::ApplyDamage(int32 DamageAmount)
