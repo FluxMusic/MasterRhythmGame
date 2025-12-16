@@ -10,77 +10,126 @@
 #include "Sound/QuartzQuantizationUtilities.h"
 #include "AudioParameterControllerInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "MetaSoundOutputSubsystem.h"
 
 UAudioManagerSubsystem::UAudioManagerSubsystem()
 {
 }
 
-void UAudioManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+void UAudioManagerSubsystem::InitSubsystem()
 {
-	Super::Initialize(Collection);
-
-	// We try to cache the Quartz subsystem here, but it may not always be available yet.
-	QuartzSubsystem = UQuartzSubsystem::Get(GetWorld());
-
-	if (QuartzSubsystem == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UAudioManagerSubsystem::Initialize - Quartz subsystem not found. Will attempt to acquire it later in StartClock()."));
-	}
-}
-
-void UAudioManagerSubsystem::Deinitialize()
-{
-	Super::Deinitialize();
-	StopClock();
-}
-
-void UAudioManagerSubsystem::StartClock(double InBPM)
-{
-	// Try to get the Quartz subsystem at call time (lazy acquire).
 	if (QuartzSubsystem == nullptr)
 	{
 		QuartzSubsystem = UQuartzSubsystem::Get(GetWorld());
 	}
+}
 
-	if (QuartzSubsystem == nullptr)
+void UAudioManagerSubsystem::StartClock()
+{
+	if (ClockHandle != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("UAudioManagerSubsystem::StartClock - Quartz subsystem is missing!"));
-		UE_LOG(LogTemp, Warning, TEXT("  - Ensure the Audio/Quartz modules are added to your module dependencies (Build.cs)."));
-		UE_LOG(LogTemp, Warning, TEXT("  - Ensure the project is configured to use the Audio Mixer (Project Settings -> Engine -> Audio)."));
-		return;
+		ClockHandle->StartClock(this, ClockHandle);
+	}
+}
+
+void UAudioManagerSubsystem::ClockHandleInit(FName CLockName)
+{
+	if (QuartzSubsystem != nullptr)
+	{
+		FQuartzClockSettings Settings;
+		ClockHandle = QuartzSubsystem->CreateNewClock(GetWorld(), CLockName, Settings, true);
+	}
+}
+
+void UAudioManagerSubsystem::SetBeatsPerMinute(float InBPM, FQuartzQuantizationBoundary InBoundary, FOnQuartzCommandEventBP InDelegate)
+{
+	if (ClockHandle != nullptr)
+	{
+		ClockHandle->SetBeatsPerMinute(this, InBoundary, InDelegate, ClockHandle, InBPM);
+
+		FOnQuartzMetronomeEventBP BeatDelegate;
+		BeatDelegate.BindUFunction(this, FName(TEXT("OnQuartzClockBeat")));
+		ClockHandle->SubscribeToQuantizationEvent(GetWorld(), EQuartzCommandQuantization::Beat, BeatDelegate, ClockHandle);
+	}
+}
+
+void UAudioManagerSubsystem::PlayQuantized()
+{
+	if ((AudioComponent != nullptr) && (ClockHandle != nullptr))
+	{
+		FOnQuartzCommandEventBP InDelegate;
+		FQuartzQuantizationBoundary QuantBoundary(EQuartzCommandQuantization::Bar, 1.0f, EQuarztQuantizationReference::BarRelative, true);
+		AudioComponent->PlayQuantized(this, ClockHandle, QuantBoundary, InDelegate, 0.0f, 0.0f, 1.0f, EAudioFaderCurve::Linear);
+	}
+	 
+	UMetaSoundOutputSubsystem* MetaSoundOutputSubsystem = nullptr;
+	if (UWorld* World = GetWorld())
+	{
+		MetaSoundOutputSubsystem = World->GetSubsystem<UMetaSoundOutputSubsystem>();
 	}
 
-	Bpm = InBPM;
-
-	FQuartzClockSettings Settings;
-	ClockHandle = QuartzSubsystem->CreateNewClock(GetWorld(), TEXT("GameplayClock"), Settings, true);
-
-	if (!ClockHandle)
+	if (MetaSoundOutputSubsystem != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("UAudioManagerSubsystem::StartClock - failed to create clock handle."));
-		return;
+		FOnMetasoundOutputValueChanged MidiDelegate;
+		MidiDelegate.BindUFunction(this, FName("WatchOutputMidiNoteChange"));
+		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("MIDINoteOut")), MidiDelegate);
+
+		FOnMetasoundOutputValueChanged PartFinishedDelegate;
+		PartFinishedDelegate.BindUFunction(this, FName("WatchOutputOnPartFinished"));
+		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("OnPartFinished")), PartFinishedDelegate);
+
+		FOnMetasoundOutputValueChanged PartNameDelegate;
+		PartNameDelegate.BindUFunction(this, FName("WatchOutputPartFinishedName"));
+		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("PartFinishedName")), PartNameDelegate);
+
+		FOnMetasoundOutputValueChanged PartPercentDelegate;
+		PartPercentDelegate.BindUFunction(this, FName("WatchOutputPartFinishedPercent"));
+		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("PartFinishPercent")), PartPercentDelegate);
 	}
+}
 
-	// Prepare valid parameters for SetBeatsPerMinute
-	FQuartzQuantizationBoundary QuantBoundary(EQuartzCommandQuantization::Beat, 1.0f, EQuarztQuantizationReference::BarRelative, true);
-	FOnQuartzCommandEventBP EmptyDelegate; // no-op delegate
+void UAudioManagerSubsystem::WatchOutputOnPartFinished(FName OutputName, const FMetaSoundOutput& Output)
+{
+	UKismetSystemLibrary::PrintString(this, FString(TEXT("Penis")), true, true, FLinearColor::Blue, 10.0f);
+}
 
-	// Set BPM (SetBeatsPerMinute expects a float)
-	ClockHandle->SetBeatsPerMinute(this, QuantBoundary, EmptyDelegate, ClockHandle, static_cast<float>(Bpm));
+void UAudioManagerSubsystem::WatchOutputPartFinishedName(FName OutputName, const FMetaSoundOutput& Output)
+{
+	UKismetSystemLibrary::PrintString(this, FString(TEXT("Penis2")), true, true, FLinearColor::Blue, 10.0f);
+}
 
-	// Bind delegates as script (dynamic) delegates using BindUFunction
-	FOnQuartzMetronomeEventBP BarDelegate;
-	BarDelegate.BindUFunction(this, FName("OnQuartzClockBar"));
+void UAudioManagerSubsystem::WatchOutputPartFinishedPercent(FName OutputName, const FMetaSoundOutput& Output)
+{
+	UKismetSystemLibrary::PrintString(this, FString(TEXT("Penis3")), true, true, FLinearColor::Blue, 10.0f);
+}
 
-	FOnQuartzMetronomeEventBP BeatDelegate;
-	BeatDelegate.BindUFunction(this, FName("OnQuartzClockBeat"));
+void UAudioManagerSubsystem::StartPartOneIntro(FName ClockName, EQuartzCommandQuantization QuantizationType,
+	int32 NumBars, int32 Beat, float BeatFraction)
+{
+}
 
-	EQuartzCommandQuantization QuantizationType = EQuartzCommandQuantization::Bar;
+void UAudioManagerSubsystem::StartPartOne(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars,
+	int32 Beat, float BeatFraction)
+{
+}
 
-	ClockHandle->SubscribeToQuantizationEvent(GetWorld(), QuantizationType, BarDelegate, ClockHandle);
-	ClockHandle->SubscribeToQuantizationEvent(GetWorld(), EQuartzCommandQuantization::Beat, BeatDelegate, ClockHandle);
+void UAudioManagerSubsystem::StartPartTwoIntro(FName ClockName, EQuartzCommandQuantization QuantizationType,
+	int32 NumBars, int32 Beat, float BeatFraction)
+{
+}
 
-	ClockHandle->StartClock(this, ClockHandle);
+void UAudioManagerSubsystem::StartPartThreeIntro(FName ClockName, EQuartzCommandQuantization QuantizationType,
+	int32 NumBars, int32 Beat, float BeatFraction)
+{
+}
+
+void UAudioManagerSubsystem::StartPartThree(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars,
+	int32 Beat, float BeatFraction)
+{
+}
+
+void UAudioManagerSubsystem::StartMusic()
+{
 }
 
 void UAudioManagerSubsystem::StopClock()
@@ -93,41 +142,12 @@ void UAudioManagerSubsystem::StopClock()
 	}
 }
 
-void UAudioManagerSubsystem::OnQuartzClockBar(FName ClockName, EQuartzCommandQuantization QuantizationType,
-	int32 NumBars, int32 Beat, float BeatFraction)
-{
-	NumBarsDelay++;
-
-	// Guard AudioComponent usage
-	if (!IsValid(AudioComponent))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("UAudioManagerSubsystem::OnQuartzClockBar - AudioComponent is null or invalid."));
-		return;
-	}
-
-	bool bIsPlaying = AudioComponent->IsPlaying();
-
-	if ((NumBarsDelay == NumBars) && bIsPlaying)
-	{
-		AudioComponent->SetTriggerParameter(FName(TEXT("PlayIntro")));
-	}
-	//bIsPlaying = AudioComponent->IsPlaying();
-
-	// TODO: Verschiedene Musikteile abspielen
-	//NumBarsDelay += 2;
-	//if ((NumBarsDelay >= NumBars) && bIsPlaying)
-	//{
-	//	AudioComponent->SetTriggerParameter(Fname(TEXT("")))
-	//}
-}
-
 void UAudioManagerSubsystem::OnQuartzClockBeat(FName ClockName, EQuartzCommandQuantization QuantizationType,
 	int32 NumBars, int32 Beat, float BeatFraction)
 {
 	UKismetSystemLibrary::PrintString(this, FString::FormatAsNumber(Beat), true, true, FLinearColor::Blue, 10.0f);
 }
 
-void UAudioManagerSubsystem::OnMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output)
+void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output)
 {
-	
 }

@@ -21,25 +21,57 @@ class MASTERRHYTHMGAME_API UAudioManagerSubsystem : public UWorldSubsystem
 public:
     UAudioManagerSubsystem();
 
-    // --- Lifecycle ---
-    virtual void Initialize(FSubsystemCollectionBase& Collection) override;
-    virtual void Deinitialize() override;
+    UFUNCTION()
+    void InitSubsystem();
 
     // --- Quartz control ---
     UFUNCTION(BlueprintCallable)
-    void StartClock(double InBPM);
+    void StartClock();
 
     UFUNCTION(BlueprintCallable)
     void StopClock();
 
     UFUNCTION()
-	void OnQuartzClockBar(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
+    void ClockHandleInit(FName ClockName);
+
+    UFUNCTION()
+    void SetBeatsPerMinute(float InBPM, FQuartzQuantizationBoundary InBoundary, FOnQuartzCommandEventBP InDelegate);
+
+    UFUNCTION()
+    void PlayQuantized();
+
+    UFUNCTION()
+	void WatchOutputMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output);
+
+    UFUNCTION()
+    void WatchOutputOnPartFinished(FName OutputName, const FMetaSoundOutput& Output);
+
+    UFUNCTION()
+    void WatchOutputPartFinishedName(FName OutputName, const FMetaSoundOutput& Output);
+
+    UFUNCTION()
+    void WatchOutputPartFinishedPercent(FName OutputName, const FMetaSoundOutput& Output);
+
+	UFUNCTION()
+    void StartPartOneIntro(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
+
+    UFUNCTION()
+    void StartPartOne(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
+
+    UFUNCTION()
+    void StartPartTwoIntro(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
+
+    UFUNCTION()
+    void StartPartThreeIntro(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
+
+    UFUNCTION()
+    void StartPartThree(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
 
     UFUNCTION()
     void OnQuartzClockBeat(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
 
     UFUNCTION()
-    void OnMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output);
+    void StartMusic();
 
     // --- Note spawning ---
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -53,7 +85,7 @@ private:
     UPROPERTY()
     UQuartzClockHandle* ClockHandle;
 
-    UPROPERTY()
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UAudioComponent> AudioComponent;
 
     UPROPERTY()

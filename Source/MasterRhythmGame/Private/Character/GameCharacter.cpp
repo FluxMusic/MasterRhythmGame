@@ -57,7 +57,13 @@ void AGameCharacter::BeginPlay()
 	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
 	if (AudioManager != nullptr)
 	{
-		AudioManager->StartClock(Bpm);
+		AudioManager->InitSubsystem();
+		AudioManager->ClockHandleInit(FName(TEXT("PlayerClock")));
+		FQuartzQuantizationBoundary QuantBoundary(EQuartzCommandQuantization::Bar, 1.0f, EQuarztQuantizationReference::BarRelative, true);
+		FOnQuartzCommandEventBP Delegate;
+		AudioManager->SetBeatsPerMinute(Bpm, QuantBoundary, Delegate);
+		AudioManager->StartClock();
+		AudioManager->PlayQuantized();
 	}
 	else
 	{
@@ -81,15 +87,15 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void AGameCharacter::CreateAndStartQuartzClock(float InBpm)
 {
-	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
-	if (AudioManager != nullptr)
-	{
-		AudioManager->StartClock(InBpm);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::CreateAndStartQuartzClock - UAudioManagerSubsystem not available."));
-	}
+	//UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
+	//if (AudioManager != nullptr)
+	//{
+	//	AudioManager->StartClock(InBpm);
+	//}
+	//else
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::CreateAndStartQuartzClock - UAudioManagerSubsystem not available."));
+	//}
 }
 
 void AGameCharacter::ApplyDamage(int32 DamageAmount)
