@@ -38,13 +38,10 @@ public:
     void SetBeatsPerMinute(float InBPM, FQuartzQuantizationBoundary InBoundary, FOnQuartzCommandEventBP InDelegate);
 
     UFUNCTION()
-    void PlayQuantized();
+    void PlayQuantized(UAudioComponent* AudioComponent);
 
     UFUNCTION()
 	void WatchOutputMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output);
-
-    UFUNCTION()
-    void WatchOutputOnPartFinished(FName OutputName, const FMetaSoundOutput& Output);
 
     UFUNCTION()
     void WatchOutputPartFinishedName(FName OutputName, const FMetaSoundOutput& Output);
@@ -52,20 +49,26 @@ public:
     UFUNCTION()
     void WatchOutputPartFinishedPercent(FName OutputName, const FMetaSoundOutput& Output);
 
-	UFUNCTION()
-    void StartPartOneIntro(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
+    UFUNCTION()
+    void StartIntro();
 
     UFUNCTION()
-    void StartPartOne(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
+    void StartPart1Intro();
 
     UFUNCTION()
-    void StartPartTwoIntro(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
+    void StartPart1();
 
     UFUNCTION()
-    void StartPartThreeIntro(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
+    void StartPart2Intro();
 
     UFUNCTION()
-    void StartPartThree(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
+    void StartPart2();
+
+    UFUNCTION()
+    void StartPart3Intro();
+
+    UFUNCTION()
+    void StartPart3();
 
     UFUNCTION()
     void OnQuartzClockBeat(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
@@ -85,12 +88,17 @@ private:
     UPROPERTY()
     UQuartzClockHandle* ClockHandle;
 
-    UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	TObjectPtr<UAudioComponent> AudioComponent;
-
     UPROPERTY()
     double Bpm { 120.f };
 
     UPROPERTY()
     int32 NumBarsDelay { 1 };
+
+    // Map to find the AudioComponent for a named MetaSound output (populated in PlayQuantized)
+    UPROPERTY()
+    TMap<FName, UAudioComponent*> OutputAudioComponentMap;
+
+    // The currently active audio component (set when PlayQuantized is called)
+    UPROPERTY()
+    UAudioComponent* ActiveAudioComponent{ nullptr };
 };

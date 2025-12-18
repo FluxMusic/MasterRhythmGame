@@ -48,13 +48,16 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSoftObjectPtr<ACameraActor> CameraActor { nullptr };
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UAudioComponent> AudioComponent { nullptr };
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TSoftObjectPtr<ACameraActor> CameraActor { nullptr };
+	 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UQuartzClockHandle* QuartzClockHandle { nullptr };
 
-private:
 	UPROPERTY(EditAnywhere)
 	int32 Health { 50 };
 

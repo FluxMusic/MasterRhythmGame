@@ -6,12 +6,21 @@
 #include "Controller/GameController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Manager/AudioManagerSubsystem.h"
+#include "Components/AudioComponent.h"
 
 // Sets default values
 AGameCharacter::AGameCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	// Create AudioComponent and attach it to the actor's RootComponent
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	if (AudioComponent != nullptr)
+	{
+		AudioComponent->SetupAttachment(RootComponent);
+		AudioComponent->bAutoActivate = false;
+	}
 
 	GetCharacterMovement()->GravityScale = 0;
 	GetCharacterMovement()->bApplyGravityWhileJumping = false;
@@ -53,6 +62,8 @@ void AGameCharacter::BeginPlay()
 		}
 	}
 
+	
+
 	// Use the engine-managed world subsystem. Do not call Initialize() manually.
 	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
 	if (AudioManager != nullptr)
@@ -63,7 +74,7 @@ void AGameCharacter::BeginPlay()
 		FOnQuartzCommandEventBP Delegate;
 		AudioManager->SetBeatsPerMinute(Bpm, QuantBoundary, Delegate);
 		AudioManager->StartClock();
-		AudioManager->PlayQuantized();
+		AudioManager->PlayQuantized(AudioComponent);
 	}
 	else
 	{
