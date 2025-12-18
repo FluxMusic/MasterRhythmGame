@@ -7,6 +7,7 @@
 #include "Components/Slider.h"
 #include "Controller/MainMenuController.h"
 #include "Controller/WorldMapController.h"
+#include "GameInstance/MyGameInstance.h"
 #include "Sound/SoundSubmix.h"
 
 void UAudioSettingWidget::OnValueChangedMaster(float Value)
@@ -14,6 +15,11 @@ void UAudioSettingWidget::OnValueChangedMaster(float Value)
 	if (MasterSubmix != nullptr)
 	{
 		MasterSubmix->SetSubmixOutputVolume(this, Value);
+	}
+
+	if (auto GM = Cast<UMyGameInstance>(GetWorld()->GetGameInstance()))
+	{
+		GM->SetMasterVolume(Value);
 	}
 }
 
@@ -23,6 +29,11 @@ void UAudioSettingWidget::OnValueChangedMusic(float Value)
 	{
 		MusicSubmix->SetSubmixOutputVolume(this, Value);
 	}
+
+	if (auto GM = Cast<UMyGameInstance>(GetWorld()->GetGameInstance()))
+	{
+		GM->SetMusicVolume(Value);
+	}
 }
 
 void UAudioSettingWidget::OnValueChangedSfx(float Value)
@@ -30,6 +41,11 @@ void UAudioSettingWidget::OnValueChangedSfx(float Value)
 	if (SfxSubmix != nullptr)
 	{
 		SfxSubmix->SetSubmixOutputVolume(this, Value);
+	}
+
+	if (auto GM = Cast<UMyGameInstance>(GetWorld()->GetGameInstance()))
+	{
+		GM->SetSFXVolume(Value);
 	}
 }
 
@@ -117,4 +133,11 @@ void UAudioSettingWidget::NativeConstruct()
 	MainMenu->OnClicked.AddDynamic(this, &UAudioSettingWidget::ReturnMenu);
 
 	MasterVolumeSlider->SetSliderBarColor(FLinearColor::Green);
+
+	if ( auto GM = Cast<UMyGameInstance>(GetWorld()->GetGameInstance()))
+	{
+		MasterVolumeSlider->SetValue(GM->GetMasterVolume());
+		MusicVolumeSlider->SetValue(GM->GetMusicVolume());
+		SfxVolumeSlider->SetValue(GM->GetSFXVolume());
+	}
 }

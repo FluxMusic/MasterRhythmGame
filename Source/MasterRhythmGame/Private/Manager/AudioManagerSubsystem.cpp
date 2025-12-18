@@ -128,12 +128,9 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedName(FName OutputName, const
 		}
 		else if (PartName.Equals(TEXT("Part3End")))
 		{
-			UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Yellow, 5.0f);
+			UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
+			StopClock();
 		}
-	}
-	else
-	{
-		UKismetSystemLibrary::PrintString(this, FString(TEXT("WatchOutputPartFinishedName: could not read string from FMetaSoundOutput")), true, true, FLinearColor::Red, 5.0f);
 	}
 }
 
@@ -146,12 +143,7 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPercent(FName OutputName, co
 		const bool bNormalized = (Value >= 0.0f && Value <= 1.0f);
 		const float DisplayValue = bNormalized ? Value * 100.0f : Value;
 		const FString Msg = FString::Printf(TEXT("%s = %.2f%%"), *OutputName.ToString(), DisplayValue);
-		UKismetSystemLibrary::PrintString(this, Msg, true, true, FLinearColor::Blue, 5.0f);
-	}
-	else
-	{
-		const FString Msg = FString::Printf(TEXT("%s = <non-float output>"), *OutputName.ToString());
-		UKismetSystemLibrary::PrintString(this, Msg, true, true, FLinearColor::Red, 5.0f);
+		UKismetSystemLibrary::PrintString(this, Msg, true, true, FLinearColor::Yellow, 5.0f);
 	}
 }
 
@@ -232,9 +224,16 @@ void UAudioManagerSubsystem::StopClock()
 void UAudioManagerSubsystem::OnQuartzClockBeat(FName ClockName, EQuartzCommandQuantization QuantizationType,
 	int32 NumBars, int32 Beat, float BeatFraction)
 {
-	UKismetSystemLibrary::PrintString(this, FString::FormatAsNumber(Beat), true, true, FLinearColor::Blue, 10.0f);
+	UKismetSystemLibrary::PrintString(this, FString::FormatAsNumber(Beat), true, true, FLinearColor::Green, 10.0f);
 }
 
 void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output)
 {
+	// Extract MIDI note as int32 and print it
+	int32 MidiNote = -1;
+	if (Output.Get<int32>(MidiNote))
+	{
+		const FString Msg = FString::Printf(TEXT("%s = %d"), *OutputName.ToString(), MidiNote);
+		UKismetSystemLibrary::PrintString(this, Msg, true, true, FLinearColor::Red, 5.0f);
+	}
 }
