@@ -17,6 +17,15 @@
 
 UAudioManagerSubsystem::UAudioManagerSubsystem()
 {
+	// Ensure we have a valid enemy class to search for. If none has been set, default to the concrete actor class.
+	if (EnemyClass == nullptr)
+	{
+		EnemyClass = ATestEnemyActor::StaticClass();
+	}
+
+	// Find an existing actor of the specified enemy class in the world and cache it.
+	AActor* FoundEnemy = UGameplayStatics::GetActorOfClass(GetWorld(), EnemyClass);
+	Enemy = Cast<ATestEnemyActor>(FoundEnemy);
 }
 
 void UAudioManagerSubsystem::InitSubsystem()
@@ -116,7 +125,19 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedName(FName OutputName, const
 		}
 		else if (PartName.Equals(TEXT("Part1End")))
 		{
-			StartPart2Intro();
+			// Check if loop needed -> Check if Enemy no life
+			if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0))
+			{
+				StartPart1();
+				if (ActiveAudioComponent != nullptr)
+				{
+					ActiveAudioComponent->SetTriggerParameter("MuteLeads");
+				}
+			}
+			else
+			{
+				StartPart2Intro();
+			}
 		}
 		else if (PartName.Equals(TEXT("Part2IntroEnd")))
 		{
@@ -124,13 +145,41 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedName(FName OutputName, const
 		}
 		else if (PartName.Equals(TEXT("Part2End")))
 		{
-			StartPart3Intro();
+			// Check if loop needed -> Check if Enemy no life
+			if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0))
+			{
+				StartPart2();
+				if (ActiveAudioComponent != nullptr)
+				{
+					ActiveAudioComponent->SetTriggerParameter("MuteLeads");
+				}
+			}
+			else
+			{
+				StartPart3Intro();
+			}
 		}
 		else if (PartName.Equals(TEXT("Part3IntroEnd")))
 		{
 			StartPart3();
 		}
 		else if (PartName.Equals(TEXT("Part3End")))
+		{
+			// Check if loop needed -> Check if Enemy no life
+			if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0))
+			{
+				StartPart3();
+				if (ActiveAudioComponent != nullptr)
+				{
+					ActiveAudioComponent->SetTriggerParameter("MuteLeads");
+				}
+			}
+			else
+			{
+				StartOutro();
+			}
+		}
+		else if (PartName.Equals(TEXT("OutroEnd")))
 		{
 			UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
 			StopClock();
@@ -140,15 +189,15 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedName(FName OutputName, const
 
 void UAudioManagerSubsystem::WatchOutputPartFinishedPercent(FName OutputName, const FMetaSoundOutput& Output)
 {
-	// Try to extract a float value from the MetaSound output
-	float Value = 0.0f;
-	if (Output.Get<float>(Value))
-	{
-		const bool bNormalized = (Value >= 0.0f && Value <= 1.0f);
-		const float DisplayValue = bNormalized ? Value * 100.0f : Value;
-		const FString Msg = FString::Printf(TEXT("%s = %.2f%%"), *OutputName.ToString(), DisplayValue);
-		UKismetSystemLibrary::PrintString(this, Msg, true, true, FLinearColor::Yellow, 5.0f);
-	}
+	//// Try to extract a float value from the MetaSound output
+	//float Value = 0.0f;
+	//if (Output.Get<float>(Value))
+	//{
+	//	const bool bNormalized = (Value >= 0.0f && Value <= 1.0f);
+	//	const float DisplayValue = bNormalized ? Value * 100.0f : Value;
+	//	const FString Msg = FString::Printf(TEXT("%s = %.2f%%"), *OutputName.ToString(), DisplayValue);
+	//	UKismetSystemLibrary::PrintString(this, Msg, true, true, FLinearColor::Yellow, 5.0f);
+	//}
 }
 
 void UAudioManagerSubsystem::StartIntro()
@@ -211,7 +260,24 @@ void UAudioManagerSubsystem::StartMusic()
 {
 	if (ActiveAudioComponent)
 	{
-		ActiveAudioComponent->SetTriggerParameter("PlayIntro");
+		//ActiveAudioComponent->SetTriggerParameter("PlayIntro");
+		ActiveAudioComponent->SetTriggerParameter("PlayPart1");
+	}
+}
+
+void UAudioManagerSubsystem::StartOutro()
+{
+	if (ActiveAudioComponent)
+	{
+		ActiveAudioComponent->SetTriggerParameter("PlayOutro");
+	}
+}
+
+void UAudioManagerSubsystem::StartOutroLoop()
+{
+	if (ActiveAudioComponent)
+	{
+		ActiveAudioComponent->SetTriggerParameter("PlayOutroLoop");
 	}
 }
 
@@ -237,13 +303,16 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 	int32 MidiNote = -1;
 	if (Output.Get<int32>(MidiNote))
 	{
+		if (MidiNote == 0)
+		{
+			return;
+		}
 		MidiNote = MidiNote % 12;
 
 		const FString Msg = FString::Printf(TEXT("%s = %d"), *OutputName.ToString(), MidiNote);
 		UKismetSystemLibrary::PrintString(this, Msg, true, true, FLinearColor::Red, 5.0f);
 	}
 
-	// Do not use CreateDefaultSubobject here — that's for constructing subobjects in constructors.
 	// Ensure we have a valid enemy class to search for. If none has been set, default to the concrete actor class.
 	if (EnemyClass == nullptr)
 	{

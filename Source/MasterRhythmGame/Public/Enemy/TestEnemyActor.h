@@ -7,6 +7,7 @@
 #include "Quartz/AudioMixerClockHandle.h"
 #include "TestEnemyActor.generated.h"
 
+class ANodeActor;
 class USplineComponent;
 
 UCLASS()
@@ -18,8 +19,8 @@ public:
 	// Sets default values for this actor's properties
 	ATestEnemyActor();
 
-	UFUNCTION(BlueprintCallable)
-	int32 CalcHealth(int32 Value);
+	//UFUNCTION(BlueprintCallable)
+	//int32 CalcHealth(int32 Value);
 
 	// --- SplineRef accessors ---
 	USplineComponent* GetSplineRef() const { return SplineRef; }
@@ -28,6 +29,31 @@ public:
 	// --- BPM ---
 	int32 GetBPM() const { return BPM; }
 	void SetBPM(int32 InBPM) { BPM = InBPM; }
+
+	// --- HealthBar accessors ---
+	int32 GetHealth1() const { return HealthBar1; }
+	void SetHealth1(int32 InHealth) { HealthBar1 = InHealth; }
+
+	int32 GetHealth2() const { return HealthBar2; }
+	void SetHealth2(int32 InHealth) { HealthBar2 = InHealth; }
+
+	int32 GetHealth3() const { return HealthBar3; }
+	void SetHealth3(int32 InHealth) { HealthBar3 = InHealth; }
+
+	int32 GetHealth4() const { return HealthBar4; }
+	void SetHealth4(int32 InHealth) { HealthBar4 = InHealth; }
+
+	int32 GetHealth5() const { return HealthBar5; }
+	void SetHealth5(int32 InHealth) { HealthBar5 = InHealth; }
+
+	int32 GetHealth6() const { return HealthBar6; }
+	void SetHealth6(int32 InHealth) { HealthBar6 = InHealth; }
+
+	int32 GetHealth7() const { return HealthBar7; }
+	void SetHealth7(int32 InHealth) { HealthBar7 = InHealth; }
+
+	int32 GetHealth8() const { return HealthBar8; }
+	void SetHealth8(int32 InHealth) { HealthBar8 = InHealth; }
 
 	UFUNCTION()
 	void Attack(int32 InBPM);
@@ -51,8 +77,29 @@ private:
 	TObjectPtr<UStaticMeshComponent> Mesh { nullptr };
 
 	UPROPERTY()
-	int32 Health { 0 };
+	int32 HealthBar1 { 0 };
 
+	UPROPERTY()
+	int32 HealthBar2 { 0 };
+
+	UPROPERTY()
+	int32 HealthBar3 { 0 };
+
+	UPROPERTY()
+	int32 HealthBar4 { 0 };
+
+	UPROPERTY()
+	int32 HealthBar5 { 0 };
+
+	UPROPERTY()
+	int32 HealthBar6 { 0 };
+
+	UPROPERTY()
+	int32 HealthBar7 { 0 };
+
+	UPROPERTY()
+	int32 HealthBar8 { 0 };
+	
 	UPROPERTY()
 	TObjectPtr<USplineComponent> SplineRef { nullptr };
 
@@ -61,4 +108,7 @@ private:
 
 	UPROPERTY()
 	int32 BPM { 0 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TSubclassOf<ANodeActor> NodeActor { nullptr };
 };

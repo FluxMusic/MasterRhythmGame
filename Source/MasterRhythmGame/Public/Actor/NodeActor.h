@@ -30,12 +30,15 @@ public:
 	UFUNCTION()
 	void SetBarLength(double BPM);
 
+	UFUNCTION()
+	void HandleTimelineProgress(float Value);
+
+	UFUNCTION()
+	void HandleTimelineFinished();
+
 	// --- Spline Ref ---
 	TObjectPtr<USplineComponent> GetSplineRef() const { return SplineRef; }
 	void SetSplineRef(TObjectPtr<USplineComponent> InSplineRef) { SplineRef = InSplineRef; }
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", DisplayName = "Mesh")
-	TObjectPtr<UStaticMeshComponent> NoteMesh { nullptr };
 
 protected:
 	// Called when the game starts or when spawned
@@ -45,15 +48,14 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-private:
-
-	UPROPERTY()
-	TObjectPtr<UStaticMeshComponent> Note;
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", DisplayName = "Mesh", meta = (AllowPrivateAccess = true))
+	TObjectPtr<UStaticMeshComponent> NoteMesh { nullptr };
 
 	UPROPERTY()
 	TObjectPtr<USceneComponent> DefaultSceneRoot;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UTimelineComponent> Timeline;
 
 	UPROPERTY()

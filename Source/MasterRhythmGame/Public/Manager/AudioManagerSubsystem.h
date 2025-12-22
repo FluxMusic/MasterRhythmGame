@@ -73,6 +73,12 @@ public:
     void StartPart3();
 
     UFUNCTION()
+    void StartOutro();
+
+    UFUNCTION()
+    void StartOutroLoop();
+
+    UFUNCTION()
     void OnQuartzClockBeat(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
 
     UFUNCTION()
