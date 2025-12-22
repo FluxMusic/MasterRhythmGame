@@ -90,15 +90,15 @@ void UAudioManagerSubsystem::PlayQuantized(UAudioComponent* AudioComponent)
 		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("MIDINoteOut")), MidiDelegate);
 		OutputAudioComponentMap.Add(FName(TEXT("MIDINoteOut")), AudioComponent);
 
-		FOnMetasoundOutputValueChanged PartFinishedDelegate;
-		PartFinishedDelegate.BindUFunction(this, FName("HandleMetaSoundOutputForPartFinished"));
-		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("OnPartFinished")), PartFinishedDelegate);
-		OutputAudioComponentMap.Add(FName(TEXT("OnPartFinished")), AudioComponent);
-
 		FOnMetasoundOutputValueChanged PartNameDelegate;
 		PartNameDelegate.BindUFunction(this, FName("WatchOutputPartFinishedName"));
 		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("PartFinishedName")), PartNameDelegate);
 		OutputAudioComponentMap.Add(FName(TEXT("PartFinishedName")), AudioComponent);
+
+		FOnMetasoundOutputValueChanged PartFinishedDelegate;
+		PartFinishedDelegate.BindUFunction(this, FName("WatchOutputPartFinishedPart"));
+		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("OnPartFinished")), PartFinishedDelegate);
+		OutputAudioComponentMap.Add(FName(TEXT("OnPartFinished")), AudioComponent);
 
 		FOnMetasoundOutputValueChanged PartPercentDelegate;
 		PartPercentDelegate.BindUFunction(this, FName("WatchOutputPartFinishedPercent"));
@@ -114,76 +114,7 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedName(FName OutputName, const
 	FString PartName;
 	if (Output.Get<FString>(PartName))
 	{
-		// Immediately select the next part based on the reported name.
-		if (PartName.Equals(TEXT("IntroEnd")))
-		{
-			StartPart1Intro();
-		}
-		else if (PartName.Equals(TEXT("Part1IntroEnd")))
-		{
-			StartPart1();
-		}
-		else if (PartName.Equals(TEXT("Part1End")))
-		{
-			// Check if loop needed -> Check if Enemy no life
-			if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0))
-			{
-				StartPart1();
-				if (ActiveAudioComponent != nullptr)
-				{
-					ActiveAudioComponent->SetTriggerParameter("MuteLeads");
-				}
-			}
-			else
-			{
-				StartPart2Intro();
-			}
-		}
-		else if (PartName.Equals(TEXT("Part2IntroEnd")))
-		{
-			StartPart2();
-		}
-		else if (PartName.Equals(TEXT("Part2End")))
-		{
-			// Check if loop needed -> Check if Enemy no life
-			if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0))
-			{
-				StartPart2();
-				if (ActiveAudioComponent != nullptr)
-				{
-					ActiveAudioComponent->SetTriggerParameter("MuteLeads");
-				}
-			}
-			else
-			{
-				StartPart3Intro();
-			}
-		}
-		else if (PartName.Equals(TEXT("Part3IntroEnd")))
-		{
-			StartPart3();
-		}
-		else if (PartName.Equals(TEXT("Part3End")))
-		{
-			// Check if loop needed -> Check if Enemy no life
-			if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0))
-			{
-				StartPart3();
-				if (ActiveAudioComponent != nullptr)
-				{
-					ActiveAudioComponent->SetTriggerParameter("MuteLeads");
-				}
-			}
-			else
-			{
-				StartOutro();
-			}
-		}
-		else if (PartName.Equals(TEXT("OutroEnd")))
-		{
-			UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
-			StopClock();
-		}
+		PartNameFix = PartName;
 	}
 }
 
@@ -260,8 +191,7 @@ void UAudioManagerSubsystem::StartMusic()
 {
 	if (ActiveAudioComponent)
 	{
-		//ActiveAudioComponent->SetTriggerParameter("PlayIntro");
-		ActiveAudioComponent->SetTriggerParameter("PlayPart1");
+		ActiveAudioComponent->SetTriggerParameter("PlayIntro");
 	}
 }
 
@@ -294,7 +224,7 @@ void UAudioManagerSubsystem::StopClock()
 void UAudioManagerSubsystem::OnQuartzClockBeat(FName ClockName, EQuartzCommandQuantization QuantizationType,
 	int32 NumBars, int32 Beat, float BeatFraction)
 {
-	UKismetSystemLibrary::PrintString(this, FString::FormatAsNumber(Beat), true, true, FLinearColor::Green, 10.0f);
+	//UKismetSystemLibrary::PrintString(this, FString::FormatAsNumber(Beat), true, true, FLinearColor::Green, 10.0f);
 }
 
 void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output)
@@ -345,5 +275,80 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 
 		Enemy->SetActorLocation(FinalLocation);
 		Enemy->Attack(Enemy->GetBPM());
+	}
+}
+
+void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const FMetaSoundOutput& Output)
+{
+	// Immediately select the next part based on the reported name.
+	if (PartNameFix.Equals(TEXT("IntroEnd")))
+	{
+		StartPart1Intro();
+	}
+	else if (PartNameFix.Equals(TEXT("Part1IntroEnd")))
+	{
+		StartPart1();
+	}
+	else if (PartNameFix.Equals(TEXT("Part1End")))
+	{
+		// Check if loop needed -> Check if Enemy no life
+		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0))
+		{
+			StartPart1();
+			if (ActiveAudioComponent != nullptr)
+			{
+				ActiveAudioComponent->SetTriggerParameter("MuteLeads");
+				UE_LOG(LogTemp, Error, TEXT("Penis"));
+			}
+		}
+		else
+		{
+			StartPart2Intro();
+		}
+	}
+	else if (PartNameFix.Equals(TEXT("Part2IntroEnd")))
+	{
+		StartPart2();
+	}
+	else if (PartNameFix.Equals(TEXT("Part2End")))
+	{
+		// Check if loop needed -> Check if Enemy no life
+		if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0))
+		{
+			StartPart2();
+			if (ActiveAudioComponent != nullptr)
+			{
+				ActiveAudioComponent->SetTriggerParameter("MuteLeads");
+			}
+		}
+		else
+		{
+			StartPart3Intro();
+		}
+	}
+	else if (PartNameFix.Equals(TEXT("Part3IntroEnd")))
+	{
+		StartPart3();
+	}
+	else if (PartNameFix.Equals(TEXT("Part3End")))
+	{
+		// Check if loop needed -> Check if Enemy no life
+		if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0))
+		{
+			StartPart3();
+			if (ActiveAudioComponent != nullptr)
+			{
+				ActiveAudioComponent->SetTriggerParameter("MuteLeads");
+			}
+		}
+		else
+		{
+			StartOutro();
+		}
+	}
+	else if (PartNameFix.Equals(TEXT("OutroEnd")))
+	{
+		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
+		StopClock();
 	}
 }

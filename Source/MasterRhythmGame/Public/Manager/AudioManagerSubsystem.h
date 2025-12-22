@@ -46,6 +46,9 @@ public:
 	void WatchOutputMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output);
 
     UFUNCTION()
+    void WatchOutputPartFinishedPart(FName OutputName, const FMetaSoundOutput& Output);
+
+    UFUNCTION()
     void WatchOutputPartFinishedName(FName OutputName, const FMetaSoundOutput& Output);
 
     UFUNCTION()
@@ -124,4 +127,7 @@ private:
 
     UPROPERTY()
     bool bPlayerCanCollectNotes { true };
+
+    UPROPERTY()
+    FString PartNameFix;
 };
