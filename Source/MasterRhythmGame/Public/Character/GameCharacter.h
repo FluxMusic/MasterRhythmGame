@@ -40,9 +40,9 @@ public:
 	int32 GetDefended() const { return Defended; }
 	void SetDefended(int32 InDefended) { Defended = InDefended; }
 
-	// --- Bpm accessors ---
-	float GetBpm() const { return Bpm; }
-	void SetBpm(float InBpm) { Bpm = InBpm; }
+	// --- BPM accessors ---
+	int32 GetBpm() const { return BPM; }
+	void SetBpm(int32 InBpm) { BPM = InBpm; }
 
 protected:
 	// Called when the game starts or when spawned
@@ -58,6 +58,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UQuartzClockHandle* QuartzClockHandle { nullptr };
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<USceneComponent> SceneComponent { nullptr };
+
 	UPROPERTY(EditAnywhere)
 	int32 Health { 50 };
 
@@ -65,5 +68,5 @@ private:
 	int32 Defended { 0 };
 
 	UPROPERTY(EditAnywhere)
-	float Bpm { 0 };
+	int32 BPM { 0 };
 };

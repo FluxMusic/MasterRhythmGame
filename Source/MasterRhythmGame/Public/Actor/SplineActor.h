@@ -21,7 +21,7 @@ public:
 	USplineComponent* GetSplines(int32 Int);
 
 	UFUNCTION(BlueprintCallable)
-	FVector GetSplinesY(int32 Int, FVector& NewParam);
+	FVector GetSplinesY(int32 Int);
 
 protected:
 	// Called when the game starts or when spawned

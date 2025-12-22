@@ -6,6 +6,8 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "AudioManagerSubsystem.generated.h"
 
+class ASplineActor;
+class ATestEnemyActor;
 class ANodeActor;
 class UQuartzSubsystem;
 class UQuartzClockHandle;
@@ -101,4 +103,19 @@ private:
     // The currently active audio component (set when PlayQuantized is called)
     UPROPERTY()
     UAudioComponent* ActiveAudioComponent{ nullptr };
+
+	UPROPERTY()
+    TSubclassOf<ATestEnemyActor> EnemyClass { nullptr };
+
+    UPROPERTY()
+    TObjectPtr<ATestEnemyActor> Enemy { nullptr };
+
+    UPROPERTY()
+	TObjectPtr<ASplineActor> Spline { nullptr };
+
+    UPROPERTY()
+    bool bEnemyCanAttack { true };
+
+    UPROPERTY()
+    bool bPlayerCanCollectNotes { true };
 };

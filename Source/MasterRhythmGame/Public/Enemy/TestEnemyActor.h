@@ -21,6 +21,17 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int32 CalcHealth(int32 Value);
 
+	// --- SplineRef accessors ---
+	USplineComponent* GetSplineRef() const { return SplineRef; }
+	void SetSplineRef(USplineComponent* InSpline) { SplineRef = InSpline; }
+
+	// --- BPM ---
+	int32 GetBPM() const { return BPM; }
+	void SetBPM(int32 InBPM) { BPM = InBPM; }
+
+	UFUNCTION()
+	void Attack(int32 InBPM);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -30,8 +41,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<USceneComponent> Scene { nullptr };
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "DefaultSceneRoot", meta = (AllowPrivateAccess = true))
+	TObjectPtr<USceneComponent> DefaultSceneRoot{ nullptr };
 
 	UPROPERTY()
 	TObjectPtr<UStaticMeshComponent> Mesh { nullptr };
@@ -44,5 +58,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UQuartzClockHandle> QuartzClockHandle;
-	
+
+	UPROPERTY()
+	int32 BPM { 0 };
 };

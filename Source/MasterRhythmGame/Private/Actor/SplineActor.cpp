@@ -32,6 +32,7 @@ ASplineActor::ASplineActor()
 	Spline5->SetupAttachment(RootComponent);
 	Spline6->SetupAttachment(RootComponent);
 
+	Spline->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 	Spline1->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
 	Spline2->SetRelativeLocation(FVector(0.0f, 0.0f, 300.0f));
 	Spline3->SetRelativeLocation(FVector(0.0f, 0.0f, 450.0f));
@@ -83,7 +84,7 @@ USplineComponent* ASplineActor::GetSplines(int32 Int)
 	}
 }
 
-FVector ASplineActor::GetSplinesY(int32 Int, FVector& NewParam)
+FVector ASplineActor::GetSplinesY(int32 Int)
 {
 	Int = Int % 12;
 

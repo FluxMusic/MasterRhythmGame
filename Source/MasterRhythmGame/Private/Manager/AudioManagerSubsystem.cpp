@@ -10,6 +10,10 @@
 #include "AudioParameterControllerInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "MetaSoundOutputSubsystem.h"
+#include "Actor/SplineActor.h"
+#include "Components/SplineComponent.h"
+#include "Enemy/TestEnemyActor.h"
+#include "Kismet/GameplayStatics.h"
 
 UAudioManagerSubsystem::UAudioManagerSubsystem()
 {
@@ -233,7 +237,44 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 	int32 MidiNote = -1;
 	if (Output.Get<int32>(MidiNote))
 	{
+		MidiNote = MidiNote % 12;
+
 		const FString Msg = FString::Printf(TEXT("%s = %d"), *OutputName.ToString(), MidiNote);
 		UKismetSystemLibrary::PrintString(this, Msg, true, true, FLinearColor::Red, 5.0f);
+	}
+
+	// Do not use CreateDefaultSubobject here — that's for constructing subobjects in constructors.
+	// Ensure we have a valid enemy class to search for. If none has been set, default to the concrete actor class.
+	if (EnemyClass == nullptr)
+	{
+		EnemyClass = ATestEnemyActor::StaticClass();
+	}
+
+	// Find an existing actor of the specified enemy class in the world and cache it.
+	AActor* FoundEnemy = UGameplayStatics::GetActorOfClass(GetWorld(), EnemyClass);
+	Enemy = Cast<ATestEnemyActor>(FoundEnemy);
+
+	// Ensure Spline is set at runtime (find the first ASplineActor in the world if not already assigned).
+	if (Spline == nullptr)
+	{
+		AActor* FoundSpline = UGameplayStatics::GetActorOfClass(GetWorld(), ASplineActor::StaticClass());
+		Spline = Cast<ASplineActor>(FoundSpline);
+	}
+
+	if (Enemy != nullptr && Spline != nullptr && bEnemyCanAttack)
+	{
+		Enemy->SetSplineRef(Spline->GetSplines(MidiNote));
+
+		const int32 Index = Enemy->GetSplineRef()->GetNumberOfSplinePoints() - 1;
+
+		FVector SplineWorldLocation = Enemy->GetSplineRef()->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);
+
+		FVector FinalLocation;
+		FinalLocation.X = -2300.f;								
+		FinalLocation.Y = -3000.f;								
+		FinalLocation.Z = SplineWorldLocation.Z;                
+
+		Enemy->SetActorLocation(FinalLocation);
+		Enemy->Attack(Enemy->GetBPM());
 	}
 }

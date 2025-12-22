@@ -30,6 +30,10 @@ public:
 	UFUNCTION()
 	void SetBarLength(double BPM);
 
+	// --- Spline Ref ---
+	TObjectPtr<USplineComponent> GetSplineRef() const { return SplineRef; }
+	void SetSplineRef(TObjectPtr<USplineComponent> InSplineRef) { SplineRef = InSplineRef; }
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", DisplayName = "Mesh")
 	TObjectPtr<UStaticMeshComponent> NoteMesh { nullptr };
 
@@ -48,8 +52,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<USceneComponent> DefaultSceneRoot;
-
-
 
 	UPROPERTY()
 	TObjectPtr<UTimelineComponent> Timeline;
