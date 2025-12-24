@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
+#include "TimerManager.h"
 #include "AudioManagerSubsystem.generated.h"
 
 class ASplineActor;
@@ -130,4 +131,18 @@ private:
 
     UPROPERTY()
     FString PartNameFix;
+
+	// Timer handle used to delay the enemy attack
+	FTimerHandle EnemyAttackTimerHandle;
+
+	// Timer handle used to delay issuing the MuteLeads trigger
+	FTimerHandle MuteLeadsTimerHandle;
+
+	// Called by timer to perform the attack after delay
+	UFUNCTION()
+	void DelayedEnemyAttack();
+
+	// Called by timer to send the MuteLeads trigger after delay
+	UFUNCTION()
+	void DelayedMuteLeads();
 };

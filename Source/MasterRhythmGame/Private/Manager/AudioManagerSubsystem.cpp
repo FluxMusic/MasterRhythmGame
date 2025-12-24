@@ -14,6 +14,7 @@
 #include "Components/SplineComponent.h"
 #include "Enemy/TestEnemyActor.h"
 #include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 
 UAudioManagerSubsystem::UAudioManagerSubsystem()
 {
@@ -278,6 +279,13 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 	}
 }
 
+static float ComputeQuarterBeatDelay(double Bpm)
+{
+	const double EffectiveBpm = (Bpm > KINDA_SMALL_NUMBER) ? Bpm : 120.0;
+	const double SecondsPerBeat = 60.0 / EffectiveBpm;
+	return static_cast<float>(SecondsPerBeat * 0.25); // quarter beat
+}
+
 void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const FMetaSoundOutput& Output)
 {
 	// Immediately select the next part based on the reported name.
@@ -295,10 +303,15 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0))
 		{
 			StartPart1();
+
 			if (ActiveAudioComponent != nullptr)
 			{
-				ActiveAudioComponent->SetTriggerParameter("MuteLeads");
-				UE_LOG(LogTemp, Error, TEXT("Penis"));
+				const float DelaySeconds = ComputeQuarterBeatDelay(Bpm);
+				if (UWorld* World = GetWorld())
+				{
+					World->GetTimerManager().ClearTimer(MuteLeadsTimerHandle);
+					World->GetTimerManager().SetTimer(MuteLeadsTimerHandle, this, &UAudioManagerSubsystem::DelayedMuteLeads, DelaySeconds, false);
+				}
 			}
 		}
 		else
@@ -318,7 +331,12 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 			StartPart2();
 			if (ActiveAudioComponent != nullptr)
 			{
-				ActiveAudioComponent->SetTriggerParameter("MuteLeads");
+				const float DelaySeconds = ComputeQuarterBeatDelay(Bpm);
+				if (UWorld* World = GetWorld())
+				{
+					World->GetTimerManager().ClearTimer(MuteLeadsTimerHandle);
+					World->GetTimerManager().SetTimer(MuteLeadsTimerHandle, this, &UAudioManagerSubsystem::DelayedMuteLeads, DelaySeconds, false);
+				}
 			}
 		}
 		else
@@ -338,7 +356,12 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 			StartPart3();
 			if (ActiveAudioComponent != nullptr)
 			{
-				ActiveAudioComponent->SetTriggerParameter("MuteLeads");
+				const float DelaySeconds = ComputeQuarterBeatDelay(Bpm);
+				if (UWorld* World = GetWorld())
+				{
+					World->GetTimerManager().ClearTimer(MuteLeadsTimerHandle);
+					World->GetTimerManager().SetTimer(MuteLeadsTimerHandle, this, &UAudioManagerSubsystem::DelayedMuteLeads, DelaySeconds, false);
+				}
 			}
 		}
 		else
@@ -350,5 +373,22 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 	{
 		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
 		StopClock();
+	}
+}
+
+void UAudioManagerSubsystem::DelayedEnemyAttack()
+{
+	if (Enemy)
+	{
+		Enemy->Attack(Enemy->GetBPM());
+	}
+}
+
+void UAudioManagerSubsystem::DelayedMuteLeads()
+{
+	if (ActiveAudioComponent)
+	{
+		ActiveAudioComponent->SetTriggerParameter("MuteLeads");
+		UE_LOG(LogTemp, Warning, TEXT("MuteLeads triggered after delay"));
 	}
 }
