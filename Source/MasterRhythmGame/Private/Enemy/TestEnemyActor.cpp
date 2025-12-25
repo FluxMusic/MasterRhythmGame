@@ -23,12 +23,97 @@ ATestEnemyActor::ATestEnemyActor()
 	SetHealth3(50);
 }
 
-//int32 ATestEnemyActor::CalcHealth(int32 Value)
-//{
-//	Value--;
-//	Health += Value;
-//	return Health;
-//}
+int32 ATestEnemyActor::CalcHealth1(int32 Value)
+{
+	Value--;
+	HealthBar1 += Value;
+	return HealthBar1;
+}
+
+int32 ATestEnemyActor::CalcHealth2(int32 Value)
+{
+	Value--;
+	HealthBar2 += Value;
+	return HealthBar2;
+}
+
+int32 ATestEnemyActor::CalcHealth3(int32 Value)
+{
+	Value--;
+	HealthBar3 += Value;
+	return HealthBar3;
+}
+
+int32 ATestEnemyActor::CalcHealth4(int32 Value)
+{
+	Value--;
+	HealthBar4 += Value;
+	return HealthBar4;
+}
+
+int32 ATestEnemyActor::CalcHealth5(int32 Value)
+{
+	Value--;
+	HealthBar5 += Value;
+	return HealthBar5;
+}
+
+int32 ATestEnemyActor::CalcHealth6(int32 Value)
+{
+	Value--;
+	HealthBar6 += Value;
+	return HealthBar6;
+}
+
+int32 ATestEnemyActor::CalcHealth7(int32 Value)
+{
+	Value--;
+	HealthBar7 += Value;
+	return HealthBar7;
+}
+
+int32 ATestEnemyActor::CalcHealth8(int32 Value)
+{
+	Value--;
+	HealthBar8 += Value;
+	return HealthBar8;
+}
+
+void ATestEnemyActor::ApplyDamage(int32 DamageValue)
+{
+	if (GetHealth8() >= 0)
+	{
+		SetHealth8(DamageValue);
+	}
+	else if (GetHealth7() >= 0)
+	{
+		SetHealth7(DamageValue);
+	}
+	else if (GetHealth6() >= 0)
+	{
+		SetHealth6(DamageValue);
+	}
+	else if (GetHealth5() >= 0)
+	{
+		SetHealth5(DamageValue);
+	}
+	else if (GetHealth4() >= 0)
+	{
+		SetHealth4(DamageValue);
+	}
+	else if (GetHealth3() >= 0)
+	{
+		SetHealth3(DamageValue);
+	}
+	else if (GetHealth2() >= 0)
+	{
+		SetHealth2(DamageValue);
+	}
+	else if (GetHealth1() >= 0)
+	{
+		SetHealth1(DamageValue);
+	}
+}
 
 void ATestEnemyActor::Attack(int32 InBPM)
 {

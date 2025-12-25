@@ -19,8 +19,32 @@ public:
 	// Sets default values for this actor's properties
 	ATestEnemyActor();
 
-	//UFUNCTION(BlueprintCallable)
-	//int32 CalcHealth(int32 Value);
+	UFUNCTION(BlueprintCallable)
+	int32 CalcHealth1(int32 Value);
+
+	UFUNCTION(BlueprintCallable)
+	int32 CalcHealth2(int32 Value);
+
+	UFUNCTION(BlueprintCallable)
+	int32 CalcHealth3(int32 Value);
+
+	UFUNCTION(BlueprintCallable)
+	int32 CalcHealth4(int32 Value);
+	
+	UFUNCTION(BlueprintCallable)
+	int32 CalcHealth5(int32 Value);
+	
+	UFUNCTION(BlueprintCallable)
+	int32 CalcHealth6(int32 Value);
+	
+	UFUNCTION(BlueprintCallable)
+	int32 CalcHealth7(int32 Value);
+	
+	UFUNCTION(BlueprintCallable)
+	int32 CalcHealth8(int32 Value);
+
+	UFUNCTION()
+	void ApplyDamage(int32 DamageValue);
 
 	// --- SplineRef accessors ---
 	USplineComponent* GetSplineRef() const { return SplineRef; }
@@ -76,28 +100,28 @@ private:
 	UPROPERTY()
 	TObjectPtr<UStaticMeshComponent> Mesh { nullptr };
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 HealthBar1 { 0 };
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 HealthBar2 { 0 };
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 HealthBar3 { 0 };
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 HealthBar4 { 0 };
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 HealthBar5 { 0 };
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 HealthBar6 { 0 };
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 HealthBar7 { 0 };
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 HealthBar8 { 0 };
 	
 	UPROPERTY()

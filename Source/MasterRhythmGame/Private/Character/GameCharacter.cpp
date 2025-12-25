@@ -104,12 +104,19 @@ void AGameCharacter::CreateAndStartQuartzClock(float InBpm)
 
 void AGameCharacter::ApplyDamage(int32 DamageAmount)
 {
-	CalcHealth(DamageAmount);
-}
+	int32 NewHealth = CalcHealth(DamageAmount);
+	UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::ApplyDamage - Damage=%d Health=%d"), DamageAmount, NewHealth);
 
+	if (GetHealth() <= 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Zero Life"));
+		// TODO: UI -> Restart Level
+		SetHealth(50);
+	}
+}
+	
 int32 AGameCharacter::CalcHealth(int32 InHealth)
 {
-	Health--;
-	Health += InHealth;
+	Health -= InHealth;
 	return Health;
 }

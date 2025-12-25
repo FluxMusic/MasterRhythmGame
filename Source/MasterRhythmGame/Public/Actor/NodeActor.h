@@ -63,4 +63,18 @@ protected:
 
 	UPROPERTY()
 	bool bIsSentBack;
+
+	// Flags to track collisions during lifetime
+	UPROPERTY()
+	bool bCollidedWithPlayer { false };
+
+	UPROPERTY()
+	bool bCollidedWithEnemy { false };
+
+	// Damage values (configurable in editor)
+	UPROPERTY(EditAnywhere, Category = "Damage")
+	int32 DamageToPlayer { 10 };
+
+	UPROPERTY(EditAnywhere, Category = "Damage")
+	int32 DamageToEnemy { 10 };
 };
