@@ -175,7 +175,7 @@ void ANodeActor::HandleTimelineFinished()
 		ATestEnemyActor* Enemy = Cast<ATestEnemyActor>(Found);
 		if (Enemy != nullptr)
 		{
-			Enemy->SetHealth1(DamageToEnemy);
+			Enemy->ApplyDamage(DamageToEnemy);
 		}
 	}
 
