@@ -9,6 +9,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Enemy/TestEnemyActor.h"
 #include "Kismet/GameplayStatics.h"
+#include "TimerManager.h"
 
 // Sets default values
 ANodeActor::ANodeActor()
@@ -184,6 +185,24 @@ void ANodeActor::HandleTimelineFinished()
 		}
 	}
 
-	// Destroy the note
+	if (GetWorld())
+	{
+		const float DelaySeconds = 0.06f;
+
+		// Ensure any previous timer is cleared, then set the new timer
+		GetWorld()->GetTimerManager().ClearTimer(DestroyTimerHandle);
+		GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, this, &ANodeActor::OnDelayedDestroy, DelaySeconds, false);
+	}
+	else
+	{
+		// Fallback: destroy immediately if no world
+		this->Destroy();
+	}
+}
+
+void ANodeActor::OnDelayedDestroy()
+{
+	
 	this->Destroy();
+	
 }

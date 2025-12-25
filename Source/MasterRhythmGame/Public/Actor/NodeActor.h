@@ -36,6 +36,10 @@ public:
 	UFUNCTION()
 	void HandleTimelineFinished();
 
+	// Delayed destroy called by timer
+	UFUNCTION()
+	void OnDelayedDestroy();
+
 	// --- Spline Ref ---
 	TObjectPtr<USplineComponent> GetSplineRef() const { return SplineRef; }
 	void SetSplineRef(TObjectPtr<USplineComponent> InSplineRef) { SplineRef = InSplineRef; }
@@ -77,4 +81,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Damage")
 	int32 DamageToEnemy { 10 };
+
+	// Timer handle used for delayed destroy (max 60ms)
+	UPROPERTY()
+	FTimerHandle DestroyTimerHandle;
 };
