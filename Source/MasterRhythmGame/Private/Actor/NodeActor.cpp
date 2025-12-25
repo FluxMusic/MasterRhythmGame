@@ -80,6 +80,11 @@ void ANodeActor::MoveLeft()
 	}
 }
 
+void ANodeActor::MoveRight()
+{
+	
+}
+
 void ANodeActor::SetBarLength(double BPM)
 {
 	BPM = BPM / 240.0f;

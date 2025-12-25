@@ -89,22 +89,18 @@ void UAudioManagerSubsystem::PlayQuantized(UAudioComponent* AudioComponent)
 		FOnMetasoundOutputValueChanged MidiDelegate;
 		MidiDelegate.BindUFunction(this, FName("WatchOutputMidiNoteChange"));
 		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("MIDINoteOut")), MidiDelegate);
-		OutputAudioComponentMap.Add(FName(TEXT("MIDINoteOut")), AudioComponent);
 
 		FOnMetasoundOutputValueChanged PartNameDelegate;
 		PartNameDelegate.BindUFunction(this, FName("WatchOutputPartFinishedName"));
 		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("PartFinishedName")), PartNameDelegate);
-		OutputAudioComponentMap.Add(FName(TEXT("PartFinishedName")), AudioComponent);
 
 		FOnMetasoundOutputValueChanged PartFinishedDelegate;
 		PartFinishedDelegate.BindUFunction(this, FName("WatchOutputPartFinishedPart"));
 		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("OnPartFinished")), PartFinishedDelegate);
-		OutputAudioComponentMap.Add(FName(TEXT("OnPartFinished")), AudioComponent);
 
 		FOnMetasoundOutputValueChanged PartPercentDelegate;
 		PartPercentDelegate.BindUFunction(this, FName("WatchOutputPartFinishedPercent"));
 		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("PartFinishPercent")), PartPercentDelegate);
-		OutputAudioComponentMap.Add(FName(TEXT("PartFinishPercent")), AudioComponent);
 	}
 	StartMusic();
 }
@@ -225,7 +221,7 @@ void UAudioManagerSubsystem::StopClock()
 void UAudioManagerSubsystem::OnQuartzClockBeat(FName ClockName, EQuartzCommandQuantization QuantizationType,
 	int32 NumBars, int32 Beat, float BeatFraction)
 {
-	//UKismetSystemLibrary::PrintString(this, FString::FormatAsNumber(Beat), true, true, FLinearColor::Green, 10.0f);
+	UKismetSystemLibrary::PrintString(this, FString::FormatAsNumber(Beat), true, true, FLinearColor::Green, 10.0f);
 }
 
 void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output)
@@ -296,6 +292,8 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 	else if (PartNameFix.Equals(TEXT("Part1IntroEnd")))
 	{
 		StartPart1();
+		
+		UnmuteLeads();
 	}
 	else if (PartNameFix.Equals(TEXT("Part1End")))
 	{
@@ -306,12 +304,7 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 
 			if (ActiveAudioComponent != nullptr)
 			{
-				const float DelaySeconds = ComputeQuarterBeatDelay(Bpm);
-				if (UWorld* World = GetWorld())
-				{
-					World->GetTimerManager().ClearTimer(MuteLeadsTimerHandle);
-					World->GetTimerManager().SetTimer(MuteLeadsTimerHandle, this, &UAudioManagerSubsystem::DelayedMuteLeads, DelaySeconds, false);
-				}
+				MuteLeads();
 			}
 		}
 		else
@@ -322,6 +315,8 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 	else if (PartNameFix.Equals(TEXT("Part2IntroEnd")))
 	{
 		StartPart2();
+
+		UnmuteLeads();
 	}
 	else if (PartNameFix.Equals(TEXT("Part2End")))
 	{
@@ -331,12 +326,7 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 			StartPart2();
 			if (ActiveAudioComponent != nullptr)
 			{
-				const float DelaySeconds = ComputeQuarterBeatDelay(Bpm);
-				if (UWorld* World = GetWorld())
-				{
-					World->GetTimerManager().ClearTimer(MuteLeadsTimerHandle);
-					World->GetTimerManager().SetTimer(MuteLeadsTimerHandle, this, &UAudioManagerSubsystem::DelayedMuteLeads, DelaySeconds, false);
-				}
+				MuteLeads();
 			}
 		}
 		else
@@ -347,6 +337,8 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 	else if (PartNameFix.Equals(TEXT("Part3IntroEnd")))
 	{
 		StartPart3();
+
+		UnmuteLeads();
 	}
 	else if (PartNameFix.Equals(TEXT("Part3End")))
 	{
@@ -356,12 +348,7 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 			StartPart3();
 			if (ActiveAudioComponent != nullptr)
 			{
-				const float DelaySeconds = ComputeQuarterBeatDelay(Bpm);
-				if (UWorld* World = GetWorld())
-				{
-					World->GetTimerManager().ClearTimer(MuteLeadsTimerHandle);
-					World->GetTimerManager().SetTimer(MuteLeadsTimerHandle, this, &UAudioManagerSubsystem::DelayedMuteLeads, DelaySeconds, false);
-				}
+				MuteLeads();
 			}
 		}
 		else
@@ -376,19 +363,20 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 	}
 }
 
-void UAudioManagerSubsystem::DelayedEnemyAttack()
-{
-	if (Enemy)
-	{
-		Enemy->Attack(Enemy->GetBPM());
-	}
-}
-
-void UAudioManagerSubsystem::DelayedMuteLeads()
+void UAudioManagerSubsystem::MuteLeads()
 {
 	if (ActiveAudioComponent)
 	{
 		ActiveAudioComponent->SetTriggerParameter("MuteLeads");
-		UE_LOG(LogTemp, Warning, TEXT("MuteLeads triggered after delay"));
+		UE_LOG(LogTemp, Warning, TEXT("MuteLeads triggered"));
+	}
+}
+
+void UAudioManagerSubsystem::UnmuteLeads()
+{
+	if (ActiveAudioComponent)
+	{
+		ActiveAudioComponent->SetTriggerParameter("UnmuteLeads");
+		UE_LOG(LogTemp, Warning, TEXT("UnmuteLeads triggered"));
 	}
 }

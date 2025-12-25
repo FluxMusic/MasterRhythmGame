@@ -28,7 +28,7 @@ AGameCharacter::AGameCharacter()
 	GetCharacterMovement()->GravityScale = 0;
 	GetCharacterMovement()->bApplyGravityWhileJumping = false;
 
-	BPM = 140;
+	BPM = 141;
 }
 
 // Called when the game starts or when spawned
@@ -65,7 +65,7 @@ void AGameCharacter::BeginPlay()
 		}
 	}
 
-	BPM = 120.0f;
+	BPM = 141.0f;
 	CreateAndStartQuartzClock(BPM);
 }
 

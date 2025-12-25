@@ -43,6 +43,8 @@ public:
     UFUNCTION()
     void PlayQuantized(UAudioComponent* AudioComponent);
 
+private:
+
     UFUNCTION()
 	void WatchOutputMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output);
 
@@ -88,6 +90,14 @@ public:
     UFUNCTION()
     void StartMusic();
 
+    UFUNCTION()
+	void MuteLeads();
+    
+    UFUNCTION()
+	void UnmuteLeads();
+
+public:
+
     // --- Note spawning ---
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     TSubclassOf<ANodeActor> NoteActorClass;
@@ -105,10 +115,6 @@ private:
 
     UPROPERTY()
     int32 NumBarsDelay { 1 };
-
-    // Map to find the AudioComponent for a named MetaSound output (populated in PlayQuantized)
-    UPROPERTY()
-    TMap<FName, UAudioComponent*> OutputAudioComponentMap;
 
     // The currently active audio component (set when PlayQuantized is called)
     UPROPERTY()
@@ -131,18 +137,4 @@ private:
 
     UPROPERTY()
     FString PartNameFix;
-
-	// Timer handle used to delay the enemy attack
-	FTimerHandle EnemyAttackTimerHandle;
-
-	// Timer handle used to delay issuing the MuteLeads trigger
-	FTimerHandle MuteLeadsTimerHandle;
-
-	// Called by timer to perform the attack after delay
-	UFUNCTION()
-	void DelayedEnemyAttack();
-
-	// Called by timer to send the MuteLeads trigger after delay
-	UFUNCTION()
-	void DelayedMuteLeads();
 };
