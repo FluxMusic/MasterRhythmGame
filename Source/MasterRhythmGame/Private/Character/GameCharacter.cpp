@@ -64,9 +64,6 @@ void AGameCharacter::BeginPlay()
 			UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::BeginPlay - CameraActor soft reference could not be resolved."));
 		}
 	}
-
-	BPM = 141.0f;
-	CreateAndStartQuartzClock(BPM);
 }
 
 // Called every frame

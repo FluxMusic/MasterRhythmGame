@@ -221,7 +221,7 @@ void UAudioManagerSubsystem::StopClock()
 void UAudioManagerSubsystem::OnQuartzClockBeat(FName ClockName, EQuartzCommandQuantization QuantizationType,
 	int32 NumBars, int32 Beat, float BeatFraction)
 {
-	UKismetSystemLibrary::PrintString(this, FString::FormatAsNumber(Beat), true, true, FLinearColor::Green, 10.0f);
+	//UKismetSystemLibrary::PrintString(this, FString::FormatAsNumber(Beat), true, true, FLinearColor::Green, 10.0f);
 }
 
 void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output)
@@ -273,13 +273,21 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 		Enemy->SetActorLocation(FinalLocation);
 		Enemy->Attack(Enemy->GetBPM());
 	}
-}
+	else if (Enemy != nullptr && Spline != nullptr && !bEnemyCanAttack)
+	{
+		Enemy->SetSplineRef(Spline->GetSplines(MidiNote));
 
-static float ComputeQuarterBeatDelay(double Bpm)
-{
-	const double EffectiveBpm = (Bpm > KINDA_SMALL_NUMBER) ? Bpm : 120.0;
-	const double SecondsPerBeat = 60.0 / EffectiveBpm;
-	return static_cast<float>(SecondsPerBeat * 0.25); // quarter beat
+		const int32 Index = Enemy->GetSplineRef()->GetNumberOfSplinePoints() - 1;
+
+		FVector SplineWorldLocation = Enemy->GetSplineRef()->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);
+
+		FVector FinalLocation;
+		FinalLocation.X = -2300.f;
+		FinalLocation.Y = -3000.f;
+		FinalLocation.Z = SplineWorldLocation.Z;
+
+		Enemy->SetActorLocation(FinalLocation);
+	}
 }
 
 void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const FMetaSoundOutput& Output)
@@ -292,20 +300,36 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 	else if (PartNameFix.Equals(TEXT("Part1IntroEnd")))
 	{
 		StartPart1();
+		bEnemyCanAttack = true;
+		bPlayAgain = true;
 		
 		UnmuteLeads();
 	}
 	else if (PartNameFix.Equals(TEXT("Part1End")))
 	{
 		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0))
+		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
+		{
+			bEnemyCanAttack = false;
+			StartPart1();
+			bPlayAgain = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && bPlayAgain)
 		{
 			StartPart1();
+			bPlayAgain = false;
 
-			if (ActiveAudioComponent != nullptr)
-			{
-				MuteLeads();
-			}
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
+		{
+			StartPart1();
+			bEnemyCanAttack = true;
+			bPlayAgain = false;
+
+			UnmuteLeads();
 		}
 		else
 		{
@@ -315,19 +339,35 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 	else if (PartNameFix.Equals(TEXT("Part2IntroEnd")))
 	{
 		StartPart2();
+		bEnemyCanAttack = true;
 
 		UnmuteLeads();
 	}
 	else if (PartNameFix.Equals(TEXT("Part2End")))
 	{
 		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0))
+		if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (bEnemyCanAttack))
+		{
+			bEnemyCanAttack = false;
+			StartPart2();
+			bPlayAgain = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && bPlayAgain)
 		{
 			StartPart2();
-			if (ActiveAudioComponent != nullptr)
-			{
-				MuteLeads();
-			}
+			bPlayAgain = false;
+			
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
+		{
+			StartPart2();
+			bEnemyCanAttack = true;
+			bPlayAgain = false;
+
+			UnmuteLeads();
 		}
 		else
 		{
@@ -337,19 +377,34 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 	else if (PartNameFix.Equals(TEXT("Part3IntroEnd")))
 	{
 		StartPart3();
+		bEnemyCanAttack = true;
 
 		UnmuteLeads();
 	}
 	else if (PartNameFix.Equals(TEXT("Part3End")))
 	{
 		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0))
+		if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (bEnemyCanAttack))
+		{
+			bEnemyCanAttack = false;
+			StartPart3();
+			
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && bPlayAgain)
 		{
 			StartPart3();
-			if (ActiveAudioComponent != nullptr)
-			{
-				MuteLeads();
-			}
+			bPlayAgain = false;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
+		{
+			StartPart3();
+			bEnemyCanAttack = true;
+			bPlayAgain = false;
+
+			UnmuteLeads();
 		}
 		else
 		{

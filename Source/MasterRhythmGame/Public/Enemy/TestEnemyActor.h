@@ -46,6 +46,9 @@ public:
 	UFUNCTION()
 	void ApplyDamage(int32 DamageValue);
 
+	UFUNCTION()
+	void CreateAndStartQuartzClock(int32 InBPM);
+
 	// --- SplineRef accessors ---
 	USplineComponent* GetSplineRef() const { return SplineRef; }
 	void SetSplineRef(USplineComponent* InSpline) { SplineRef = InSpline; }
@@ -91,6 +94,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UAudioComponent> AudioComponent{ nullptr };
+
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USceneComponent> Scene { nullptr };
 
@@ -130,7 +136,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<UQuartzClockHandle> QuartzClockHandle;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 BPM { 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))

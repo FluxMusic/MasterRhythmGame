@@ -187,7 +187,7 @@ void ANodeActor::HandleTimelineFinished()
 
 	if (GetWorld())
 	{
-		const float DelaySeconds = 0.06f;
+		const float DelaySeconds = 0.1f;
 
 		// Ensure any previous timer is cleared, then set the new timer
 		GetWorld()->GetTimerManager().ClearTimer(DestroyTimerHandle);
@@ -202,7 +202,5 @@ void ANodeActor::HandleTimelineFinished()
 
 void ANodeActor::OnDelayedDestroy()
 {
-	
 	this->Destroy();
-	
 }

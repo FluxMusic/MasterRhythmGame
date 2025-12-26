@@ -137,4 +137,7 @@ private:
 
     UPROPERTY()
     FString PartNameFix;
+
+    UPROPERTY()
+    bool bPlayAgain { false };
 };

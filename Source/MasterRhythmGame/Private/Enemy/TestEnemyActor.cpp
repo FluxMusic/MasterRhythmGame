@@ -3,6 +3,9 @@
 
 #include "Enemy/TestEnemyActor.h"
 #include "Actor/NodeActor.h"
+#include "Manager/AudioManagerSubsystem.h"
+#include "Components/AudioComponent.h"
+
 
 // Sets default values
 ATestEnemyActor::ATestEnemyActor()
@@ -21,6 +24,14 @@ ATestEnemyActor::ATestEnemyActor()
 	SetHealth1(50);
 	SetHealth2(50);
 	SetHealth3(50);
+
+	// Create AudioComponent and attach it to the actor's RootComponent
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	if (AudioComponent != nullptr)
+	{
+		AudioComponent->SetupAttachment(RootComponent);
+		AudioComponent->bAutoActivate = false;
+	}
 }
 
 int32 ATestEnemyActor::CalcHealth1(int32 Value)
@@ -81,37 +92,56 @@ int32 ATestEnemyActor::CalcHealth8(int32 Value)
 
 void ATestEnemyActor::ApplyDamage(int32 DamageValue)
 {
-	if (GetHealth8() >= 0)
+	if (GetHealth1() >= 0)
 	{
-		SetHealth8(DamageValue);
-	}
-	else if (GetHealth7() >= 0)
-	{
-		SetHealth7(DamageValue);
-	}
-	else if (GetHealth6() >= 0)
-	{
-		SetHealth6(DamageValue);
-	}
-	else if (GetHealth5() >= 0)
-	{
-		SetHealth5(DamageValue);
-	}
-	else if (GetHealth4() >= 0)
-	{
-		SetHealth4(DamageValue);
-	}
-	else if (GetHealth3() >= 0)
-	{
-		SetHealth3(DamageValue);
+		SetHealth1(DamageValue);
 	}
 	else if (GetHealth2() >= 0)
 	{
 		SetHealth2(DamageValue);
 	}
-	else if (GetHealth1() >= 0)
+	else if (GetHealth3() >= 0)
 	{
-		SetHealth1(DamageValue);
+		SetHealth3(DamageValue);
+	}
+	else if (GetHealth4() >= 0)
+	{
+		SetHealth4(DamageValue);
+	}
+	else if (GetHealth5() >= 0)
+	{
+		SetHealth5(DamageValue);
+	}
+	else if (GetHealth6() >= 0)
+	{
+		SetHealth6(DamageValue);
+	}
+	else if (GetHealth7() >= 0)
+	{
+		SetHealth7(DamageValue);
+	}
+	else if (GetHealth8() >= 0)
+	{
+		SetHealth8(DamageValue);
+	}
+}
+
+void ATestEnemyActor::CreateAndStartQuartzClock(int32 InBPM)
+{
+	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
+	if (AudioManager != nullptr)
+	{
+		AudioManager->InitSubsystem();
+		AudioManager->ClockHandleInit(FName(TEXT("PlayerClock")));
+		FQuartzQuantizationBoundary QuantBoundary(EQuartzCommandQuantization::Bar, 1.0f, EQuarztQuantizationReference::BarRelative, true);
+		FOnQuartzCommandEventBP Delegate;
+		AudioManager->SetBeatsPerMinute(BPM, QuantBoundary, Delegate);
+		AudioManager->StartClock();
+		AudioManager->PlayQuantized(AudioComponent);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::BeginPlay - UAudioManagerSubsystem not available."));
 	}
 }
 
@@ -139,6 +169,7 @@ void ATestEnemyActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	CreateAndStartQuartzClock(BPM);
 }
 
 // Called every frame
