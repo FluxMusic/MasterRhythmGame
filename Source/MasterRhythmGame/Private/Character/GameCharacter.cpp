@@ -27,8 +27,6 @@ AGameCharacter::AGameCharacter()
 
 	GetCharacterMovement()->GravityScale = 0;
 	GetCharacterMovement()->bApplyGravityWhileJumping = false;
-
-	BPM = 141;
 }
 
 // Called when the game starts or when spawned
@@ -89,7 +87,7 @@ void AGameCharacter::CreateAndStartQuartzClock(float InBpm)
 		AudioManager->ClockHandleInit(FName(TEXT("PlayerClock")));
 		FQuartzQuantizationBoundary QuantBoundary(EQuartzCommandQuantization::Bar, 1.0f, EQuarztQuantizationReference::BarRelative, true);
 		FOnQuartzCommandEventBP Delegate;
-		AudioManager->SetBeatsPerMinute(BPM, QuantBoundary, Delegate);
+		AudioManager->SetBeatsPerMinute(InBpm, QuantBoundary, Delegate);
 		AudioManager->StartClock();
 		AudioManager->PlayQuantized(AudioComponent);
 	}

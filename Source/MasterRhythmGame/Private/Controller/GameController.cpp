@@ -14,6 +14,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "EnhancedInputComponent.h"
+#include "Actor/NodeActor.h"
+#include "Manager/AudioManagerSubsystem.h"
 
 AGameController::AGameController()
 {
@@ -64,6 +66,7 @@ void AGameController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(AAction, ETriggerEvent::Triggered, this, &AGameController::HandleAAttack);
 		EnhancedInputComponent->BindAction(BAction, ETriggerEvent::Triggered, this, &AGameController::HandleBAttack);
 		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Triggered, this, &AGameController::HandlePause);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AGameController::HandleAttack);
 	}
 }
 
@@ -256,6 +259,30 @@ void AGameController::HandleBAttack()
 		if (GameCharacter->GetCapsuleComponent() != nullptr)
 		{
 			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[6]);
+		}
+	}
+}
+
+void AGameController::HandleAttack()
+{
+	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
+	if (AudioManager != nullptr)
+	{
+		if (AudioManager->GetPlayerCanAttack())
+		{
+			FVector SpawnLocationPlayer = FVector(0.0f, 0.0f, 0.0f);
+			auto ActorLocation = GameCharacter->GetActorLocation();
+			auto SceneLocation = GameCharacter->GetSceneComponent()->GetRelativeLocation();
+			SpawnLocationPlayer.X = -2300.f;
+			SpawnLocationPlayer.Y = -3000.f + SceneLocation.Y;
+			SpawnLocationPlayer.Z = ActorLocation.Z;
+			auto Note = GetWorld()->SpawnActor<ANodeActor>(NodeActor, SpawnLocationPlayer, GameCharacter->GetActorRotation());
+
+			if (Note != nullptr)
+			{
+				Note->SetBarLength(1000);
+				Note->MoveRight();
+			}
 		}
 	}
 }

@@ -43,6 +43,10 @@ public:
     UFUNCTION()
     void PlayQuantized(UAudioComponent* AudioComponent);
 
+	// --- Player Can Attack accessors ---
+    bool GetPlayerCanAttack() const { return bPlayerCanAttack; }
+	void SetPlayerCanAttack(bool bInPlayerCanAttack) { bPlayerCanAttack = bInPlayerCanAttack; }
+
 private:
 
     UFUNCTION()
@@ -140,4 +144,7 @@ private:
 
     UPROPERTY()
     bool bPlayAgain { false };
+
+    UPROPERTY()
+    bool bPlayerCanAttack { false };
 };

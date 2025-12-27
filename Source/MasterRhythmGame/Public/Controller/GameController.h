@@ -8,6 +8,7 @@
 #include "GameController.generated.h"
 
 
+class ANodeActor;
 class UInputAction;
 
 enum class EControllerStateGame
@@ -96,6 +97,9 @@ protected:
 	void HandleBAttack();
 
 	UFUNCTION()
+	void HandleAttack();
+
+	UFUNCTION()
 	void HandlePause();
 
 	void GameControl(ENote Note);
@@ -123,7 +127,7 @@ private:
 	TObjectPtr<AGameHUD> GameHud { nullptr };
 
 	UPROPERTY(VisibleAnywhere, DisplayName = "Midi Controller", Category = "Components")
-	TObjectPtr<class UMIDIDeviceInputController> MidiController{ nullptr };
+	TObjectPtr<class UMIDIDeviceInputController> MidiController { nullptr };
 
 	UPROPERTY(VisibleAnywhere, DisplayName = "GraphicMenuIndex", Category = "Components")
 	int32 GraphicMenuIndex { 0 };
@@ -147,6 +151,9 @@ private:
 
 	UPROPERTY(EditAnywhere, DisplayName = "GameCharacter Blueprint Class", Category = "Components")
 	TSubclassOf<AGameCharacter> GameCharacterBPClass { nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TSubclassOf<ANodeActor> NodeActor{ nullptr };
 
 #pragma region InputAction
 
@@ -176,6 +183,9 @@ private:
 	
 	UPROPERTY(EditAnywhere, DisplayName = "Pause Action", Category = "InputAction")
 	UInputAction* PauseAction { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "Attack Action", Category = "InputAction")
+	UInputAction* AttackAction { nullptr };
 
 #pragma endregion
 };

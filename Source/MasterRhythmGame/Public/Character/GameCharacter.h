@@ -24,7 +24,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-		
+
 	void CreateAndStartQuartzClock(float Bpm);
 
 	UFUNCTION()
@@ -38,11 +38,11 @@ public:
 
 	// --- Defended accessors ---
 	int32 GetDefended() const { return Defended; }
-	void SetDefended(int32 InDefended) { Defended = InDefended; }
+	void SetDefended(int32 InDefended) { Defended = FMath::Clamp(InDefended, 0, 10); }
 
-	// --- BPM accessors ---
-	int32 GetBpm() const { return BPM; }
-	void SetBpm(int32 InBpm) { BPM = InBpm; }
+	// --- SceneComponent accessors ---
+	USceneComponent* GetSceneComponent() const { return SceneComponent; }
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -54,7 +54,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TSoftObjectPtr<ACameraActor> CameraActor { nullptr };
-	 
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UQuartzClockHandle* QuartzClockHandle { nullptr };
 
@@ -62,11 +62,8 @@ private:
 	TObjectPtr<USceneComponent> SceneComponent { nullptr };
 
 	UPROPERTY(EditAnywhere)
-	int32 Health { 50 };
+	int32 Health{ 50 };
 
 	UPROPERTY(EditAnywhere)
-	int32 Defended { 0 };
-
-	UPROPERTY(EditAnywhere)
-	int32 BPM { 0 };
+	int32 Defended{ 0 };
 };

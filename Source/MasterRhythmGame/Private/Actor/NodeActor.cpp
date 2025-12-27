@@ -10,6 +10,7 @@
 #include "Enemy/TestEnemyActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
+#include "Math/UnitConversion.h"
 
 // Sets default values
 ANodeActor::ANodeActor()
@@ -83,7 +84,10 @@ void ANodeActor::MoveLeft()
 
 void ANodeActor::MoveRight()
 {
-	
+	if (Timeline)
+	{
+		Timeline->ReverseFromEnd();
+	}
 }
 
 void ANodeActor::SetBarLength(double BPM)

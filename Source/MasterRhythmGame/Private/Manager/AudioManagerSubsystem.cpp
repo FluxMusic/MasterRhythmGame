@@ -3,7 +3,6 @@
 #include "Manager/AudioManagerSubsystem.h"
 #include "Quartz/AudioMixerClockHandle.h"
 #include "Quartz/QuartzSubsystem.h"
-#include "Actor/NodeActor.h"
 #include "MetasoundOutput.h"
 #include "Components/AudioComponent.h"
 #include "Sound/QuartzQuantizationUtilities.h"
@@ -311,6 +310,7 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
 		{
 			bEnemyCanAttack = false;
+			bPlayerCanAttack = false;
 			StartPart1();
 			bPlayAgain = true;
 
@@ -320,6 +320,7 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 		{
 			StartPart1();
 			bPlayAgain = false;
+			bPlayerCanAttack = true;
 
 			MuteLeads();
 		}
@@ -328,6 +329,7 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 			StartPart1();
 			bEnemyCanAttack = true;
 			bPlayAgain = false;
+			bPlayerCanAttack = true;
 
 			UnmuteLeads();
 		}
