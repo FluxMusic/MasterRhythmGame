@@ -8,6 +8,8 @@
 #include "GameController.generated.h"
 
 
+class ASplineActor;
+class ATestEnemyActor;
 class ANodeActor;
 class UInputAction;
 
@@ -154,6 +156,18 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TSubclassOf<ANodeActor> NodeActor{ nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TSubclassOf<ATestEnemyActor> EnemyClass { nullptr };
+
+	UPROPERTY()
+	TObjectPtr<ATestEnemyActor> Enemy { nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TSubclassOf<ASplineActor> SplineClass { nullptr };
+
+	UPROPERTY()
+	TObjectPtr<ASplineActor> Spline { nullptr };
 
 #pragma region InputAction
 

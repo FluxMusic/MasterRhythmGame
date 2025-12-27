@@ -15,7 +15,10 @@
 #include "Engine/World.h"
 #include "EnhancedInputComponent.h"
 #include "Actor/NodeActor.h"
+#include "Actor/SplineActor.h"
+#include "Components/TimelineComponent.h"
 #include "Manager/AudioManagerSubsystem.h"
+#include "Enemy/TestEnemyActor.h"
 
 AGameController::AGameController()
 {
@@ -44,6 +47,29 @@ void AGameController::BeginPlay()
 		// Try to find an existing actor of the specified Blueprint class
 		AActor* Found = UGameplayStatics::GetActorOfClass(GetWorld(), GameCharacterBPClass);
 		GameCharacter = Cast<AGameCharacter>(Found);
+	}
+
+	// Ensure we have a valid enemy class to search for. If none has been set, default to the concrete actor class.
+	if (EnemyClass == nullptr)
+	{
+		EnemyClass = ATestEnemyActor::StaticClass();
+	}
+	else if (EnemyClass != nullptr)
+	{
+		// Find an existing actor of the specified enemy class in the world and cache it.
+		AActor* FoundEnemy = UGameplayStatics::GetActorOfClass(GetWorld(), EnemyClass);
+		Enemy = Cast<ATestEnemyActor>(FoundEnemy);
+	}
+
+	// Ensure Spline is set at runtime (find the first ASplineActor in the world if not already assigned).
+	if (SplineClass == nullptr)
+	{
+		SplineClass = ASplineActor::StaticClass();
+	}
+	else if (SplineClass != nullptr)
+	{
+		AActor* FoundSpline = UGameplayStatics::GetActorOfClass(GetWorld(), SplineClass);
+		Spline = Cast<ASplineActor>(FoundSpline);
 	}
 
 	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
@@ -195,6 +221,10 @@ void AGameController::HandleCAttack()
 			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[0]);
 		}
 	}
+	if (Spline != nullptr)
+	{
+		GameCharacter->SetSplineRef(Spline->GetSplines(0));
+	}
 }
 
 void AGameController::HandleDAttack()
@@ -205,6 +235,10 @@ void AGameController::HandleDAttack()
 		{
 			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[1]);
 		}
+	}
+	if (Spline != nullptr)
+	{
+		GameCharacter->SetSplineRef(Spline->GetSplines(2));
 	}
 }
 
@@ -217,6 +251,10 @@ void AGameController::HandleEAttack()
 			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[2]);
 		}
 	}
+	if (Spline != nullptr)
+	{
+		GameCharacter->SetSplineRef(Spline->GetSplines(4));
+	}
 }
 
 void AGameController::HandleFAttack()
@@ -227,6 +265,10 @@ void AGameController::HandleFAttack()
 		{
 			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[3]);
 		}
+	}
+	if (Spline != nullptr)
+	{
+		GameCharacter->SetSplineRef(Spline->GetSplines(5));
 	}
 }
 
@@ -239,6 +281,10 @@ void AGameController::HandleGAttack()
 			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[4]);
 		}
 	}
+	if (Spline != nullptr)
+	{
+		GameCharacter->SetSplineRef(Spline->GetSplines(7));
+	}
 }
 
 void AGameController::HandleAAttack()
@@ -249,6 +295,10 @@ void AGameController::HandleAAttack()
 		{
 			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[5]);
 		}
+	}
+	if (Spline != nullptr)
+	{
+		GameCharacter->SetSplineRef(Spline->GetSplines(9));
 	}
 }
 
@@ -261,6 +311,10 @@ void AGameController::HandleBAttack()
 			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[6]);
 		}
 	}
+	if (Spline != nullptr)
+	{
+		GameCharacter->SetSplineRef(Spline->GetSplines(11));
+	}
 }
 
 void AGameController::HandleAttack()
@@ -268,19 +322,23 @@ void AGameController::HandleAttack()
 	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
 	if (AudioManager != nullptr)
 	{
-		if (AudioManager->GetPlayerCanAttack())
+		if (AudioManager->GetPlayerCanAttack() && GameCharacter->GetDefended() > 0)
 		{
+			auto Defended = GameCharacter->GetDefended();
+			Defended--;
+			GameCharacter->SetDefended(Defended);
 			FVector SpawnLocationPlayer = FVector(0.0f, 0.0f, 0.0f);
 			auto ActorLocation = GameCharacter->GetActorLocation();
 			auto SceneLocation = GameCharacter->GetSceneComponent()->GetRelativeLocation();
 			SpawnLocationPlayer.X = -2300.f;
-			SpawnLocationPlayer.Y = -3000.f + SceneLocation.Y;
+			SpawnLocationPlayer.Y = -600.f + SceneLocation.Y;
 			SpawnLocationPlayer.Z = ActorLocation.Z;
 			auto Note = GetWorld()->SpawnActor<ANodeActor>(NodeActor, SpawnLocationPlayer, GameCharacter->GetActorRotation());
 
-			if (Note != nullptr)
+			if (Note != nullptr && Enemy != nullptr)
 			{
-				Note->SetBarLength(1000);
+				Note->GetTimeline()->SetPlayRate(.25f);
+				Note->SetSplineRef(GameCharacter->GetSplineRef());
 				Note->MoveRight();
 			}
 		}

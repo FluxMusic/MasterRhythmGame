@@ -44,6 +44,10 @@ public:
 	TObjectPtr<USplineComponent> GetSplineRef() const { return SplineRef; }
 	void SetSplineRef(TObjectPtr<USplineComponent> InSplineRef) { SplineRef = InSplineRef; }
 
+	// --- Timeline ---
+	TObjectPtr<UTimelineComponent> GetTimeline() const { return Timeline; }
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

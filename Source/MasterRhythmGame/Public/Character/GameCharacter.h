@@ -8,6 +8,7 @@
 #include "Quartz/AudioMixerClockHandle.h"
 #include "GameCharacter.generated.h"
 
+class USplineComponent;
 class ACameraActor;
 class UQuartzClockHandle;
 
@@ -43,6 +44,9 @@ public:
 	// --- SceneComponent accessors ---
 	USceneComponent* GetSceneComponent() const { return SceneComponent; }
 
+	// --- SplineRef accessors ---
+	USplineComponent* GetSplineRef() const { return SplineRef; }
+	void SetSplineRef(USplineComponent* InSpline) { SplineRef = InSpline; }
 
 protected:
 	// Called when the game starts or when spawned
@@ -60,6 +64,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TObjectPtr<USceneComponent> SceneComponent { nullptr };
+
+	UPROPERTY()
+	TObjectPtr<USplineComponent> SplineRef { nullptr };
 
 	UPROPERTY(EditAnywhere)
 	int32 Health{ 50 };
