@@ -36,57 +36,49 @@ ATestEnemyActor::ATestEnemyActor()
 
 int32 ATestEnemyActor::CalcHealth1(int32 Value)
 {
-	Value--;
-	HealthBar1 += Value;
+	HealthBar1 -= Value;
 	return HealthBar1;
 }
 
 int32 ATestEnemyActor::CalcHealth2(int32 Value)
 {
-	Value--;
-	HealthBar2 += Value;
+	HealthBar2 -= Value;
 	return HealthBar2;
 }
 
 int32 ATestEnemyActor::CalcHealth3(int32 Value)
 {
-	Value--;
-	HealthBar3 += Value;
+	HealthBar3 -= Value;
 	return HealthBar3;
 }
 
 int32 ATestEnemyActor::CalcHealth4(int32 Value)
 {
-	Value--;
-	HealthBar4 += Value;
+	HealthBar4 -= Value;
 	return HealthBar4;
 }
 
 int32 ATestEnemyActor::CalcHealth5(int32 Value)
 {
-	Value--;
-	HealthBar5 += Value;
+	HealthBar5 -= Value;
 	return HealthBar5;
 }
 
 int32 ATestEnemyActor::CalcHealth6(int32 Value)
 {
-	Value--;
-	HealthBar6 += Value;
+	HealthBar6 -= Value;
 	return HealthBar6;
 }
 
 int32 ATestEnemyActor::CalcHealth7(int32 Value)
 {
-	Value--;
-	HealthBar7 += Value;
+	HealthBar7 -= Value;
 	return HealthBar7;
 }
 
 int32 ATestEnemyActor::CalcHealth8(int32 Value)
 {
-	Value--;
-	HealthBar8 += Value;
+	HealthBar8 -= Value;
 	return HealthBar8;
 }
 
@@ -94,35 +86,35 @@ void ATestEnemyActor::ApplyDamage(int32 DamageValue)
 {
 	if (GetHealth1() >= 0)
 	{
-		SetHealth1(DamageValue);
+		SetHealth1(CalcHealth1(DamageValue));
 	}
 	else if (GetHealth2() >= 0)
 	{
-		SetHealth2(DamageValue);
+		SetHealth2(CalcHealth2(DamageValue));
 	}
 	else if (GetHealth3() >= 0)
 	{
-		SetHealth3(DamageValue);
+		SetHealth3(CalcHealth3(DamageValue));
 	}
 	else if (GetHealth4() >= 0)
 	{
-		SetHealth4(DamageValue);
+		SetHealth4(CalcHealth4(DamageValue));
 	}
 	else if (GetHealth5() >= 0)
 	{
-		SetHealth5(DamageValue);
+		SetHealth5(CalcHealth5(DamageValue));
 	}
 	else if (GetHealth6() >= 0)
 	{
-		SetHealth6(DamageValue);
+		SetHealth6(CalcHealth6(DamageValue));
 	}
 	else if (GetHealth7() >= 0)
 	{
-		SetHealth7(DamageValue);
+		SetHealth7(CalcHealth7(DamageValue));
 	}
 	else if (GetHealth8() >= 0)
 	{
-		SetHealth8(DamageValue);
+		SetHealth8(CalcHealth8(DamageValue));
 	}
 }
 

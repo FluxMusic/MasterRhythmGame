@@ -47,6 +47,9 @@ public:
     bool GetPlayerCanAttack() const { return bPlayerCanAttack; }
 	void SetPlayerCanAttack(bool bInPlayerCanAttack) { bPlayerCanAttack = bInPlayerCanAttack; }
 
+	// --- Enemy Can Attack accessors ---
+	bool GetEnemyCanAttack() const { return bEnemyCanAttack; }
+
 private:
 
     UFUNCTION()

@@ -324,8 +324,8 @@ void AGameController::HandleAttack()
 	{
 		if (AudioManager->GetPlayerCanAttack() && GameCharacter->GetDefended() > 0)
 		{
-			auto Defended = GameCharacter->GetDefended();
-			Defended--;
+			auto Defended = GameCharacter->GetDefended() - 1;
+			UE_LOG(LogTemp, Warning, TEXT("Defended Left: %d"), Defended);
 			GameCharacter->SetDefended(Defended);
 			FVector SpawnLocationPlayer = FVector(0.0f, 0.0f, 0.0f);
 			auto ActorLocation = GameCharacter->GetActorLocation();

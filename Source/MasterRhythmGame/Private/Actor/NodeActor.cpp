@@ -10,6 +10,7 @@
 #include "Enemy/TestEnemyActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
+#include "Manager/AudioManagerSubsystem.h"
 
 // Sets default values
 ANodeActor::ANodeActor()
@@ -49,27 +50,54 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 		return;
 	}
 
-	// Player collision: mark flag 
+	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
+
+	// Player collision: mark flag so the player does NOT take damage when they are attacking.
 	AGameCharacter* OverlappingCharacter = Cast<AGameCharacter>(OtherActor);
 	if (OverlappingCharacter != nullptr)
 	{
-		// mark that we collided with the player so we don't apply damage when timeline finishes
-		bCollidedWithPlayer = true;
+		if (AudioManager != nullptr)
+		{
+			// If the player is attacking, they should not receive damage from this note.
+			if (AudioManager->GetPlayerCanAttack())
+			{
+				bCollidedWithPlayer = true;
+				return;
+			}
+			else
+			{
+				// Existing behavior when player is not attacking: treat as a collision and increment defended.
+				bCollidedWithPlayer = true;
 
-		// keep defended increment behavior if desired
-		int32 Defended = OverlappingCharacter->GetDefended();
-		Defended++;
-		OverlappingCharacter->SetDefended(Defended);
+				int32 Defended = OverlappingCharacter->GetDefended();
+				Defended++;
+				OverlappingCharacter->SetDefended(Defended);
 
-		return;
+				return;
+			}
+		}
 	}
 
-	// Enemy collision: mark flag and destroy the note, nothing else should happen
+	// Enemy collision: mark flag and destroy the note so the enemy does NOT take damage when it is attacking.
 	ATestEnemyActor* OverlappingEnemy = Cast<ATestEnemyActor>(OtherActor);
 	if (OverlappingEnemy != nullptr)
 	{
-		bCollidedWithEnemy = true;
-		this->Destroy();
+		if (AudioManager != nullptr)
+		{
+			// If the enemy is attacking, ensure it does not receive damage from this note.
+			if (AudioManager->GetEnemyCanAttack())
+			{
+				bCollidedWithEnemy = true;
+				return;
+			}
+			else
+			{
+				// Existing behavior when enemy is not attacking: still mark collided and destroy note.
+				bCollidedWithEnemy = true;
+				this->Destroy();
+				return;
+			}
+		}
 	}
 }
 
@@ -163,8 +191,10 @@ void ANodeActor::HandleTimelineProgress(float Value)
 
 void ANodeActor::HandleTimelineFinished()
 {
+	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
+
 	// If we did not collide with the player, apply damage to the player
-	if (!bCollidedWithPlayer)
+	if (!bCollidedWithPlayer && !AudioManager->GetPlayerCanAttack())
 	{
 		// find the player character and apply damage
 		if (AGameCharacter* PlayerActor = Cast<AGameCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameCharacter::StaticClass())))
@@ -172,18 +202,19 @@ void ANodeActor::HandleTimelineFinished()
 			AGameCharacter* GameChar = Cast<AGameCharacter>(PlayerActor);
 			if (GameChar != nullptr)
 			{
+				UE_LOG(LogTemp, Log, TEXT("ANodeActor::HandleTimelineFinished - Applying %d damage to player."), DamageToPlayer);
 				GameChar->ApplyDamage(DamageToPlayer);
 			}
 		}
 	}
-
-	// If we did not collide with an enemy, find the first TestEnemyActor and apply damage to its HealthBar1
-	if (!bCollidedWithEnemy)
+	// If we did not collide with an enemy, find the first TestEnemyActor and apply damage
+	else if (!bCollidedWithEnemy && !AudioManager->GetEnemyCanAttack())
 	{
 		AActor* Found = UGameplayStatics::GetActorOfClass(GetWorld(), ATestEnemyActor::StaticClass());
 		ATestEnemyActor* Enemy = Cast<ATestEnemyActor>(Found);
 		if (Enemy != nullptr)
 		{
+			UE_LOG(LogTemp, Log, TEXT("ANodeActor::HandleTimelineFinished - Applying %d damage to enemy."), DamageToEnemy);
 			Enemy->ApplyDamage(DamageToEnemy);
 		}
 	}
