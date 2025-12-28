@@ -14,8 +14,8 @@ UCLASS()
 class MASTERRHYTHMGAME_API ATestEnemyActor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	ATestEnemyActor();
 
@@ -30,16 +30,16 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	int32 CalcHealth4(int32 Value);
-	
+
 	UFUNCTION(BlueprintCallable)
 	int32 CalcHealth5(int32 Value);
-	
+
 	UFUNCTION(BlueprintCallable)
 	int32 CalcHealth6(int32 Value);
-	
+
 	UFUNCTION(BlueprintCallable)
 	int32 CalcHealth7(int32 Value);
-	
+
 	UFUNCTION(BlueprintCallable)
 	int32 CalcHealth8(int32 Value);
 
@@ -82,6 +82,10 @@ public:
 	int32 GetHealth8() const { return HealthBar8; }
 	void SetHealth8(int32 InHealth) { HealthBar8 = InHealth; }
 
+	// --- Current part control (1..8) ---
+	int32 GetCurrentPart() const { return CurrentPart; }
+	void SetCurrentPart(int32 InPart) { CurrentPart = FMath::Clamp(InPart, 1, 8); }
+
 	UFUNCTION()
 	void Attack(int32 InBPM);
 
@@ -89,7 +93,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -98,47 +102,51 @@ private:
 	TObjectPtr<UAudioComponent> AudioComponent{ nullptr };
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<USceneComponent> Scene { nullptr };
+	TObjectPtr<USceneComponent> Scene{ nullptr };
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "DefaultSceneRoot", meta = (AllowPrivateAccess = true))
 	TObjectPtr<USceneComponent> DefaultSceneRoot{ nullptr };
 
 	UPROPERTY()
-	TObjectPtr<UStaticMeshComponent> Mesh { nullptr };
+	TObjectPtr<UStaticMeshComponent> Mesh{ nullptr };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar1 { 0 };
+	int32 HealthBar1{ 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar2 { 0 };
+	int32 HealthBar2{ 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar3 { 0 };
+	int32 HealthBar3{ 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar4 { 0 };
+	int32 HealthBar4{ 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar5 { 0 };
+	int32 HealthBar5{ 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar6 { 0 };
+	int32 HealthBar6{ 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar7 { 0 };
+	int32 HealthBar7{ 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar8 { 0 };
-	
+	int32 HealthBar8{ 0 };
+
 	UPROPERTY()
-	TObjectPtr<USplineComponent> SplineRef { nullptr };
+	TObjectPtr<USplineComponent> SplineRef{ nullptr };
 
 	UPROPERTY()
 	TObjectPtr<UQuartzClockHandle> QuartzClockHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 BPM { 0 };
+	int32 BPM{ 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	TSubclassOf<ANodeActor> NodeActor { nullptr };
+	TSubclassOf<ANodeActor> NodeActor{ nullptr };
+
+	// which part is active (1..8). Damage will only be applied to the corresponding HealthBarX.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	int32 CurrentPart{ 1 };
 };

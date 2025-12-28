@@ -10,7 +10,7 @@
 // Sets default values
 ATestEnemyActor::ATestEnemyActor()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	SetBPM(141);
@@ -32,89 +32,139 @@ ATestEnemyActor::ATestEnemyActor()
 		AudioComponent->SetupAttachment(RootComponent);
 		AudioComponent->bAutoActivate = false;
 	}
+
+	// Ensure the enemy starts in Part 1
+	SetCurrentPart(1);
 }
 
 int32 ATestEnemyActor::CalcHealth1(int32 Value)
 {
-	HealthBar1 -= Value;
+	HealthBar1 = FMath::Max(HealthBar1 - Value, 0);
 	return HealthBar1;
 }
 
 int32 ATestEnemyActor::CalcHealth2(int32 Value)
 {
-	HealthBar2 -= Value;
+	HealthBar2 = FMath::Max(HealthBar2 - Value, 0);
 	return HealthBar2;
 }
 
 int32 ATestEnemyActor::CalcHealth3(int32 Value)
 {
-	HealthBar3 -= Value;
+	HealthBar3 = FMath::Max(HealthBar3 - Value, 0);
 	return HealthBar3;
 }
 
 int32 ATestEnemyActor::CalcHealth4(int32 Value)
 {
-	HealthBar4 -= Value;
+	HealthBar4 = FMath::Max(HealthBar4 - Value, 0);
 	return HealthBar4;
 }
 
 int32 ATestEnemyActor::CalcHealth5(int32 Value)
 {
-	HealthBar5 -= Value;
+	HealthBar5 = FMath::Max(HealthBar5 - Value, 0);
 	return HealthBar5;
 }
 
 int32 ATestEnemyActor::CalcHealth6(int32 Value)
 {
-	HealthBar6 -= Value;
+	HealthBar6 = FMath::Max(HealthBar6 - Value, 0);
 	return HealthBar6;
 }
 
 int32 ATestEnemyActor::CalcHealth7(int32 Value)
 {
-	HealthBar7 -= Value;
+	HealthBar7 = FMath::Max(HealthBar7 - Value, 0);
 	return HealthBar7;
 }
 
 int32 ATestEnemyActor::CalcHealth8(int32 Value)
 {
-	HealthBar8 -= Value;
+	HealthBar8 = FMath::Max(HealthBar8 - Value, 0);
 	return HealthBar8;
 }
 
 void ATestEnemyActor::ApplyDamage(int32 DamageValue)
 {
-	if (GetHealth1() >= 0)
+	// Apply damage only to the health bar that corresponds to CurrentPart.
+	// If that health bar drops to zero or below, advance to the next part (up to 8).
+	switch (GetCurrentPart())
 	{
-		SetHealth1(CalcHealth1(DamageValue));
-	}
-	else if (GetHealth2() >= 0)
-	{
-		SetHealth2(CalcHealth2(DamageValue));
-	}
-	else if (GetHealth3() >= 0)
-	{
-		SetHealth3(CalcHealth3(DamageValue));
-	}
-	else if (GetHealth4() >= 0)
-	{
-		SetHealth4(CalcHealth4(DamageValue));
-	}
-	else if (GetHealth5() >= 0)
-	{
-		SetHealth5(CalcHealth5(DamageValue));
-	}
-	else if (GetHealth6() >= 0)
-	{
-		SetHealth6(CalcHealth6(DamageValue));
-	}
-	else if (GetHealth7() >= 0)
-	{
-		SetHealth7(CalcHealth7(DamageValue));
-	}
-	else if (GetHealth8() >= 0)
-	{
-		SetHealth8(CalcHealth8(DamageValue));
+		case 1:
+		{
+			SetHealth1(CalcHealth1(DamageValue));
+			if (GetHealth1() <= 0)
+			{
+				SetCurrentPart(GetCurrentPart() + 1);
+			}
+			break;
+		}
+		case 2:
+		{
+			SetHealth2(CalcHealth2(DamageValue));
+			if (GetHealth2() <= 0)
+			{
+				SetCurrentPart(GetCurrentPart() + 1);
+			}
+			break;
+		}
+		case 3:
+		{
+			SetHealth3(CalcHealth3(DamageValue));
+			if (GetHealth3() <= 0)
+			{
+				SetCurrentPart(GetCurrentPart() + 1);
+			}
+			break;
+		}
+		case 4:
+		{
+			SetHealth4(CalcHealth4(DamageValue));
+			if (GetHealth4() <= 0)
+			{
+				SetCurrentPart(GetCurrentPart() + 1);
+			}
+			break;
+		}
+		case 5:
+		{
+			SetHealth5(CalcHealth5(DamageValue));
+			if (GetHealth5() <= 0)
+			{
+				SetCurrentPart(GetCurrentPart() + 1);
+			}
+			break;
+		}
+		case 6:
+		{
+			SetHealth6(CalcHealth6(DamageValue));
+			if (GetHealth6() <= 0)
+			{
+				SetCurrentPart(GetCurrentPart() + 1);
+			}
+			break;
+		}
+		case 7:
+		{
+			SetHealth7(CalcHealth7(DamageValue));
+			if (GetHealth7() <= 0)
+			{
+				SetCurrentPart(GetCurrentPart() + 1);
+			}
+			break;
+		}
+		case 8:
+		{
+			SetHealth8(CalcHealth8(DamageValue));
+			break;
+		}
+		default:
+		{
+			// Safety: clamp to valid range
+			SetCurrentPart(FMath::Clamp(GetCurrentPart(), 1, 8));
+			break;
+		}
 	}
 }
 
@@ -147,7 +197,7 @@ void ATestEnemyActor::Attack(int32 InBPM)
 	SpawnLocation.Y = -3000.f + SceneLocation.Y;
 	SpawnLocation.Z = ActorLocation.Z;
 	auto Note = GetWorld()->SpawnActor<ANodeActor>(NodeActor, SpawnLocation, GetActorRotation());
-	
+
 	if (Note != nullptr)
 	{
 		Note->SetBarLength(InBPM);
@@ -160,7 +210,7 @@ void ATestEnemyActor::Attack(int32 InBPM)
 void ATestEnemyActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	CreateAndStartQuartzClock(BPM);
 }
 
@@ -170,4 +220,3 @@ void ATestEnemyActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
