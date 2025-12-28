@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "UI/PauseMenuWidget.h"
+#include "UI/Game/MainGameWidget.h"
 #include "UI/Settings/AudioSettingWidget.h"
 #include "UI/Settings/GraphicSettingWidget.h"
 #include "UI/Settings/MainMenuSettingWidget.h"
@@ -52,6 +53,14 @@ public:
 	UAudioSettingWidget* GetAudioSettingInstance() const { return AudioSettingInstance; }
 	void SetAudioSettingInstance(UAudioSettingWidget* InInstance) { AudioSettingInstance = InInstance; }
 
+	// --- Main Game Class ---
+	TSubclassOf<UMainGameWidget> GetMainGameClass() const { return MainGameClass; }
+	void SetMainGameClass(TSubclassOf<UMainGameWidget> InClass) { MainGameClass = InClass; }
+
+	// --- Main Game Instance ---
+	UMainGameWidget* GetMainGameInstance() const { return MainGameInstance; }
+	void SetMainGameInstance(UMainGameWidget* InInstance) { MainGameInstance = InInstance; }
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -79,4 +88,10 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UAudioSettingWidget> AudioSettingInstance { nullptr };
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UMainGameWidget> MainGameClass;
+
+	UPROPERTY()
+	TObjectPtr<UMainGameWidget> MainGameInstance { nullptr };
 };

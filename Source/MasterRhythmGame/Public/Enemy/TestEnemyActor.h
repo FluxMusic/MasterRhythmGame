@@ -7,6 +7,7 @@
 #include "Quartz/AudioMixerClockHandle.h"
 #include "TestEnemyActor.generated.h"
 
+class AGameHUD;
 class ANodeActor;
 class USplineComponent;
 
@@ -89,6 +90,9 @@ public:
 	UFUNCTION()
 	void Attack(int32 InBPM);
 
+	UFUNCTION()
+	void UpdateHealthUIForPart(int32 Part);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -99,54 +103,57 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	TObjectPtr<UAudioComponent> AudioComponent{ nullptr };
+	TObjectPtr<UAudioComponent> AudioComponent { nullptr };
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<USceneComponent> Scene{ nullptr };
+	TObjectPtr<USceneComponent> Scene { nullptr };
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "DefaultSceneRoot", meta = (AllowPrivateAccess = true))
-	TObjectPtr<USceneComponent> DefaultSceneRoot{ nullptr };
+	TObjectPtr<USceneComponent> DefaultSceneRoot { nullptr };
 
 	UPROPERTY()
-	TObjectPtr<UStaticMeshComponent> Mesh{ nullptr };
+	TObjectPtr<UStaticMeshComponent> Mesh { nullptr };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar1{ 0 };
+	int32 HealthBar1 { 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar2{ 0 };
+	int32 HealthBar2 { 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar3{ 0 };
+	int32 HealthBar3 { 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar4{ 0 };
+	int32 HealthBar4 { 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar5{ 0 };
+	int32 HealthBar5 { 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar6{ 0 };
+	int32 HealthBar6 { 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar7{ 0 };
+	int32 HealthBar7 { 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar8{ 0 };
+	int32 HealthBar8 { 0 };
 
 	UPROPERTY()
-	TObjectPtr<USplineComponent> SplineRef{ nullptr };
+	TObjectPtr<USplineComponent> SplineRef { nullptr };
 
 	UPROPERTY()
 	TObjectPtr<UQuartzClockHandle> QuartzClockHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 BPM{ 0 };
+	int32 BPM { 0 };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	TSubclassOf<ANodeActor> NodeActor{ nullptr };
+	TSubclassOf<ANodeActor> NodeActor { nullptr };
 
 	// which part is active (1..8). Damage will only be applied to the corresponding HealthBarX.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 CurrentPart{ 1 };
+	int32 CurrentPart { 1 };
+
+	UPROPERTY()
+	TObjectPtr<AGameHUD> GameHUD { nullptr };
 };

@@ -3,3 +3,7 @@
 
 #include "UI/Game/MainGameWidget.h"
 
+void UMainGameWidget::NativeConstruct()
+{
+	Super::NativeConstruct();
+}

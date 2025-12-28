@@ -11,6 +11,15 @@ void AGameHUD::BeginPlay()
 {
 	Super::BeginPlay();
 
+	if (MainGameClass)
+	{
+		MainGameInstance = CreateWidget<UMainGameWidget>(GetWorld(), MainGameClass);
+		if (AudioSettingInstance != nullptr)
+		{
+			MainGameInstance->AddToViewport();
+			MainGameInstance->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
 	if (PauseMenuWidgetClass)
 	{
 		PauseMenuInstance = CreateWidget<UPauseMenuWidget>(GetWorld(), PauseMenuWidgetClass);
