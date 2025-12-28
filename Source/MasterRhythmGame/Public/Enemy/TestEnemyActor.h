@@ -60,7 +60,7 @@ public:
 
 	// --- HealthBar accessors ---
 	int32 GetHealth1() const { return HealthBar1; }
-	void SetHealth1(int32 InHealth) { HealthBar1 = InHealth; }
+		void SetHealth1(int32 InHealth) { HealthBar1 = InHealth; }
 
 	int32 GetHealth2() const { return HealthBar2; }
 	void SetHealth2(int32 InHealth) { HealthBar2 = InHealth; }
@@ -83,15 +83,8 @@ public:
 	int32 GetHealth8() const { return HealthBar8; }
 	void SetHealth8(int32 InHealth) { HealthBar8 = InHealth; }
 
-	// --- Current part control (1..8) ---
-	int32 GetCurrentPart() const { return CurrentPart; }
-	void SetCurrentPart(int32 InPart) { CurrentPart = FMath::Clamp(InPart, 1, 8); }
-
 	UFUNCTION()
 	void Attack(int32 InBPM);
-
-	UFUNCTION()
-	void UpdateHealthUIForPart(int32 Part);
 
 protected:
 	// Called when the game starts or when spawned
@@ -149,10 +142,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TSubclassOf<ANodeActor> NodeActor { nullptr };
-
-	// which part is active (1..8). Damage will only be applied to the corresponding HealthBarX.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 CurrentPart { 1 };
 
 	UPROPERTY()
 	TObjectPtr<AGameHUD> GameHUD { nullptr };

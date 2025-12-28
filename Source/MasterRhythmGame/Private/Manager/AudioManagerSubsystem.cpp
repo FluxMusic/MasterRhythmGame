@@ -14,6 +14,8 @@
 #include "Enemy/TestEnemyActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
+#include "Components/TextBlock.h"
+#include "HUD/GameHUD.h"
 
 UAudioManagerSubsystem::UAudioManagerSubsystem()
 {
@@ -116,15 +118,49 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedName(FName OutputName, const
 
 void UAudioManagerSubsystem::WatchOutputPartFinishedPercent(FName OutputName, const FMetaSoundOutput& Output)
 {
-	//// Try to extract a float value from the MetaSound output
-	//float Value = 0.0f;
-	//if (Output.Get<float>(Value))
-	//{
-	//	const bool bNormalized = (Value >= 0.0f && Value <= 1.0f);
-	//	const float DisplayValue = bNormalized ? Value * 100.0f : Value;
-	//	const FString Msg = FString::Printf(TEXT("%s = %.2f%%"), *OutputName.ToString(), DisplayValue);
-	//	UKismetSystemLibrary::PrintString(this, Msg, true, true, FLinearColor::Yellow, 5.0f);
-	//}
+	if (GameHUD == nullptr)
+	{
+		if (APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0))
+		{
+			GameHUD = Cast<AGameHUD>(PC->GetHUD());
+		}
+	}
+
+	// If Part1IntroEnd has not happened yet, always show "0%"
+	if (!bPart1IntroEnded)
+	{
+		if (GameHUD != nullptr)
+		{
+			if (UTextBlock* CompletionPercent = GameHUD->GetMainGameInstance()->GetCompletionPercent())
+			{
+				CompletionPercent->SetText(FText::FromString(TEXT("0%")));
+			}
+		}
+		return;
+	}
+
+	// Try to extract a float value from the MetaSound output
+	float Value = 0.0f;
+	if (Output.Get<float>(Value))
+	{
+		// If the MetaSound outputs a normalized value [0..1], convert to percent
+		const bool bNormalized = (Value >= 0.0f && Value <= 1.0f);
+		const float DisplayValue = bNormalized ? Value * 100.0f : Value;
+
+		// Round to nearest integer so no decimal places are shown
+		const int32 IntPercent = FMath::RoundToInt(DisplayValue);
+
+		// Only show the percentage number and percent sign (e.g. "42%")
+		const FString Msg = FString::Printf(TEXT("%d%%"), IntPercent);
+
+		if (GameHUD != nullptr)
+		{
+			if (UTextBlock* CompletionPercent = GameHUD->GetMainGameInstance()->GetCompletionPercent())
+			{
+				CompletionPercent->SetText(FText::FromString(Msg));
+			}
+		}
+	}
 }
 
 void UAudioManagerSubsystem::StartIntro()
@@ -302,6 +338,9 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 		bEnemyCanAttack = true;
 		bPlayAgain = true;
 		
+		// Mark that Part1Intro has finished so percentage updates are allowed
+		bPart1IntroEnded = true;
+
 		UnmuteLeads();
 	}
 	else if (PartNameFix.Equals(TEXT("Part1End")))
@@ -342,6 +381,7 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 	{
 		StartPart2();
 		bEnemyCanAttack = true;
+		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -351,6 +391,7 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 		if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (bEnemyCanAttack))
 		{
 			bEnemyCanAttack = false;
+			bPlayerCanAttack = false;
 			StartPart2();
 			bPlayAgain = true;
 
@@ -360,7 +401,8 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 		{
 			StartPart2();
 			bPlayAgain = false;
-			
+			bPlayerCanAttack = true;
+
 			MuteLeads();
 		}
 		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
@@ -368,12 +410,13 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 			StartPart2();
 			bEnemyCanAttack = true;
 			bPlayAgain = false;
+			bPlayerCanAttack = true;
 
 			UnmuteLeads();
 		}
 		else
 		{
-			StartPart3Intro();
+			StartPart2Intro();
 		}
 	}
 	else if (PartNameFix.Equals(TEXT("Part3IntroEnd")))
@@ -389,14 +432,17 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 		if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (bEnemyCanAttack))
 		{
 			bEnemyCanAttack = false;
+			bPlayerCanAttack = false;
 			StartPart3();
-			
+			bPlayAgain = true;
+
 			MuteLeads();
 		}
 		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && bPlayAgain)
 		{
 			StartPart3();
 			bPlayAgain = false;
+			bPlayerCanAttack = true;
 
 			MuteLeads();
 		}
@@ -405,6 +451,7 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 			StartPart3();
 			bEnemyCanAttack = true;
 			bPlayAgain = false;
+			bPlayerCanAttack = true;
 
 			UnmuteLeads();
 		}

@@ -79,6 +79,10 @@ protected:
 	UPROPERTY()
 	bool bCollidedWithEnemy { false };
 
+	// Movement direction: true = moving left (can hit player), false = moving right (can hit enemy)
+	UPROPERTY()
+	bool bMovingLeft { false };
+
 	// Damage values (configurable in editor)
 	UPROPERTY(EditAnywhere, Category = "Damage")
 	int32 DamageToPlayer { 10 };

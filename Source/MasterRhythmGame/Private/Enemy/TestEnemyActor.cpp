@@ -35,9 +35,6 @@ ATestEnemyActor::ATestEnemyActor()
 		AudioComponent->SetupAttachment(RootComponent);
 		AudioComponent->bAutoActivate = false;
 	}
-
-	// Ensure the enemy starts in Part 1
-	SetCurrentPart(1);
 }
 
 int32 ATestEnemyActor::CalcHealth1(int32 Value)
@@ -90,94 +87,24 @@ int32 ATestEnemyActor::CalcHealth8(int32 Value)
 
 void ATestEnemyActor::ApplyDamage(int32 DamageValue)
 {
-	// Apply damage only to the health bar that corresponds to CurrentPart.
-	// If that health bar drops to zero or below, advance to the next part (up to 8).
-	const int32 PrevPart = GetCurrentPart();
+	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
 
-	switch (PrevPart)
+	if (AudioManager != nullptr)
 	{
-		case 1:
+		auto PartName = AudioManager->GetPartNameFix();
+
+		if (PartName == "Part1End")
 		{
 			SetHealth1(CalcHealth1(DamageValue));
-			if (GetHealth1() <= 0)
-			{
-				SetCurrentPart(GetCurrentPart() + 1);
-			}
-			break;
 		}
-		case 2:
+		else if (PartName == "Part2End")
 		{
 			SetHealth2(CalcHealth2(DamageValue));
-			if (GetHealth2() <= 0)
-			{
-				SetCurrentPart(GetCurrentPart() + 1);
-			}
-			break;
 		}
-		case 3:
+		else if (PartName == "Part3End")
 		{
 			SetHealth3(CalcHealth3(DamageValue));
-			if (GetHealth3() <= 0)
-			{
-				SetCurrentPart(GetCurrentPart() + 1);
-			}
-			break;
 		}
-		case 4:
-		{
-			SetHealth4(CalcHealth4(DamageValue));
-			if (GetHealth4() <= 0)
-			{
-				SetCurrentPart(GetCurrentPart() + 1);
-			}
-			break;
-		}
-		case 5:
-		{
-			SetHealth5(CalcHealth5(DamageValue));
-			if (GetHealth5() <= 0)
-			{
-				SetCurrentPart(GetCurrentPart() + 1);
-			}
-			break;
-		}
-		case 6:
-		{
-			SetHealth6(CalcHealth6(DamageValue));
-			if (GetHealth6() <= 0)
-			{
-				SetCurrentPart(GetCurrentPart() + 1);
-			}
-			break;
-		}
-		case 7:
-		{
-			SetHealth7(CalcHealth7(DamageValue));
-			if (GetHealth7() <= 0)
-			{
-				SetCurrentPart(GetCurrentPart() + 1);
-			}
-			break;
-		}
-		case 8:
-		{
-			SetHealth8(CalcHealth8(DamageValue));
-			break;
-		}
-		default:
-		{
-			// Safety: clamp to valid range
-			SetCurrentPart(FMath::Clamp(GetCurrentPart(), 1, 8));
-			break;
-		}
-	}
-
-	// Update HUD for the part that was damaged and for the new current part (if advanced).
-	// This keeps the progress bars in sync and hides any that reached zero.
-	if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
-	{
-		UpdateHealthUIForPart(PrevPart);
-		UpdateHealthUIForPart(GetCurrentPart());
 	}
 }
 
@@ -230,15 +157,6 @@ void ATestEnemyActor::BeginPlay()
 		GameHUD = Cast<AGameHUD>(PC->GetHUD());
 	}
 
-	// Initialize all life bars in HUD (set percent and handle visibility for zero health)
-	if (GameHUD != nullptr)
-	{
-		for (int32 Part = 1; Part <= 8; ++Part)
-		{
-			UpdateHealthUIForPart(Part);
-		}
-	}
-
 	CreateAndStartQuartzClock(BPM);
 }
 
@@ -247,82 +165,4 @@ void ATestEnemyActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
-
-
-// --- Helper functions (internal to this translation unit) ---
-// Update progress bar percent and visibility for the given part.
-// Assumes GameHUD and its MainGameInstance are valid when called.
-void ATestEnemyActor::UpdateHealthUIForPart(int32 Part)
-{
-	if (GameHUD->GetMainGameInstance() == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Trash"));
-		return;
-	}
-
-	UProgressBar* TargetBar = nullptr;
-	int32 HealthValue = 0;
-
-	switch (Part)
-	{
-		case 1:
-			TargetBar = GameHUD->GetMainGameInstance()->GetLifeBarEnemy1();
-			HealthValue = GetHealth1();
-			break;
-		case 2:
-			TargetBar = GameHUD->GetMainGameInstance()->GetLifeBarEnemy2();
-			HealthValue = GetHealth2();
-			break;
-		case 3:
-			TargetBar = GameHUD->GetMainGameInstance()->GetLifeBarEnemy3();
-			HealthValue = GetHealth3();
-			break;
-		case 4:
-			TargetBar = GameHUD->GetMainGameInstance()->GetLifeBarEnemy4();
-			HealthValue = GetHealth4();
-			break;
-		case 5:
-			TargetBar = GameHUD->GetMainGameInstance()->GetLifeBarEnemy5();
-			HealthValue = GetHealth5();
-			break;
-		case 6:
-			TargetBar = GameHUD->GetMainGameInstance()->GetLifeBarEnemy6();
-			HealthValue = GetHealth6();
-			break;
-		case 7:
-			TargetBar = GameHUD->GetMainGameInstance()->GetLifeBarEnemy7();
-			HealthValue = GetHealth7();
-			break;
-		case 8:
-			TargetBar = GameHUD->GetMainGameInstance()->GetLifeBarEnemy8();
-			HealthValue = GetHealth8();
-			break;
-		default:
-			return;
-	}
-
-	if (TargetBar == nullptr)
-	{
-		return;
-	}
-
-	// NOTE:
-	// The project currently stores health as integers. To drive UProgressBar::SetPercent we
-	// need a normalized float in [0,1]. As a pragmatic default use 50.0f as the max health
-	// per segment (matches initial values used in constructor). If you have different maxima
-	// per segment, replace MaxHealth with those values.
-	constexpr float MaxHealth = 50.0f;
-	const float Normalized = FMath::Clamp(static_cast<float>(HealthValue) / MaxHealth, 0.0f, 1.0f);
-
-	TargetBar->SetPercent(Normalized);
-
-	if (HealthValue <= 0)
-	{
-		TargetBar->SetVisibility(ESlateVisibility::Hidden);
-	}
-	else
-	{
-		TargetBar->SetVisibility(ESlateVisibility::Visible);
-	}
 }

@@ -14,7 +14,7 @@ void AGameHUD::BeginPlay()
 	if (MainGameClass)
 	{
 		MainGameInstance = CreateWidget<UMainGameWidget>(GetWorld(), MainGameClass);
-		if (AudioSettingInstance != nullptr)
+		if (MainGameInstance != nullptr)
 		{
 			MainGameInstance->AddToViewport();
 			MainGameInstance->SetVisibility(ESlateVisibility::Visible);

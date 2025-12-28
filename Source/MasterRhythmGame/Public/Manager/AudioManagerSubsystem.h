@@ -7,6 +7,7 @@
 #include "TimerManager.h"
 #include "AudioManagerSubsystem.generated.h"
 
+class AGameHUD;
 class ASplineActor;
 class ATestEnemyActor;
 class ANodeActor;
@@ -49,6 +50,9 @@ public:
 
 	// --- Enemy Can Attack accessors ---
 	bool GetEnemyCanAttack() const { return bEnemyCanAttack; }
+
+	// --- Part Name Fix accessors ---
+	FString GetPartNameFix() const { return PartNameFix; }
 
 private:
 
@@ -150,4 +154,11 @@ private:
 
     UPROPERTY()
     bool bPlayerCanAttack { false };
+
+    // New: track whether Part1IntroEnd has occurred at least once
+    UPROPERTY()
+    bool bPart1IntroEnded { false };
+
+    UPROPERTY()
+    TObjectPtr<AGameHUD> GameHUD { nullptr }; 
 };

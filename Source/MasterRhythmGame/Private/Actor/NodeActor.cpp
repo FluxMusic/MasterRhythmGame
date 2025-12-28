@@ -36,9 +36,8 @@ ANodeActor::ANodeActor()
 	bCollidedWithPlayer = false;
 	bCollidedWithEnemy = false;
 
-	// default damage values (can be changed in editor)
-	DamageToPlayer = 10;
-	DamageToEnemy = 10;
+	// default movement direction (will be set by MoveLeft/MoveRight when node is sent)
+	bMovingLeft = false;
 }
 
 void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -50,59 +49,78 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 		return;
 	}
 
-	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
+	UAudioManagerSubsystem* AudioManager = GetWorld() ? GetWorld()->GetSubsystem<UAudioManagerSubsystem>() : nullptr;
 
-	// Player collision: mark flag so the player does NOT take damage when they are attacking.
+	// Player collision
 	AGameCharacter* OverlappingCharacter = Cast<AGameCharacter>(OtherActor);
 	if (OverlappingCharacter != nullptr)
 	{
-		if (AudioManager != nullptr)
+		// If the node is moving left, it targets the player side.
+		if (bMovingLeft)
 		{
-			// If the player is attacking, they should not receive damage from this note.
-			if (AudioManager->GetPlayerCanAttack())
+			// If player is attacking, treat as a collision that prevents damage but do not increment defended.
+			if (AudioManager != nullptr && AudioManager->GetPlayerCanAttack())
 			{
 				bCollidedWithPlayer = true;
 				return;
 			}
-			else
-			{
-				// Existing behavior when player is not attacking: treat as a collision and increment defended.
-				bCollidedWithPlayer = true;
 
-				int32 Defended = OverlappingCharacter->GetDefended();
-				Defended++;
-				OverlappingCharacter->SetDefended(Defended);
-
-				return;
-			}
+			// Player collided with a left-moving node => increment defended and prevent damage.
+			bCollidedWithPlayer = true;
+			int32 Defended = OverlappingCharacter->GetDefended();
+			Defended++;
+			OverlappingCharacter->SetDefended(Defended);
+			return;
 		}
+
+		// If node is moving right (targets enemy), a player overlap should not cause player damage.
+		// Mark as collided to ensure player won't be damaged by this note later.
+		bCollidedWithPlayer = true;
+		this->Destroy();
 	}
 
-	// Enemy collision: mark flag and destroy the note so the enemy does NOT take damage when it is attacking.
+	// Enemy collision
 	ATestEnemyActor* OverlappingEnemy = Cast<ATestEnemyActor>(OtherActor);
 	if (OverlappingEnemy != nullptr)
 	{
-		if (AudioManager != nullptr)
+		// If the node is moving right, it targets the enemy side.
+		if (!bMovingLeft)
 		{
-			// If the enemy is attacking, ensure it does not receive damage from this note.
-			if (AudioManager->GetEnemyCanAttack())
+			// If enemy is attacking, just mark collided to prevent damage.
+			if (AudioManager != nullptr && AudioManager->GetEnemyCanAttack())
 			{
 				bCollidedWithEnemy = true;
 				return;
 			}
-			else
-			{
-				// Existing behavior when enemy is not attacking: still mark collided and destroy note.
-				bCollidedWithEnemy = true;
-				this->Destroy();
-				return;
-			}
+
+			// Per requirement: when MoveRight executed and enemy collides with the note, nothing happens.
+			// Mark collided so the enemy will not receive damage from this note when it finishes.
+			bCollidedWithEnemy = true;
+			return;
 		}
+
+		// If node is moving left (targets player), preserve original behavior for enemy overlaps:
+		// if enemy overlaps with a left-moving node, mark and destroy.
+		if (AudioManager != nullptr && AudioManager->GetEnemyCanAttack())
+		{
+			bCollidedWithEnemy = true;
+			return;
+		}
+
+		bCollidedWithEnemy = true;
+		this->Destroy();
 	}
 }
 
 void ANodeActor::MoveLeft()
 {
+	// This node will travel left and therefore may damage the player (unless collided).
+	bMovingLeft = true;
+
+	// Reset collision flags for this new travel.
+	bCollidedWithPlayer = false;
+	bCollidedWithEnemy = false;
+
 	if (Timeline)
 	{
 		Timeline->PlayFromStart();
@@ -111,6 +129,13 @@ void ANodeActor::MoveLeft()
 
 void ANodeActor::MoveRight()
 {
+	// This node will travel right and therefore may damage the enemy (unless collided).
+	bMovingLeft = false;
+
+	// Reset collision flags for this new travel.
+	bCollidedWithPlayer = false;
+	bCollidedWithEnemy = false;
+
 	if (Timeline)
 	{
 		Timeline->ReverseFromEnd();
@@ -191,31 +216,35 @@ void ANodeActor::HandleTimelineProgress(float Value)
 
 void ANodeActor::HandleTimelineFinished()
 {
-	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
+	UAudioManagerSubsystem* AudioManager = GetWorld() ? GetWorld()->GetSubsystem<UAudioManagerSubsystem>() : nullptr;
 
-	// If we did not collide with the player, apply damage to the player
-	if (!bCollidedWithPlayer && !AudioManager->GetPlayerCanAttack())
+	if (bMovingLeft)
 	{
-		// find the player character and apply damage
-		if (AGameCharacter* PlayerActor = Cast<AGameCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameCharacter::StaticClass())))
+		if (!bCollidedWithPlayer && AudioManager != nullptr && !AudioManager->GetPlayerCanAttack())
 		{
-			AGameCharacter* GameChar = Cast<AGameCharacter>(PlayerActor);
-			if (GameChar != nullptr)
+			// find the player character and apply damage
+			if (AGameCharacter* PlayerActor = Cast<AGameCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameCharacter::StaticClass())))
 			{
-				UE_LOG(LogTemp, Log, TEXT("ANodeActor::HandleTimelineFinished - Applying %d damage to player."), DamageToPlayer);
-				GameChar->ApplyDamage(DamageToPlayer);
+				AGameCharacter* GameChar = Cast<AGameCharacter>(PlayerActor);
+				if (GameChar != nullptr)
+				{
+					UE_LOG(LogTemp, Log, TEXT("ANodeActor::HandleTimelineFinished - Applying %d damage to player."), DamageToPlayer);
+					GameChar->ApplyDamage(DamageToPlayer);
+				}
 			}
 		}
 	}
-	// If we did not collide with an enemy, find the first TestEnemyActor and apply damage
-	else if (!bCollidedWithEnemy && !AudioManager->GetEnemyCanAttack())
+	else
 	{
-		AActor* Found = UGameplayStatics::GetActorOfClass(GetWorld(), ATestEnemyActor::StaticClass());
-		ATestEnemyActor* Enemy = Cast<ATestEnemyActor>(Found);
-		if (Enemy != nullptr)
+		if (!bCollidedWithEnemy && AudioManager != nullptr && !AudioManager->GetEnemyCanAttack())
 		{
-			UE_LOG(LogTemp, Log, TEXT("ANodeActor::HandleTimelineFinished - Applying %d damage to enemy."), DamageToEnemy);
-			Enemy->ApplyDamage(DamageToEnemy);
+			AActor* Found = UGameplayStatics::GetActorOfClass(GetWorld(), ATestEnemyActor::StaticClass());
+			ATestEnemyActor* Enemy = Cast<ATestEnemyActor>(Found);
+			if (Enemy != nullptr)
+			{
+				UE_LOG(LogTemp, Log, TEXT("ANodeActor::HandleTimelineFinished - Applying %d damage to enemy."), DamageToEnemy);
+				Enemy->ApplyDamage(DamageToEnemy);
+			}
 		}
 	}
 
@@ -226,11 +255,6 @@ void ANodeActor::HandleTimelineFinished()
 		// Ensure any previous timer is cleared, then set the new timer
 		GetWorld()->GetTimerManager().ClearTimer(DestroyTimerHandle);
 		GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, this, &ANodeActor::OnDelayedDestroy, DelaySeconds, false);
-	}
-	else
-	{
-		// Fallback: destroy immediately if no world
-		this->Destroy();
 	}
 }
 
