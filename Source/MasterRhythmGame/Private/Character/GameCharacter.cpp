@@ -66,9 +66,13 @@ void AGameCharacter::BeginPlay()
 
 		GameHUD = Cast<AGameHUD>(PlayerController->GetHUD());
 
-		if (GameHUD != nullptr)
+		if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
 		{
 			GameHUD->GetMainGameInstance()->SetHealthPlayer(Health);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Fotze"));
 		}
 	}
 }
