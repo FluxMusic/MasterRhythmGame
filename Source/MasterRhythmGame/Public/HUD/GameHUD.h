@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "UI/PauseMenuWidget.h"
+#include "UI/Game/DeathWidget.h"
 #include "UI/Game/MainGameWidget.h"
 #include "UI/Settings/AudioSettingWidget.h"
 #include "UI/Settings/GraphicSettingWidget.h"
@@ -61,6 +62,14 @@ public:
 	UMainGameWidget* GetMainGameInstance() const { return MainGameInstance; }
 	void SetMainGameInstance(UMainGameWidget* InInstance) { MainGameInstance = InInstance; }
 
+	// --- Death Widget Class ---
+	TSubclassOf<UDeathWidget> GetDeathWidgetClass() const { return DeathWidgetClass; }
+	void SetDeathWidgetClass(TSubclassOf<UDeathWidget> InClass) { DeathWidgetClass = InClass; }
+
+	// --- Death Widget Instance ---
+	UDeathWidget* GetDeathWidgetInstance() const { return DeathWidgetInstance; }
+	void SetDeathWidgetInstance(UDeathWidget* InInstance) { DeathWidgetInstance = InInstance; }
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -94,4 +103,10 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UMainGameWidget> MainGameInstance { nullptr };
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UDeathWidget> DeathWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UDeathWidget> DeathWidgetInstance { nullptr };
 };

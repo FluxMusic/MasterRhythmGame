@@ -8,6 +8,7 @@
 #include "Quartz/AudioMixerClockHandle.h"
 #include "GameCharacter.generated.h"
 
+class AGameHUD;
 class USplineComponent;
 class ACameraActor;
 class UQuartzClockHandle;
@@ -73,4 +74,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	int32 Defended{ 0 };
+
+	UPROPERTY()
+	TObjectPtr<AGameHUD> GameHUD { nullptr };
 };

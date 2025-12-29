@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "MainGameWidget.generated.h"
 
+class AGameCharacter;
 class ATestEnemyActor;
 class UProgressBar;
 class UTextBlock;
@@ -17,6 +18,12 @@ class MASTERRHYTHMGAME_API UMainGameWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
+	UFUNCTION()
+	void SetHealthPlayer(int32 InHealth);
+
+	UFUNCTION()
+	void SetHealthEnemy(int32 InHealth);
+
 	// --- LifeBarPlayer ---
 	UProgressBar* GetLifeBarPlayer() const { return LifeBarPlayer; }
 
@@ -82,5 +89,8 @@ private:
 	class UTextBlock* CompletionPercent { nullptr };
 
 	//TODO: Kombotext
+
+	UPROPERTY()
+	TObjectPtr<ATestEnemyActor> Enemy { nullptr };
 
 };

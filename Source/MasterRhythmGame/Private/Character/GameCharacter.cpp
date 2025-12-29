@@ -7,6 +7,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Manager/AudioManagerSubsystem.h"
 #include "Components/AudioComponent.h"
+#include "HUD/GameHUD.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AGameCharacter::AGameCharacter()
@@ -61,6 +63,13 @@ void AGameCharacter::BeginPlay()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::BeginPlay - CameraActor soft reference could not be resolved."));
 		}
+
+		GameHUD = Cast<AGameHUD>(PlayerController->GetHUD());
+
+		if (GameHUD != nullptr)
+		{
+			GameHUD->GetMainGameInstance()->SetHealthPlayer(Health);
+		}
 	}
 }
 
@@ -104,14 +113,39 @@ void AGameCharacter::ApplyDamage(int32 DamageAmount)
 
 	if (GetHealth() <= 0)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Zero Life"));
-		// TODO: UI -> Restart Level
-		SetHealth(50);
+		if (GameHUD != nullptr)
+		{
+			GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
+			// Toggle pause state
+			bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
+			UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
+
+			if (bCurrentlyPaused == false)
+			{
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+				}
+				AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+
+
+
+				// Show mouse cursor and switch to GameAndUI input so widgets receive focus
+				PlayerController->bShowMouseCursor = true;
+				FInputModeGameAndUI InputMode;
+				InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+				PlayerController->SetInputMode(InputMode);
+			}
+		}
 	}
 }
 	
 int32 AGameCharacter::CalcHealth(int32 InHealth)
 {
 	Health -= InHealth;
+	if (GameHUD != nullptr)
+	{
+		GameHUD->GetMainGameInstance()->SetHealthPlayer(Health);
+	}
 	return Health;
 }

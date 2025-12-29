@@ -105,6 +105,8 @@ void ATestEnemyActor::ApplyDamage(int32 DamageValue)
 		{
 			SetHealth3(CalcHealth3(DamageValue));
 		}
+
+		// TODO: If enemy health reaches zero do sth
 	}
 }
 

@@ -57,4 +57,13 @@ void AGameHUD::BeginPlay()
 			AudioSettingInstance->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+	if (DeathWidgetClass)
+	{
+		DeathWidgetInstance = CreateWidget<UDeathWidget>(GetWorld(), DeathWidgetClass);
+		if (DeathWidgetInstance != nullptr)
+		{
+			DeathWidgetInstance->AddToViewport();
+			DeathWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
 }

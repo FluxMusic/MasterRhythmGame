@@ -22,6 +22,13 @@ enum class EControllerStateGame
 	AudioMenu
 };
 
+enum class EDeathState : uint8
+{
+	Respawn,
+	WorldMap,
+	MainMenu
+};
+
 class UInputMappingContext;
 class AGameCharacter;
 class AGameHUD;
@@ -124,6 +131,10 @@ protected:
 
 	void MainSettingSwitchButton(EMainSettingItem InMainSettingItem);
 
+	void DeathMenuControl(ENote Note);
+
+	void DeathMenuSwitchButton(EDeathState InDeathState);
+
 private:
 	UPROPERTY()
 	TObjectPtr<AGameHUD> GameHud { nullptr };
@@ -141,7 +152,10 @@ private:
 	int32 SettingMenuIndex { 0 };
 
 	UPROPERTY(VisibleAnywhere, DisplayName = "PauseMenuIndex", Category = "Components")
-	int32 PauseMenuIndex{ 0 };
+	int32 PauseMenuIndex { 0 };
+
+	UPROPERTY(VisibleAnywhere, DisplayName = "DeathMenuIndex", Category = "Components")
+	int32 DeathMenuIndex { 0 };
 
 	EControllerStateGame ControllerState { EControllerStateGame::Game };
 

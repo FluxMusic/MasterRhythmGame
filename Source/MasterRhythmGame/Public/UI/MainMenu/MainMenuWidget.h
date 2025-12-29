@@ -98,7 +98,6 @@ private:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UButton* Setting{ nullptr };
 
-	//TODO: Change Name later to WorldMap back
 	const FName LevelName = FName(TEXT("WorldMap"));
 
 	UPROPERTY()

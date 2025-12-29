@@ -927,29 +927,111 @@ void AGameController::MainSettingSwitchButton(EMainSettingItem InMainSettingItem
 	{
 		switch (InMainSettingItem)
 		{
-		case EMainSettingItem::Graphic:
+			case EMainSettingItem::Graphic:
+			{
+				GameHud->GetMainMenuSettingInstance()->GetGraphicButton()->SetKeyboardFocus();
+				GameHud->GetMainMenuSettingInstance()->GraphicButtonHovered();
+				break;
+			}
+			case EMainSettingItem::Audio:
+			{
+				GameHud->GetMainMenuSettingInstance()->GetAudioButton()->SetKeyboardFocus();
+				GameHud->GetMainMenuSettingInstance()->AudioButtonHovered();
+				break;
+			}
+			case EMainSettingItem::MainMenu:
+			{
+				GameHud->GetMainMenuSettingInstance()->GetMainMenuButton()->SetKeyboardFocus();
+				GameHud->GetMainMenuSettingInstance()->ReturnMainMenuButtonHovered();
+				break;
+			}
+			default:
+			{
+				// Should not land here
+				break;
+			}
+		}
+	}
+}
+
+void AGameController::DeathMenuControl(ENote Note)
+{
+	switch (Note)
+	{
+		case ENote::C:
 		{
-			GameHud->GetMainMenuSettingInstance()->GetGraphicButton()->SetKeyboardFocus();
-			GameHud->GetMainMenuSettingInstance()->GraphicButtonHovered();
+			DeathMenuIndex++;
+			DeathMenuIndex = FMath::Clamp(DeathMenuIndex, 0, 2);
+			UE_LOG(LogTemp, Log, TEXT("DeathMenuIndex: %d"), DeathMenuIndex);
 			break;
 		}
-		case EMainSettingItem::Audio:
+		case ENote::D:
 		{
-			GameHud->GetMainMenuSettingInstance()->GetAudioButton()->SetKeyboardFocus();
-			GameHud->GetMainMenuSettingInstance()->AudioButtonHovered();
+			DeathMenuIndex--;
+			DeathMenuIndex = FMath::Clamp(DeathMenuIndex, 0, 2);
+			UE_LOG(LogTemp, Log, TEXT("DeathMenuIndex: %d"), DeathMenuIndex);
 			break;
 		}
-		case EMainSettingItem::MainMenu:
+		case ENote::B:
 		{
-			GameHud->GetMainMenuSettingInstance()->GetMainMenuButton()->SetKeyboardFocus();
-			GameHud->GetMainMenuSettingInstance()->ReturnMainMenuButtonHovered();
-			break;
+			if (GameHud != nullptr)
+			{
+				if (GameHud->GetDeathWidgetInstance()->GetRespawnButton()->HasKeyboardFocus())
+				{
+					DeathMenuIndex = 0;
+					GameHud->GetDeathWidgetInstance()->RespawnButtonClicked();
+					break;
+				}
+				if (GameHud->GetDeathWidgetInstance()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					DeathMenuIndex = 0;
+					GameHud->GetDeathWidgetInstance()->MainMenuButtonClicked();
+					break;
+				}
+				if (GameHud->GetDeathWidgetInstance()->GetWorldMapButton()->HasKeyboardFocus())
+				{
+					DeathMenuIndex = 0;
+					GameHud->GetDeathWidgetInstance()->WorldMapButtonClicked();
+					break;
+				}
+			}
 		}
 		default:
 		{
 			// Should not land here
 			break;
 		}
+	}
+}
+
+void AGameController::DeathMenuSwitchButton(EDeathState InDeathState)
+{
+	if (GameHud != nullptr)
+	{
+		switch (InDeathState)
+		{
+			case EDeathState::Respawn:
+			{
+				GameHud->GetDeathWidgetInstance()->GetRespawnButton()->SetKeyboardFocus();
+				GameHud->GetDeathWidgetInstance()->RespawnButtonHovered();
+				break;
+			}
+			case EDeathState::MainMenu:
+			{
+				GameHud->GetDeathWidgetInstance()->GetMainMenuButton()->SetKeyboardFocus();
+				GameHud->GetDeathWidgetInstance()->MainMenuButtonHovered();
+				break;
+			}
+			case EDeathState::WorldMap:
+			{
+				GameHud->GetDeathWidgetInstance()->GetWorldMapButton()->SetKeyboardFocus();
+				GameHud->GetDeathWidgetInstance()->WorldMapButtonHovered();
+			}
+			default:
+			{
+				// Should not land here
+				break;
+			}
 		}
 	}
 }
