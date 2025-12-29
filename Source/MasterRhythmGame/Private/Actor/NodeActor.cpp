@@ -70,7 +70,6 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 		// If node is moving right (targets enemy), a player overlap should not cause player damage.
 		// Mark as collided to ensure player won't be damaged by this note later.
 		bCollidedWithPlayer = true;
-		this->Destroy();
 	}
 
 	// Enemy collision
@@ -102,7 +101,6 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 		}
 
 		bCollidedWithEnemy = true;
-		this->Destroy();
 	}
 }
 
