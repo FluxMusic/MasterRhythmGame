@@ -7,6 +7,8 @@
 #include "Quartz/AudioMixerClockHandle.h"
 #include "TestEnemyActor.generated.h"
 
+class UTimelineComponent;
+class UCurveFloat;
 class AGameHUD;
 class ANodeActor;
 class USplineComponent;
@@ -49,6 +51,15 @@ public:
 
 	UFUNCTION()
 	void CreateAndStartQuartzClock(int32 InBPM);
+
+	// Timeline helpers (setup a single-frame timeline to initialize UI one frame after BeginPlay)
+	void SetupHealthTimeline();
+
+	UFUNCTION()
+	void OnHealthTimelineTick(float Value);
+
+	UFUNCTION()
+	void OnHealthTimelineFinished();
 
 	// --- SplineRef accessors ---
 	USplineComponent* GetSplineRef() const { return SplineRef; }
@@ -145,4 +156,11 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AGameHUD> GameHUD { nullptr };
+
+	UPROPERTY()
+	TObjectPtr<UTimelineComponent> HealthTimeline { nullptr };
+
+	// Keep a runtime-created curve so GC won't collect it
+	UPROPERTY()
+	TObjectPtr<UCurveFloat> HealthCurve { nullptr };
 };

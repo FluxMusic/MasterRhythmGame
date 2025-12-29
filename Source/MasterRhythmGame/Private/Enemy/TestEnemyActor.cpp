@@ -1,19 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Enemy/TestEnemyActor.h"
 #include "Actor/NodeActor.h"
 #include "Manager/AudioManagerSubsystem.h"
 #include "Components/AudioComponent.h"
-#include "Components/ProgressBar.h"
 #include "HUD/GameHUD.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "Components/TimelineComponent.h"
+#include "Math/UnrealMathUtility.h"
 
 // Sets default values
 ATestEnemyActor::ATestEnemyActor()
 {
-	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.
 	PrimaryActorTick.bCanEverTick = true;
 
 	SetBPM(141);
@@ -35,6 +34,9 @@ ATestEnemyActor::ATestEnemyActor()
 		AudioComponent->SetupAttachment(RootComponent);
 		AudioComponent->bAutoActivate = false;
 	}
+
+	// Create Timeline component so it's available at runtime
+	HealthTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("Health Timeline"));
 }
 
 int32 ATestEnemyActor::CalcHealth1(int32 Value)
@@ -96,16 +98,28 @@ void ATestEnemyActor::ApplyDamage(int32 DamageValue)
 		if (PartName == "Part1End")
 		{
 			SetHealth1(CalcHealth1(DamageValue));
+			// update UI
+			if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
+			{
+				GameHUD->GetMainGameInstance()->SetHealthEnemy1(GetHealth1());
+			}
 		}
 		else if (PartName == "Part2End")
 		{
 			SetHealth2(CalcHealth2(DamageValue));
+			if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
+			{
+				GameHUD->GetMainGameInstance()->SetHealthEnemy2(GetHealth2());
+			}
 		}
 		else if (PartName == "Part3End")
 		{
 			SetHealth3(CalcHealth3(DamageValue));
+			if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
+			{
+				GameHUD->GetMainGameInstance()->SetHealthEnemy3(GetHealth3());
+			}
 		}
-
 		// TODO: If enemy health reaches zero do sth
 	}
 }
@@ -131,7 +145,6 @@ void ATestEnemyActor::CreateAndStartQuartzClock(int32 InBPM)
 
 void ATestEnemyActor::Attack(int32 InBPM)
 {
-
 	FVector SpawnLocation;
 	auto ActorLocation = GetActorLocation();
 	auto SceneLocation = Scene->GetRelativeLocation();
@@ -160,11 +173,93 @@ void ATestEnemyActor::BeginPlay()
 	}
 
 	CreateAndStartQuartzClock(BPM);
+
+	// Setup timeline that will execute one frame later to initialize enemy health UI
+	SetupHealthTimeline();
+	if (HealthTimeline != nullptr)
+	{
+		HealthTimeline->PlayFromStart();
+	}
 }
 
 // Called every frame
 void ATestEnemyActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
 
+void ATestEnemyActor::SetupHealthTimeline()
+{
+	if (HealthTimeline == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ATestEnemyActor::SetupHealthTimeline - HealthTimeline is null."));
+		return;
+	}
+
+	// Determine a single-frame duration. Default to 1/60s if delta not available.
+	float FrameTime = 1.0f / 60.0f;
+	if (GetWorld() && GetWorld()->GetDeltaSeconds() > 0.0f)
+	{
+		FrameTime = GetWorld()->GetDeltaSeconds();
+	}
+
+	// Create a short runtime curve that goes from 0 to 1 across one frame.
+	if (HealthCurve == nullptr)
+	{
+		HealthCurve = NewObject<UCurveFloat>(this, TEXT("EnemyHealthCurve_Dyn"));
+		if (HealthCurve != nullptr)
+		{
+			HealthCurve->FloatCurve.AddKey(0.0f, 0.0f);
+			HealthCurve->FloatCurve.AddKey(FrameTime, 1.0f);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ATestEnemyActor::SetupHealthTimeline - Failed to create HealthCurve."));
+			return;
+		}
+	}
+
+	// Bind tick delegate (no-op but required) and finished delegate.
+	FOnTimelineFloat TickDelegate;
+	TickDelegate.BindUFunction(this, FName("OnHealthTimelineTick"));
+	HealthTimeline->AddInterpFloat(HealthCurve, TickDelegate);
+
+	FOnTimelineEvent FinishDelegate;
+	FinishDelegate.BindUFunction(this, FName("OnHealthTimelineFinished"));
+	HealthTimeline->SetTimelineFinishedFunc(FinishDelegate);
+
+	HealthTimeline->SetLooping(false);
+	HealthTimeline->SetTimelineLength(FrameTime);
+	HealthTimeline->SetTimelineLengthMode(ETimelineLengthMode::TL_TimelineLength);
+
+	if (!HealthTimeline->IsRegistered())
+	{
+		HealthTimeline->RegisterComponent();
+	}
+}
+
+void ATestEnemyActor::OnHealthTimelineTick(float Value)
+{
+	// no action required on tick; we only need the finished callback after one frame
+}
+
+void ATestEnemyActor::OnHealthTimelineFinished()
+{
+	if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
+	{
+		// Initialize the UI with the current actor health values.
+		// SetMaxHealthEnemyN will show/hide bars depending on max (0 = hidden).
+		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy1(GetHealth1());
+		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy2(GetHealth2());
+		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy3(GetHealth3());
+		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy4(GetHealth4());
+		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy5(GetHealth5());
+		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy6(GetHealth6());
+		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy7(GetHealth7());
+		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy8(GetHealth8());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ATestEnemyActor::OnHealthTimelineFinished - GameHUD or MainGameInstance not available."));
+	}
 }

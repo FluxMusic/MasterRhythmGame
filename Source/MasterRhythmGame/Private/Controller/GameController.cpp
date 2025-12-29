@@ -176,6 +176,11 @@ void AGameController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceControl
 			SettingMenuControl(NoteEnum);
 			break;
 		}
+		case EControllerStateGame::DeathMenu:
+		{
+			DeathMenuControl(NoteEnum);
+			break;
+		}
 		default:
 		{
 			// Should not land here
@@ -1002,6 +1007,8 @@ void AGameController::DeathMenuControl(ENote Note)
 			break;
 		}
 	}
+	// map index -> enum
+	DeathMenuSwitchButton(static_cast<EDeathState>(DeathMenuIndex));
 }
 
 void AGameController::DeathMenuSwitchButton(EDeathState InDeathState)

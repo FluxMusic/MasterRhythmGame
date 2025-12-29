@@ -20,9 +20,42 @@ class MASTERRHYTHMGAME_API UMainGameWidget : public UUserWidget
 public:
 	UFUNCTION()
 	void SetHealthPlayer(int32 InHealth);
+	UFUNCTION()
+	void SetMaxHealthPlayer(int32 InMaxHealth);
 
 	UFUNCTION()
-	void SetHealthEnemy(int32 InHealth);
+	void SetHealthEnemy1(int32 InHealth);
+	UFUNCTION()
+	void SetHealthEnemy2(int32 InHealth);
+	UFUNCTION()
+	void SetHealthEnemy3(int32 InHealth);
+	UFUNCTION()
+	void SetHealthEnemy4(int32 InHealth);
+	UFUNCTION()
+	void SetHealthEnemy5(int32 InHealth);
+	UFUNCTION()
+	void SetHealthEnemy6(int32 InHealth);
+	UFUNCTION()
+	void SetHealthEnemy7(int32 InHealth);
+	UFUNCTION()
+	void SetHealthEnemy8(int32 InHealth);
+
+	UFUNCTION()
+	void SetMaxHealthEnemy1(int32 InMaxHealth);
+	UFUNCTION()
+	void SetMaxHealthEnemy2(int32 InMaxHealth);
+	UFUNCTION()
+	void SetMaxHealthEnemy3(int32 InMaxHealth);
+	UFUNCTION()
+	void SetMaxHealthEnemy4(int32 InMaxHealth);
+	UFUNCTION()
+	void SetMaxHealthEnemy5(int32 InMaxHealth);
+	UFUNCTION()
+	void SetMaxHealthEnemy6(int32 InMaxHealth);
+	UFUNCTION()
+	void SetMaxHealthEnemy7(int32 InMaxHealth);
+	UFUNCTION()
+	void SetMaxHealthEnemy8(int32 InMaxHealth);
 
 	// --- LifeBarPlayer ---
 	UProgressBar* GetLifeBarPlayer() const { return LifeBarPlayer; }
@@ -93,4 +126,23 @@ private:
 	UPROPERTY()
 	TObjectPtr<ATestEnemyActor> Enemy { nullptr };
 
+	UPROPERTY()
+	int32 MaxPlayerHealth { 0 };
+
+	UPROPERTY()
+	int32 MaxEnemyHealth1 { 0 };
+	UPROPERTY()
+	int32 MaxEnemyHealth2 { 0 };
+	UPROPERTY()
+	int32 MaxEnemyHealth3 { 0 };
+	UPROPERTY()
+	int32 MaxEnemyHealth4 { 0 };
+	UPROPERTY()
+	int32 MaxEnemyHealth5 { 0 };
+	UPROPERTY()
+	int32 MaxEnemyHealth6 { 0 };
+	UPROPERTY()
+	int32 MaxEnemyHealth7 { 0 };
+	UPROPERTY()
+	int32 MaxEnemyHealth8 { 0 };
 };

@@ -19,7 +19,8 @@ enum class EControllerStateGame
 	Game,
 	SettingMenu,
 	GraphicsMenu,
-	AudioMenu
+	AudioMenu,
+	DeathMenu
 };
 
 enum class EDeathState : uint8

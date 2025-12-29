@@ -8,6 +8,7 @@
 #include "Quartz/AudioMixerClockHandle.h"
 #include "GameCharacter.generated.h"
 
+class UTimelineComponent;
 class AGameHUD;
 class USplineComponent;
 class ACameraActor;
@@ -33,6 +34,15 @@ public:
 	void ApplyDamage(int32 DamageAmount);
 
 	int32 CalcHealth(int32 InHealth);
+
+	// Timeline helpers
+	void SetupHealthTimeline();
+
+	UFUNCTION()
+	void OnHealthTimelineTick(float Value);
+
+	UFUNCTION()
+	void OnHealthTimelineFinished();
 
 	// --- Health accessors ---
 	int32 GetHealth() const { return Health; }
@@ -70,11 +80,18 @@ private:
 	TObjectPtr<USplineComponent> SplineRef { nullptr };
 
 	UPROPERTY(EditAnywhere)
-	int32 Health{ 50 };
+	int32 Health { 50 };
 
 	UPROPERTY(EditAnywhere)
-	int32 Defended{ 0 };
+	int32 Defended { 0 };
 
 	UPROPERTY()
 	TObjectPtr<AGameHUD> GameHUD { nullptr };
+
+	UPROPERTY()
+	TObjectPtr<UTimelineComponent> HealthTimeline { nullptr };
+
+	// Runtime-created curve used by the timeline (kept so GC doesn't collect it)
+	UPROPERTY()
+	TObjectPtr<UCurveFloat> HealthCurve { nullptr };
 };

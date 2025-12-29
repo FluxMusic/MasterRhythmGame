@@ -8,6 +8,7 @@
 #include "Manager/AudioManagerSubsystem.h"
 #include "Components/AudioComponent.h"
 #include "HUD/GameHUD.h"
+#include "Components/TimelineComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -29,6 +30,9 @@ AGameCharacter::AGameCharacter()
 
 	GetCharacterMovement()->GravityScale = 0;
 	GetCharacterMovement()->bApplyGravityWhileJumping = false;
+
+	// Create and initialize Timeline component so it's not nullptr at runtime
+	HealthTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("Health Timeline"));
 }
 
 // Called when the game starts or when spawned
@@ -65,16 +69,9 @@ void AGameCharacter::BeginPlay()
 		}
 
 		GameHUD = Cast<AGameHUD>(PlayerController->GetHUD());
-
-		if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
-		{
-			GameHUD->GetMainGameInstance()->SetHealthPlayer(Health);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Fotze"));
-		}
 	}
+	SetupHealthTimeline();
+	HealthTimeline->PlayFromStart();
 }
 
 // Called every frame
@@ -119,7 +116,9 @@ void AGameCharacter::ApplyDamage(int32 DamageAmount)
 	{
 		if (GameHUD != nullptr)
 		{
+			AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
 			GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
+			PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
 			// Toggle pause state
 			bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
 			UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
@@ -130,10 +129,6 @@ void AGameCharacter::ApplyDamage(int32 DamageAmount)
 				{
 					GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
 				}
-				AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-
-
-
 				// Show mouse cursor and switch to GameAndUI input so widgets receive focus
 				PlayerController->bShowMouseCursor = true;
 				FInputModeGameAndUI InputMode;
@@ -152,4 +147,74 @@ int32 AGameCharacter::CalcHealth(int32 InHealth)
 		GameHUD->GetMainGameInstance()->SetHealthPlayer(Health);
 	}
 	return Health;
+}
+
+// Timeline setup and callbacks
+void AGameCharacter::SetupHealthTimeline()
+{
+	if (HealthTimeline == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::SetupHealthTimeline - HealthTimeline is null."));
+		return;
+	}
+
+	// Determine a single-frame duration. If world delta is available, use it; otherwise default to 1/60s.
+	float FrameTime = 1.0f / 60.0f;
+	if (GetWorld() && GetWorld()->GetDeltaSeconds() > 0.0f)
+	{
+		FrameTime = GetWorld()->GetDeltaSeconds();
+	}
+
+	// Create a short runtime curve that goes from 0 to 1 across one frame.
+	if (HealthCurve == nullptr)
+	{
+		HealthCurve = NewObject<UCurveFloat>(this, TEXT("HealthCurve_Dyn"));
+		if (HealthCurve != nullptr)
+		{
+			HealthCurve->FloatCurve.AddKey(0.0f, 0.0f);
+			HealthCurve->FloatCurve.AddKey(FrameTime, 1.0f);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::SetupHealthTimeline - Failed to create HealthCurve."));
+			return;
+		}
+	}
+
+	// Bind tick delegate (no-op, but required to drive timeline) and finished delegate.
+	FOnTimelineFloat TickDelegate;
+	TickDelegate.BindUFunction(this, FName("OnHealthTimelineTick"));
+	HealthTimeline->AddInterpFloat(HealthCurve, TickDelegate);
+
+	FOnTimelineEvent FinishDelegate;
+	FinishDelegate.BindUFunction(this, FName("OnHealthTimelineFinished"));
+	HealthTimeline->SetTimelineFinishedFunc(FinishDelegate);
+
+	HealthTimeline->SetLooping(false);
+	HealthTimeline->SetTimelineLength(FrameTime);
+	HealthTimeline->SetTimelineLengthMode(ETimelineLengthMode::TL_TimelineLength);
+
+	// Ensure component is registered and start it.
+	if (!HealthTimeline->IsRegistered())
+	{
+		HealthTimeline->RegisterComponent();
+	}
+	HealthTimeline->PlayFromStart();
+}
+
+void AGameCharacter::OnHealthTimelineTick(float Value)
+{
+	// Intentionally left empty — we only need the finished event one frame later.
+}
+
+void AGameCharacter::OnHealthTimelineFinished()
+{
+	if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
+	{
+		GameHUD->GetMainGameInstance()->SetMaxHealthPlayer(Health);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::OnHealthTimelineFinished - GameHUD or MainGameInstance not available."));
+	}
 }
