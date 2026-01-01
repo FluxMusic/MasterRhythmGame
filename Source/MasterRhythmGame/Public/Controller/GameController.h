@@ -213,8 +213,5 @@ private:
 	UPROPERTY(EditAnywhere, DisplayName = "Pause Action", Category = "InputAction")
 	UInputAction* PauseAction { nullptr };
 
-	UPROPERTY(EditAnywhere, DisplayName = "Attack Action", Category = "InputAction")
-	UInputAction* AttackAction { nullptr };
-
 #pragma endregion
 };

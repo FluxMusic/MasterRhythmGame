@@ -92,7 +92,6 @@ void AGameController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(AAction, ETriggerEvent::Triggered, this, &AGameController::HandleAAttack);
 		EnhancedInputComponent->BindAction(BAction, ETriggerEvent::Triggered, this, &AGameController::HandleBAttack);
 		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Triggered, this, &AGameController::HandlePause);
-		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &AGameController::HandleAttack);
 	}
 }
 
@@ -230,6 +229,7 @@ void AGameController::HandleCAttack()
 	{
 		GameCharacter->SetSplineRef(Spline->GetSplines(0));
 	}
+	HandleAttack();
 }
 
 void AGameController::HandleDAttack()
@@ -245,6 +245,7 @@ void AGameController::HandleDAttack()
 	{
 		GameCharacter->SetSplineRef(Spline->GetSplines(2));
 	}
+	HandleAttack();
 }
 
 void AGameController::HandleEAttack()
@@ -260,6 +261,7 @@ void AGameController::HandleEAttack()
 	{
 		GameCharacter->SetSplineRef(Spline->GetSplines(4));
 	}
+	HandleAttack();
 }
 
 void AGameController::HandleFAttack()
@@ -275,6 +277,7 @@ void AGameController::HandleFAttack()
 	{
 		GameCharacter->SetSplineRef(Spline->GetSplines(5));
 	}
+	HandleAttack();
 }
 
 void AGameController::HandleGAttack()
@@ -290,6 +293,7 @@ void AGameController::HandleGAttack()
 	{
 		GameCharacter->SetSplineRef(Spline->GetSplines(7));
 	}
+	HandleAttack();
 }
 
 void AGameController::HandleAAttack()
@@ -305,6 +309,7 @@ void AGameController::HandleAAttack()
 	{
 		GameCharacter->SetSplineRef(Spline->GetSplines(9));
 	}
+	HandleAttack();
 }
 
 void AGameController::HandleBAttack()
@@ -320,6 +325,7 @@ void AGameController::HandleBAttack()
 	{
 		GameCharacter->SetSplineRef(Spline->GetSplines(11));
 	}
+	HandleAttack();
 }
 
 void AGameController::HandleAttack()
@@ -459,11 +465,6 @@ void AGameController::GameControl(ENote Note)
 			case ENote::CSharp:
 			{
 				HandlePause();
-				break;
-			}
-			case ENote::ASharp:
-			{
-				HandleAttack();
 				break;
 			}
 			default:
