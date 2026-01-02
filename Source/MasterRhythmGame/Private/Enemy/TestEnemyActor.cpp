@@ -145,12 +145,9 @@ void ATestEnemyActor::CreateAndStartQuartzClock(int32 InBPM)
 
 void ATestEnemyActor::Attack(int32 InBPM)
 {
-	FVector SpawnLocation;
-	auto ActorLocation = GetActorLocation();
+	auto ActorLocation = AActor::GetActorLocation();
 	auto SceneLocation = Scene->GetRelativeLocation();
-	SpawnLocation.X = -2300.f;
-	SpawnLocation.Y = -3000.f + SceneLocation.Y;
-	SpawnLocation.Z = ActorLocation.Z;
+	auto SpawnLocation = ActorLocation + SceneLocation;
 	auto Note = GetWorld()->SpawnActor<ANodeActor>(NodeActor, SpawnLocation, GetActorRotation());
 
 	if (Note != nullptr)

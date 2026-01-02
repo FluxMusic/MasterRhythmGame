@@ -84,14 +84,14 @@ void AGameController::SetupInputComponent()
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent))
 	{
-		EnhancedInputComponent->BindAction(CAction, ETriggerEvent::Triggered, this, &AGameController::HandleCAttack);
-		EnhancedInputComponent->BindAction(DAction, ETriggerEvent::Triggered, this, &AGameController::HandleDAttack);
-		EnhancedInputComponent->BindAction(EAction, ETriggerEvent::Triggered, this, &AGameController::HandleEAttack);
-		EnhancedInputComponent->BindAction(FAction, ETriggerEvent::Triggered, this, &AGameController::HandleFAttack);
-		EnhancedInputComponent->BindAction(GAction, ETriggerEvent::Triggered, this, &AGameController::HandleGAttack);
-		EnhancedInputComponent->BindAction(AAction, ETriggerEvent::Triggered, this, &AGameController::HandleAAttack);
-		EnhancedInputComponent->BindAction(BAction, ETriggerEvent::Triggered, this, &AGameController::HandleBAttack);
-		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Triggered, this, &AGameController::HandlePause);
+		EnhancedInputComponent->BindAction(CAction, ETriggerEvent::Started, this, &AGameController::HandleCAttack);
+		EnhancedInputComponent->BindAction(DAction, ETriggerEvent::Started, this, &AGameController::HandleDAttack);
+		EnhancedInputComponent->BindAction(EAction, ETriggerEvent::Started, this, &AGameController::HandleEAttack);
+		EnhancedInputComponent->BindAction(FAction, ETriggerEvent::Started, this, &AGameController::HandleFAttack);
+		EnhancedInputComponent->BindAction(GAction, ETriggerEvent::Started, this, &AGameController::HandleGAttack);
+		EnhancedInputComponent->BindAction(AAction, ETriggerEvent::Started, this, &AGameController::HandleAAttack);
+		EnhancedInputComponent->BindAction(BAction, ETriggerEvent::Started, this, &AGameController::HandleBAttack);
+		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AGameController::HandlePause);
 	}
 }
 
@@ -338,12 +338,9 @@ void AGameController::HandleAttack()
 			auto Defended = GameCharacter->GetDefended() - 1;
 			UE_LOG(LogTemp, Warning, TEXT("Defended Left: %d"), Defended);
 			GameCharacter->SetDefended(Defended);
-			FVector SpawnLocationPlayer = FVector(0.0f, 0.0f, 0.0f);
 			auto ActorLocation = GameCharacter->GetActorLocation();
 			auto SceneLocation = GameCharacter->GetSceneComponent()->GetRelativeLocation();
-			SpawnLocationPlayer.X = -2300.f;
-			SpawnLocationPlayer.Y = -600.f + SceneLocation.Y;
-			SpawnLocationPlayer.Z = ActorLocation.Z;
+			auto SpawnLocationPlayer = ActorLocation + SceneLocation;
 			auto Note = GetWorld()->SpawnActor<ANodeActor>(NodeActor, SpawnLocationPlayer, GameCharacter->GetActorRotation());
 
 			if (Note != nullptr && Enemy != nullptr)
