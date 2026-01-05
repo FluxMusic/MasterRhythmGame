@@ -293,6 +293,7 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 		Spline = Cast<ASplineActor>(FoundSpline);
 	}
 
+	// TODO: Alex mach besser
 	if (Enemy != nullptr && Spline != nullptr && bEnemyCanAttack)
 	{
 		Enemy->SetSplineRef(Spline->GetSplines(MidiNote));
