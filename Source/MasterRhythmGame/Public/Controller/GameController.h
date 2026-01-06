@@ -164,9 +164,6 @@ private:
 	EControllerStateGame ControllerState { EControllerStateGame::Game };
 
 	UPROPERTY()
-	TArray<FVector> Points;
-
-	UPROPERTY()
 	TObjectPtr<AGameCharacter> GameCharacter { nullptr };
 
 	UPROPERTY(EditAnywhere, DisplayName = "GameCharacter Blueprint Class", Category = "Components")

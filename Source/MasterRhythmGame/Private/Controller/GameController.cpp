@@ -25,14 +25,6 @@ AGameController::AGameController()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	Points.Add(FVector(-2300.0f, -600.0f, 100.0f));
-	Points.Add(FVector(-2300.0f, -600.0f, 250.0f));
-	Points.Add(FVector(-2300.0f, -600.0f, 400.0f));
-	Points.Add(FVector(-2300.0f, -600.0f, 550.0f));
-	Points.Add(FVector(-2300.0f, -600.0f, 700.0f));
-	Points.Add(FVector(-2300.0f, -600.0f, 850.0f));
-	Points.Add(FVector(-2300.0f, -600.0f, 1000.0f));
 }
 
 void AGameController::BeginPlay()
