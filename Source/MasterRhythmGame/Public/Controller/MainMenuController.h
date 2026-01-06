@@ -8,6 +8,7 @@
 #include "HUD/MainMenuHUD.h"
 #include "MainMenuController.generated.h"
 
+UENUM(BlueprintType)
 enum class ENote : uint8
 {
 	C      = 0,

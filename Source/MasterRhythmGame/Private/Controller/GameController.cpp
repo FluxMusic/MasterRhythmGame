@@ -84,6 +84,16 @@ void AGameController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(GAction, ETriggerEvent::Started, this, &AGameController::HandleGAttack);
 		EnhancedInputComponent->BindAction(AAction, ETriggerEvent::Started, this, &AGameController::HandleAAttack);
 		EnhancedInputComponent->BindAction(BAction, ETriggerEvent::Started, this, &AGameController::HandleBAttack);
+		
+		//Trigger Release of note when releasing key
+		EnhancedInputComponent->BindAction(CAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(DAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(EAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(FAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(GAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(AAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(BAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
+
 		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AGameController::HandlePause);
 	}
 }
@@ -136,6 +146,8 @@ void AGameController::Tick(float DeltaSeconds)
 void AGameController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel,
 	int32 Note, int32 Velocity)
 {
+	NotePlayed = Note;
+
 	// Convert incoming MIDI note number to semitone class (0-11) and map to ENote.
 	const int32 Semitone = Note % 12;
 
@@ -183,9 +195,11 @@ void AGameController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceControl
 
 void AGameController::HandleNoteOff(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Note, int32 Velocity)
 {
-	//UE_LOG(LogTemp, Log, TEXT("Channel: %d"),  Channel);
-	//UE_LOG(LogTemp, Log, TEXT("Note: %d"),     Note);
-	//UE_LOG(LogTemp, Log, TEXT("Velocity: %d"), Velocity);
+	if (GameCharacter)
+	{
+		GameCharacter->StopNote();
+	}
+	
 }
 
 void AGameController::HandlePitchBend(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Pitch)
@@ -211,47 +225,54 @@ void AGameController::HandleControlChange(UMIDIDeviceInputController* MIDIDevice
 
 void AGameController::HandleCAttack()
 {
+	NotePlayed = 60;
 	MovePlayer(ENote::C);
-	HandleAttack();
+	HandleAttack(ENote::C);
 }
 
 void AGameController::HandleDAttack()
 {
+	NotePlayed = 62;
 	MovePlayer(ENote::D);
-	HandleAttack();
+	HandleAttack(ENote::D);
 }
 
 void AGameController::HandleEAttack()
 {
+	NotePlayed = 64;
 	MovePlayer(ENote::E);
-	HandleAttack();
+	HandleAttack(ENote::E);
 }
 
 void AGameController::HandleFAttack()
 {
+	NotePlayed = 65;
 	MovePlayer(ENote::F);
-	HandleAttack();
+	HandleAttack(ENote::F);
 }
 
 void AGameController::HandleGAttack()
 {
+	NotePlayed = 67;
 	MovePlayer(ENote::G);
-	HandleAttack();
+	HandleAttack(ENote::G);
 }
 
 void AGameController::HandleAAttack()
 {
+	NotePlayed = 69;
 	MovePlayer(ENote::A);
-	HandleAttack();
+	HandleAttack(ENote::A);
 }
 
 void AGameController::HandleBAttack()
 {
+	NotePlayed = 71;
 	MovePlayer(ENote::B);
-	HandleAttack();
+	HandleAttack(ENote::B);
 }
 
-void AGameController::HandleAttack()
+void AGameController::HandleAttack(ENote Note)
 {
 	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
 	if (AudioManager != nullptr)
@@ -264,16 +285,28 @@ void AGameController::HandleAttack()
 			auto ActorLocation = GameCharacter->GetActorLocation();
 			auto SceneLocation = GameCharacter->GetSceneComponent()->GetRelativeLocation();
 			auto SpawnLocationPlayer = ActorLocation + SceneLocation;
-			auto Note = GetWorld()->SpawnActor<ANodeActor>(NodeActor, SpawnLocationPlayer, GameCharacter->GetActorRotation());
+			auto NoteActor = GetWorld()->SpawnActor<ANodeActor>(NodeActor, SpawnLocationPlayer, GameCharacter->GetActorRotation());
 
-			if (Note != nullptr && Enemy != nullptr)
+			//Play some Feedback Sound
+			GameCharacter->PlayNote(NotePlayed);
+
+			if (NoteActor != nullptr && Enemy != nullptr)
 			{
-				Note->GetTimeline()->SetPlayRate(.25f);
-				Note->SetSplineRef(GameCharacter->GetSplineRef());
-				Note->MoveRight();
+				NoteActor->GetTimeline()->SetPlayRate(.25f);
+				NoteActor->SetSplineRef(GameCharacter->GetSplineRef());
+				NoteActor->MoveRight();
 			}
 		}
 	}
+}
+
+void AGameController::HandleNoteRelease()
+{
+	if (GameCharacter)
+	{
+		GameCharacter->StopNote();
+	}
+	
 }
 
 void AGameController::HandlePause()
@@ -320,8 +353,8 @@ void AGameController::GameControl(ENote Note)
 {
 	if (GameHud != nullptr)
 	{
-		MovePlayer(ENote::C);
-		HandleAttack();
+		MovePlayer(Note);
+		HandleAttack(Note);
 	}
 }
 

@@ -35,7 +35,6 @@ class AGameCharacter;
 class AGameHUD;
 enum class EAudioSettingItem : uint8;
 enum class EGraphicSettingItem : uint8;
-enum class ENote : uint8;
 enum class EMainSettingItem : uint8;
 enum class EPauseMenuItem;
 
@@ -108,7 +107,10 @@ protected:
 	void HandleBAttack();
 
 	UFUNCTION()
-	void HandleAttack();
+	void HandleAttack(ENote Note);
+	
+	UFUNCTION()
+	void HandleNoteRelease();
 
 	UFUNCTION()
 	void HandlePause();
@@ -140,6 +142,9 @@ protected:
 	void DeathMenuSwitchButton(EDeathState InDeathState);
 
 private:
+
+	int32 NotePlayed { -1 };
+
 	UPROPERTY()
 	TObjectPtr<AGameHUD> GameHud { nullptr };
 

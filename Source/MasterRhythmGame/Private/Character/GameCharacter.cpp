@@ -204,7 +204,7 @@ void AGameCharacter::SetupHealthTimeline()
 
 void AGameCharacter::OnHealthTimelineTick(float Value)
 {
-	// Intentionally left empty — we only need the finished event one frame later.
+	// Intentionally left empty ï¿½ we only need the finished event one frame later.
 }
 
 void AGameCharacter::OnHealthTimelineFinished()
@@ -217,4 +217,31 @@ void AGameCharacter::OnHealthTimelineFinished()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::OnHealthTimelineFinished - GameHUD or MainGameInstance not available."));
 	}
+}
+
+void AGameCharacter::PlayNote(int32 Note)
+{
+	if (AudioComponent && AudioComponent->GetSound())
+	{
+		if (!AudioComponent->IsPlaying())
+		{
+			AudioComponent->Play();
+		}
+		AudioComponent->SetTriggerParameter("MIDINoteOn");
+		AudioComponent->SetIntParameter("Note", Note);
+	}
+	
+}
+
+void AGameCharacter::StopNote()
+{
+	if (AudioComponent && AudioComponent->GetSound())
+	{
+		if (!AudioComponent->IsPlaying())
+		{
+			AudioComponent->Play();
+		}
+		AudioComponent->SetTriggerParameter("MIDINoteOff");
+	}
+	
 }

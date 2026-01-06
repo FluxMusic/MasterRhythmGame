@@ -59,6 +59,14 @@ public:
 	USplineComponent* GetSplineRef() const { return SplineRef; }
 	void SetSplineRef(USplineComponent* InSpline) { SplineRef = InSpline; }
 
+	//Plays a Sound when the player presses a note
+	UFUNCTION()
+	void PlayNote(int32 Note);
+	
+	//Stops the Sound when the player releases a note
+	UFUNCTION()
+	void StopNote();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
