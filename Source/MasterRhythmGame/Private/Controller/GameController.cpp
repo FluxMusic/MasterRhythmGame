@@ -8,6 +8,7 @@
 #include "Components/Button.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/Slider.h"
+#include "Components/SplineComponent.h"
 #include "Controller/MainMenuController.h"
 #include "Controller/WorldMapController.h"
 #include "HUD/GameHUD.h"
@@ -218,113 +219,43 @@ void AGameController::HandleControlChange(UMIDIDeviceInputController* MIDIDevice
 
 void AGameController::HandleCAttack()
 {
-	if (GameCharacter != nullptr)
-	{
-		if (GameCharacter->GetCapsuleComponent() != nullptr)
-		{
-			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[0]);
-		}
-	}
-	if (Spline != nullptr)
-	{
-		GameCharacter->SetSplineRef(Spline->GetSplines(0));
-	}
+	MovePlayer(ENote::C);
 	HandleAttack();
 }
 
 void AGameController::HandleDAttack()
 {
-	if (GameCharacter != nullptr)
-	{
-		if (GameCharacter->GetCapsuleComponent() != nullptr)
-		{
-			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[1]);
-		}
-	}
-	if (Spline != nullptr)
-	{
-		GameCharacter->SetSplineRef(Spline->GetSplines(2));
-	}
+	MovePlayer(ENote::D);
 	HandleAttack();
 }
 
 void AGameController::HandleEAttack()
 {
-	if (GameCharacter != nullptr)
-	{
-		if (GameCharacter->GetCapsuleComponent() != nullptr)
-		{
-			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[2]);
-		}
-	}
-	if (Spline != nullptr)
-	{
-		GameCharacter->SetSplineRef(Spline->GetSplines(4));
-	}
+	MovePlayer(ENote::E);
 	HandleAttack();
 }
 
 void AGameController::HandleFAttack()
 {
-	if (GameCharacter != nullptr)
-	{
-		if (GameCharacter->GetCapsuleComponent() != nullptr)
-		{
-			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[3]);
-		}
-	}
-	if (Spline != nullptr)
-	{
-		GameCharacter->SetSplineRef(Spline->GetSplines(5));
-	}
+	MovePlayer(ENote::F);
 	HandleAttack();
 }
 
 void AGameController::HandleGAttack()
 {
-	if (GameCharacter != nullptr)
-	{
-		if (GameCharacter->GetCapsuleComponent() != nullptr)
-		{
-			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[4]);
-		}
-	}
-	if (Spline != nullptr)
-	{
-		GameCharacter->SetSplineRef(Spline->GetSplines(7));
-	}
+	MovePlayer(ENote::G);
 	HandleAttack();
 }
 
 void AGameController::HandleAAttack()
 {
-	if (GameCharacter != nullptr)
-	{
-		if (GameCharacter->GetCapsuleComponent() != nullptr)
-		{
-			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[5]);
-		}
-	}
-	if (Spline != nullptr)
-	{
-		GameCharacter->SetSplineRef(Spline->GetSplines(9));
-	}
+	MovePlayer(ENote::A);
 	HandleAttack();
 }
 
 void AGameController::HandleBAttack()
 {
-	if (GameCharacter != nullptr)
-	{
-		if (GameCharacter->GetCapsuleComponent() != nullptr)
-		{
-			GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[6]);
-		}
-	}
-	if (Spline != nullptr)
-	{
-		GameCharacter->SetSplineRef(Spline->GetSplines(11));
-	}
+	MovePlayer(ENote::B);
 	HandleAttack();
 }
 
@@ -376,100 +307,29 @@ void AGameController::HandlePause()
 	}
 }
 
+void AGameController::MovePlayer(ENote Note)
+{
+	if (GameCharacter && GameCharacter->GetCapsuleComponent() && Spline)
+	{
+		//Sets the Characters Spline Ref based on the Midi Note played
+		USplineComponent* SplineRef = Spline->GetSplines(static_cast<int32>(Note));
+
+		GameCharacter->SetSplineRef(SplineRef);
+
+		const int32 Index = SplineRef->GetNumberOfSplinePoints() - 1;
+
+		FVector SplineWorldLocation = SplineRef->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);
+
+		GameCharacter->GetCapsuleComponent()->SetWorldLocation(SplineWorldLocation);
+	}
+}
+
 void AGameController::GameControl(ENote Note)
 {
 	if (GameHud != nullptr)
 	{
-		switch (Note)
-		{
-			case ENote::C:
-			{
-				if (GameCharacter != nullptr)
-				{
-					if (GameCharacter->GetCapsuleComponent() != nullptr)
-					{
-						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[0]);
-					}
-				}
-				break;
-			}
-			case ENote::D:
-			{
-				if (GameCharacter != nullptr)
-				{
-					if (GameCharacter->GetCapsuleComponent() != nullptr)
-					{
-						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[1]);
-					}
-				}
-				break;
-			}
-			case ENote::E:
-			{
-				if (GameCharacter != nullptr)
-				{
-					if (GameCharacter->GetCapsuleComponent() != nullptr)
-					{
-						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[2]);
-					}
-				}
-				break;
-			}
-			case ENote::F:
-			{
-				if (GameCharacter != nullptr)
-				{
-					if (GameCharacter->GetCapsuleComponent() != nullptr)
-					{
-						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[3]);
-					}
-				}
-				break;
-			}
-			case ENote::G:
-			{
-				if (GameCharacter != nullptr)
-				{
-					if (GameCharacter->GetCapsuleComponent() != nullptr)
-					{
-						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[4]);
-					}
-				}
-				break;
-			}
-			case ENote::A:
-			{
-				if (GameCharacter != nullptr)
-				{
-					if (GameCharacter->GetCapsuleComponent() != nullptr)
-					{
-						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[5]);
-					}
-				}
-				break;
-			}
-			case ENote::B:
-			{
-				if (GameCharacter != nullptr)
-				{
-					if (GameCharacter->GetCapsuleComponent() != nullptr)
-					{
-						GameCharacter->GetCapsuleComponent()->SetWorldLocation(Points[6]);
-					}
-				}
-				break;
-			}
-			case ENote::CSharp:
-			{
-				HandlePause();
-				break;
-			}
-			default:
-			{
-				// Should not land here
-				break;
-			}
-		}
+		MovePlayer(ENote::C);
+		HandleAttack();
 	}
 }
 

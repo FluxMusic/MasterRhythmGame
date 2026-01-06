@@ -85,6 +85,7 @@ protected:
 	UFUNCTION()
 	void HandleControlChange(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Type, int32 Value);
 
+	//TODO: Add Logic to remap Note based on Key of the Song
 	UFUNCTION()
 	void HandleCAttack();
 
@@ -111,6 +112,8 @@ protected:
 
 	UFUNCTION()
 	void HandlePause();
+
+	void MovePlayer(ENote Note);
 
 	void GameControl(ENote Note);
 

@@ -293,37 +293,28 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 		Spline = Cast<ASplineActor>(FoundSpline);
 	}
 
-	// TODO: Alex mach besser
+	//Move the Enemy to the corresponding Line based on the Midi Note
 	if (Enemy != nullptr && Spline != nullptr && bEnemyCanAttack)
 	{
 		Enemy->SetSplineRef(Spline->GetSplines(MidiNote));
 
-		const int32 Index = Enemy->GetSplineRef()->GetNumberOfSplinePoints() - 1;
+		const int32 Index = 0;
 
-		FVector SplineWorldLocation = Enemy->GetSplineRef()->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);
+		FVector SplineWorldLocation = Enemy->GetSplineRef()->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);               
 
-		FVector FinalLocation;
-		FinalLocation.X = -2300.f;								
-		FinalLocation.Y = -3000.f;								
-		FinalLocation.Z = SplineWorldLocation.Z;                
-
-		Enemy->SetActorLocation(FinalLocation);
+		Enemy->SetActorLocation(SplineWorldLocation);
 		Enemy->Attack(Enemy->GetBPM());
 	}
 	else if (Enemy != nullptr && Spline != nullptr && !bEnemyCanAttack)
 	{
 		Enemy->SetSplineRef(Spline->GetSplines(MidiNote));
 
-		const int32 Index = Enemy->GetSplineRef()->GetNumberOfSplinePoints() - 1;
+		// const int32 Index = Enemy->GetSplineRef()->GetNumberOfSplinePoints() - 1;
+		const int32 Index = 0;
 
 		FVector SplineWorldLocation = Enemy->GetSplineRef()->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);
 
-		FVector FinalLocation;
-		FinalLocation.X = -2300.f;
-		FinalLocation.Y = -3000.f;
-		FinalLocation.Z = SplineWorldLocation.Z;
-
-		Enemy->SetActorLocation(FinalLocation);
+		Enemy->SetActorLocation(SplineWorldLocation);
 	}
 }
 
