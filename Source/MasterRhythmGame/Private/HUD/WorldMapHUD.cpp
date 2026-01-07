@@ -21,15 +21,15 @@ void AWorldMapHUD::BeginPlay()
 			PauseMenuInstance->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
-	if (WorldMapWidgetClass)
-	{
-		WorldMapWidgetInstance = CreateWidget<UWorldMapWidget_TEMPORARILY>(GetWorld(), WorldMapWidgetClass);
+	//if (WorldMapWidgetClass)
+	//{
+	//	WorldMapWidgetInstance = CreateWidget<UWorldMapWidget_TEMPORARILY>(GetWorld(), WorldMapWidgetClass);
 
-		if (WorldMapWidgetInstance != nullptr)
-		{
-			WorldMapWidgetInstance->AddToViewport();
-		}
-	}
+	//	if (WorldMapWidgetInstance != nullptr)
+	//	{
+	//		WorldMapWidgetInstance->AddToViewport();
+	//	}
+	//}
 	if (MainMenuSettingWidgetClass)
 	{
 		MainMenuSettingInstance = CreateWidget<UMainMenuSettingWidget>(GetWorld(), MainMenuSettingWidgetClass);
