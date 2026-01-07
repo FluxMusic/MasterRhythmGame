@@ -3,27 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "../CoreTypes.h"
+
 #include "MIDIDevice/Public/MIDIDeviceInputController.h"
 #include "GameFramework/PlayerController.h"
 #include "HUD/MainMenuHUD.h"
 #include "MainMenuController.generated.h"
-
-UENUM(BlueprintType)
-enum class ENote : uint8
-{
-	C      = 0,
-	CSharp = 1,
-	D      = 2,
-	DSharp = 3,
-	E      = 4,
-	F      = 5,
-	FSharp = 6,
-	G      = 7,
-	GSharp = 8,
-	A      = 9,
-	ASharp = 10,
-	B      = 11
-};
 
 enum class EMainMenuItem : uint8
 {

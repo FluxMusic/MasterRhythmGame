@@ -294,27 +294,18 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 	}
 
 	//Move the Enemy to the corresponding Line based on the Midi Note
-	if (Enemy != nullptr && Spline != nullptr && bEnemyCanAttack)
+	if (Enemy != nullptr && Spline != nullptr)
 	{
 		Enemy->SetSplineRef(Spline->GetSplines(MidiNote));
 
-		const int32 Index = 0;
-
-		FVector SplineWorldLocation = Enemy->GetSplineRef()->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);               
+		FVector SplineWorldLocation = Enemy->GetSplineRef()->GetLocationAtSplinePoint(0, ESplineCoordinateSpace::World);               
 
 		Enemy->SetActorLocation(SplineWorldLocation);
-		Enemy->Attack(Enemy->GetBPM());
-	}
-	else if (Enemy != nullptr && Spline != nullptr && !bEnemyCanAttack)
-	{
-		Enemy->SetSplineRef(Spline->GetSplines(MidiNote));
 
-		// const int32 Index = Enemy->GetSplineRef()->GetNumberOfSplinePoints() - 1;
-		const int32 Index = 0;
-
-		FVector SplineWorldLocation = Enemy->GetSplineRef()->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);
-
-		Enemy->SetActorLocation(SplineWorldLocation);
+		if (bEnemyCanAttack)
+		{
+			Enemy->Attack(Enemy->GetBPM());
+		}
 	}
 }
 

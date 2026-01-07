@@ -4,6 +4,7 @@
 #include "Actor/SplineActor.h"
 
 #include "Components/SplineComponent.h"
+#include "Components/InstancedStaticMeshComponent.h"
 #include "Controller/MainMenuController.h"
 
 // Sets default values
@@ -16,29 +17,47 @@ ASplineActor::ASplineActor()
 
 	SetRootComponent(DefaultSceneRoot);
 
-	Spline = CreateDefaultSubobject<USplineComponent>("Spline");
-	Spline1 = CreateDefaultSubobject<USplineComponent>("Spline1");
-	Spline2 = CreateDefaultSubobject<USplineComponent>("Spline2");
-	Spline3 = CreateDefaultSubobject<USplineComponent>("Spline3");
-	Spline4 = CreateDefaultSubobject<USplineComponent>("Spline4");
-	Spline5 = CreateDefaultSubobject<USplineComponent>("Spline5");
-	Spline6 = CreateDefaultSubobject<USplineComponent>("Spline6");
+	MeshInstances = CreateDefaultSubobject<UInstancedStaticMeshComponent>("MeshInstances");
+	MeshInstances->SetupAttachment(RootComponent);
 
-	Spline->SetupAttachment(RootComponent);
-	Spline1->SetupAttachment(RootComponent);
-	Spline2->SetupAttachment(RootComponent);
-	Spline3->SetupAttachment(RootComponent);
-	Spline4->SetupAttachment(RootComponent);
-	Spline5->SetupAttachment(RootComponent);
-	Spline6->SetupAttachment(RootComponent);
+	if (Mesh && Material)
+	{
+		Mesh->SetMaterial(0, Material);
+	}
+	
 
-	Spline->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-	Spline1->SetRelativeLocation(FVector(0.0f, 0.0f, 150.0f));
-	Spline2->SetRelativeLocation(FVector(0.0f, 0.0f, 300.0f));
-	Spline3->SetRelativeLocation(FVector(0.0f, 0.0f, 450.0f));
-	Spline4->SetRelativeLocation(FVector(0.0f, 0.0f, 650.0f));
-	Spline5->SetRelativeLocation(FVector(0.0f, 0.0f, 750.0f));
-	Spline6->SetRelativeLocation(FVector(0.0f, 0.0f, 900.0f));
+	SplineC      = CreateDefaultSubobject<USplineComponent>("SplineC");
+	SplineCSharp = CreateDefaultSubobject<USplineComponent>("SplineCSharp");
+	SplineD      = CreateDefaultSubobject<USplineComponent>("SplineD");
+	SplineDSharp = CreateDefaultSubobject<USplineComponent>("SplineDSharp");
+	SplineE      = CreateDefaultSubobject<USplineComponent>("SplineE");
+	SplineF      = CreateDefaultSubobject<USplineComponent>("SplineF");
+	SplineFSharp = CreateDefaultSubobject<USplineComponent>("SplineFSharp");
+	SplineG      = CreateDefaultSubobject<USplineComponent>("SplineG");
+	SplineGSharp = CreateDefaultSubobject<USplineComponent>("SplineGSharp");
+	SplineA      = CreateDefaultSubobject<USplineComponent>("SplineA");
+	SplineASharp = CreateDefaultSubobject<USplineComponent>("SplineASharp");
+	SplineB      = CreateDefaultSubobject<USplineComponent>("SplineB");
+
+	SplineC->     SetupAttachment(RootComponent);
+	SplineCSharp->SetupAttachment(RootComponent);
+	SplineD->     SetupAttachment(RootComponent);
+	SplineDSharp->SetupAttachment(RootComponent);
+	SplineE->     SetupAttachment(RootComponent);
+	SplineF->     SetupAttachment(RootComponent);
+	SplineFSharp->SetupAttachment(RootComponent);
+	SplineG->     SetupAttachment(RootComponent);
+	SplineGSharp->SetupAttachment(RootComponent);
+	SplineA->     SetupAttachment(RootComponent);
+	SplineASharp->SetupAttachment(RootComponent);
+	SplineB->     SetupAttachment(RootComponent);
+}
+
+// Called every frame
+void ASplineActor::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
 }
 
 USplineComponent* ASplineActor::GetSplines(int32 Int)
@@ -51,31 +70,51 @@ USplineComponent* ASplineActor::GetSplines(int32 Int)
 	{
 		case ENote::C:
 		{
-			return Spline;
+			return SplineC;
+		}
+		case ENote::CSharp:
+		{
+			return SplineCSharp;
 		}
 		case ENote::D:
 		{
-			return Spline1;
+			return SplineD;
+		}
+		case ENote::DSharp:
+		{
+			return SplineDSharp;
 		}
 		case ENote::E:
 		{
-			return Spline2;
+			return SplineE;
 		}
 		case ENote::F:
 		{
-			return Spline3;
+			return SplineF;
+		}
+		case ENote::FSharp:
+		{
+			return SplineFSharp;
 		}
 		case ENote::G:
 		{
-			return Spline4;
+			return SplineG;
+		}
+		case ENote::GSharp:
+		{
+			return SplineGSharp;
 		}
 		case ENote::A:
 		{
-			return Spline5;
+			return SplineA;
+		}
+		case ENote::ASharp:
+		{
+			return SplineASharp;
 		}
 		case ENote::B:
 		{
-			return Spline6;
+			return SplineB;
 		}
 		default:
 		{
@@ -134,10 +173,128 @@ void ASplineActor::BeginPlay()
 	
 }
 
-// Called every frame
-void ASplineActor::Tick(float DeltaTime)
+void ASplineActor::OnConstruction(const FTransform& Transform)
 {
-	Super::Tick(DeltaTime);
+	Super::OnConstruction(Transform);
 
+	SplineC->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  0.f));
+	SplineCSharp->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  1.f));
+	SplineD->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  2.f));
+	SplineDSharp->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  3.f));
+	SplineE->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  4.f));
+	SplineF->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  5.f));
+	SplineFSharp->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  6.f));
+	SplineG->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  7.f));
+	SplineGSharp->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  8.f));
+	SplineA->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  9.f));
+	SplineASharp->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing * 10.f));
+	SplineB->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing * 11.f));
+
+	FVector Location;
+
+	//SplineC
+	Location = SplineC->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	Location.X = SplineLength;
+	SplineC->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	
+	//SplineCSharp
+	Location = SplineCSharp->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	Location.X = SplineLength;
+	SplineCSharp->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+
+	//SplineD
+	Location = SplineD->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	Location.X = SplineLength;
+	SplineD->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	
+	//SplineDSharp
+	Location = SplineDSharp->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	Location.X = SplineLength;
+	SplineDSharp->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	
+	//SplineE
+	Location = SplineE->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	Location.X = SplineLength;
+	SplineE->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	
+	//SplineF
+	Location = SplineF->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	Location.X = SplineLength;
+	SplineF->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	
+	//SplineFSharp
+	Location = SplineFSharp->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	Location.X = SplineLength;
+	SplineFSharp->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	
+	//SplineG
+	Location = SplineG->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	Location.X = SplineLength;
+	SplineG->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	
+	//SplineGSharp
+	Location = SplineGSharp->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	Location.X = SplineLength;
+	SplineGSharp->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	
+	//SplineA
+	Location = SplineA->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	Location.X = SplineLength;
+	SplineA->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	
+	//SplineASharp
+	Location = SplineASharp->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	Location.X = SplineLength;
+	SplineASharp->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	
+	//SplineB
+	Location = SplineB->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	Location.X = SplineLength;
+	SplineB->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+
+	SplineC->     SetVisibility(false);
+	SplineCSharp->SetVisibility(false);
+	SplineD->     SetVisibility(false);
+	SplineDSharp->SetVisibility(false);
+	SplineE->     SetVisibility(false);
+	SplineF->     SetVisibility(false);
+	SplineFSharp->SetVisibility(false);
+	SplineG->     SetVisibility(false);
+	SplineGSharp->SetVisibility(false);
+	SplineA->     SetVisibility(false);
+	SplineASharp->SetVisibility(false);
+	SplineB->     SetVisibility(false);
+
+	if (MeshInstances && Mesh)
+	{
+		MeshInstances->ClearInstances();
+		MeshInstances->SetStaticMesh(Mesh);
+
+		const float MeshLength = Mesh->GetBounds().BoxExtent.X * 2.f;
+		
+		for (int32 ScaleDegree : ScaleLookupTable.Find(Scale)->Scale)
+		{
+			auto* Spline = GetSplines(ScaleDegree);
+			Spline->SetVisibility(true);
+			
+			FVector Start = Spline->GetLocationAtSplinePoint(0, ESplineCoordinateSpace::Local);
+			FVector End   = Spline->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+
+			Start.Z = LineSpacing * ScaleDegree;
+			End.Z   = LineSpacing * ScaleDegree;
+
+			FVector Direction = End - Start;
+			float Length = Direction.Size();
+			Direction.Normalize();
+
+			FTransform InstanceTransform;
+			InstanceTransform.SetLocation((Start + End) * 0.5f);
+			InstanceTransform.SetRotation(FRotationMatrix::MakeFromX(Direction).ToQuat());
+
+			FVector InstanceScale = FVector(Length / MeshLength, 1.f, 1.f);
+			InstanceTransform.SetScale3D(InstanceScale);
+
+			MeshInstances->AddInstance(InstanceTransform);
+		}
+	}
 }
-

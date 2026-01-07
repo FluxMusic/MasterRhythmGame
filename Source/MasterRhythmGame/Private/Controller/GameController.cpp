@@ -282,19 +282,26 @@ void AGameController::HandleAttack(ENote Note)
 			auto Defended = GameCharacter->GetDefended() - 1;
 			UE_LOG(LogTemp, Warning, TEXT("Defended Left: %d"), Defended);
 			GameCharacter->SetDefended(Defended);
-			auto ActorLocation = GameCharacter->GetActorLocation();
-			auto SceneLocation = GameCharacter->GetSceneComponent()->GetRelativeLocation();
-			auto SpawnLocationPlayer = ActorLocation + SceneLocation;
-			auto NoteActor = GetWorld()->SpawnActor<ANodeActor>(NodeActor, SpawnLocationPlayer, GameCharacter->GetActorRotation());
-
-			//Play some Feedback Sound
-			GameCharacter->PlayNote(NotePlayed);
-
-			if (NoteActor != nullptr && Enemy != nullptr)
+			
+			if (GameCharacter->GetSplineRef()->IsVisible())
 			{
-				NoteActor->GetTimeline()->SetPlayRate(.25f);
-				NoteActor->SetSplineRef(GameCharacter->GetSplineRef());
-				NoteActor->MoveRight();
+				auto ActorLocation = GameCharacter->GetActorLocation();
+				auto SceneLocation = GameCharacter->GetSceneComponent()->GetRelativeLocation();
+				auto SpawnLocationPlayer = ActorLocation + SceneLocation;
+				auto NoteActor = GetWorld()->SpawnActor<ANodeActor>(NodeActor, SpawnLocationPlayer, GameCharacter->GetActorRotation());
+				//Play some Feedback Sound
+				GameCharacter->PlayNote(NotePlayed);
+
+				if (NoteActor != nullptr && Enemy != nullptr)
+				{
+					NoteActor->GetTimeline()->SetPlayRate(.25f);
+					NoteActor->SetSplineRef(GameCharacter->GetSplineRef());
+					NoteActor->MoveRight();
+				}
+			}
+			else
+			{
+				//TODO: Add some feedback when the Player plays a note that is off key
 			}
 		}
 	}
