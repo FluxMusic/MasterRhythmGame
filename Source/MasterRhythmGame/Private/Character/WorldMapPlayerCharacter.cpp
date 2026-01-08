@@ -107,9 +107,9 @@ void AWorldMapPlayerCharacter::HandleTimelineProgress(float Value)
 	{
 		case EDirectionWorldMap::Forward:
 		{
-			const float SplineLength = LevelNodeRef->GetSplineForward()->GetSpline()->GetSplineLength();
+			const float SplineLength = LevelNodeRef->GetSplineForward().Spline->GetSpline()->GetSplineLength();
 			const float DistanceAlongSpline = FMath::Clamp(NormalizedX * SplineLength, 0.0f, SplineLength);
-			const FVector NewLocation = LevelNodeRef->GetSplineForward()->GetSpline()->GetLocationAtDistanceAlongSpline(DistanceAlongSpline, ESplineCoordinateSpace::World);
+			const FVector NewLocation = LevelNodeRef->GetSplineForward().Spline->GetSpline()->GetLocationAtDistanceAlongSpline(DistanceAlongSpline, ESplineCoordinateSpace::World);
 			SetActorLocation(NewLocation);
 			break;
 		}

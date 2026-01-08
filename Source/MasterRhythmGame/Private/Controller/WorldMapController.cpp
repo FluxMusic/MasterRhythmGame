@@ -200,12 +200,12 @@ void AWorldMapController::WorldMapControl(ENote Note)
 				break;
 			}
 			// Forward
-			case ENote::GSharp:
+			case ENote::FSharp:
 			{
-				if (PlayerCharacter->GetLevelNodeRef()->GetSplineForward() != nullptr)
+				if (PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline != nullptr)
 				{
 					// TODO: Set Spline Target
-					PlayerCharacter->MoveForward(EDirectionWorldMap::Forward);
+					PlayerCharacter->MoveForward(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().DirectionWorldMap);
 					break;
 				}
 				break;
