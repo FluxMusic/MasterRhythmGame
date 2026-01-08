@@ -18,7 +18,7 @@ public:
 	// Sets default values for this actor's properties
 	ALevelPath();
 
-	// --- Spline ---
+	UFUNCTION(BlueprintCallable)
 	USplineComponent* GetSpline() const { return Spline; }
 
 private:
