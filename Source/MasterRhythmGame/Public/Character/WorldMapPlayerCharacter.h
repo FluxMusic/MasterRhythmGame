@@ -33,7 +33,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// Timeline progress callback — only float because Timeline delegate supplies only a float
+	// Timeline progress callback only float because Timeline delegate supplies only a float
 	UFUNCTION()
 	void HandleTimelineProgress(float Value);
 
@@ -41,14 +41,13 @@ public:
 	void HandleTimelineFinished();
 
 	UFUNCTION()
-	void MoveForward(EDirectionWorldMap InDirection);
-
-	UFUNCTION()
-	void MoveBackward();
+	void Move(EDirectionWorldMap InDirection);
 
 	// --- Level Node Ref ---
 	TObjectPtr<ALevelNode> GetLevelNodeRef() const { return LevelNodeRef; }
 	void SetLevelNodeRef(TObjectPtr<ALevelNode> InLevelNodeRef) { LevelNodeRef = InLevelNodeRef; }
+
+	void SetSplineRef(ALevelPath* SplineIn) { SplineRef = SplineIn; }
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
@@ -65,6 +64,9 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TObjectPtr<ALevelNode> LevelNodeRef { nullptr };
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<ALevelPath> SplineRef { nullptr };
 
 	// Current direction used during timeline movement
 	EDirectionWorldMap CurrentDirection { EDirectionWorldMap::Forward };

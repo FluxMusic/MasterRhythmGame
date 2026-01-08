@@ -172,7 +172,7 @@ void AWorldMapController::WorldMapControl(ENote Note)
 				if (PlayerCharacter->GetLevelNodeRef()->GetSplineLeft() != nullptr)
 				{
 					// TODO: Set Spline Target
-					PlayerCharacter->MoveForward(EDirectionWorldMap::Left);
+					// PlayerCharacter->MoveForward(EDirectionWorldMap::Left);
 					break;
 				}
 				break;
@@ -183,7 +183,7 @@ void AWorldMapController::WorldMapControl(ENote Note)
 				if (PlayerCharacter->GetLevelNodeRef()->GetSplineBackward() != nullptr)
 				{
 					// TODO: Set Spline Target
-					PlayerCharacter->MoveBackward();
+					// PlayerCharacter->MoveBackward();
 					break;
 				}
 				break;
@@ -194,7 +194,7 @@ void AWorldMapController::WorldMapControl(ENote Note)
 				if (PlayerCharacter->GetLevelNodeRef()->GetSplineRight() != nullptr)
 				{
 					// TODO: Set Spline Target
-					PlayerCharacter->MoveForward(EDirectionWorldMap::Right);
+					// PlayerCharacter->MoveForward(EDirectionWorldMap::Right);
 					break;
 				}
 				break;
@@ -205,7 +205,8 @@ void AWorldMapController::WorldMapControl(ENote Note)
 				if (PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline != nullptr)
 				{
 					// TODO: Set Spline Target
-					PlayerCharacter->MoveForward(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().DirectionWorldMap);
+					PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline);
+					PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().DirectionWorldMap);
 					break;
 				}
 				break;

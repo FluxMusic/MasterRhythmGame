@@ -102,41 +102,13 @@ void AWorldMapPlayerCharacter::HandleTimelineProgress(float Value)
 	{
 		return;
 	}
-
-	switch (CurrentDirection)
+	
+	if (SplineRef)
 	{
-		case EDirectionWorldMap::Forward:
-		{
-			const float SplineLength = LevelNodeRef->GetSplineForward().Spline->GetSpline()->GetSplineLength();
-			const float DistanceAlongSpline = FMath::Clamp(NormalizedX * SplineLength, 0.0f, SplineLength);
-			const FVector NewLocation = LevelNodeRef->GetSplineForward().Spline->GetSpline()->GetLocationAtDistanceAlongSpline(DistanceAlongSpline, ESplineCoordinateSpace::World);
-			SetActorLocation(NewLocation);
-			break;
-		}
-		case EDirectionWorldMap::Backward:
-		{
-			const float SplineLength = LevelNodeRef->GetSplineBackward()->GetSpline()->GetSplineLength();
-			const float DistanceAlongSpline = FMath::Clamp(NormalizedX * SplineLength, 0.0f, SplineLength);
-			const FVector NewLocation = LevelNodeRef->GetSplineBackward()->GetSpline()->GetLocationAtDistanceAlongSpline(DistanceAlongSpline, ESplineCoordinateSpace::World);
-			SetActorLocation(NewLocation);
-			break;
-		}
-		case EDirectionWorldMap::Left:
-		{
-			const float SplineLength = LevelNodeRef->GetSplineLeft()->GetSpline()->GetSplineLength();
-			const float DistanceAlongSpline = FMath::Clamp(NormalizedX * SplineLength, 0.0f, SplineLength);
-			const FVector NewLocation = LevelNodeRef->GetSplineLeft()->GetSpline()->GetLocationAtDistanceAlongSpline(DistanceAlongSpline, ESplineCoordinateSpace::World);
-			SetActorLocation(NewLocation);
-			break;
-		}
-		case EDirectionWorldMap::Right:
-		{
-			const float SplineLength = LevelNodeRef->GetSplineRight()->GetSpline()->GetSplineLength();
-			const float DistanceAlongSpline = FMath::Clamp(NormalizedX * SplineLength, 0.0f, SplineLength);
-			const FVector NewLocation = LevelNodeRef->GetSplineRight()->GetSpline()->GetLocationAtDistanceAlongSpline(DistanceAlongSpline, ESplineCoordinateSpace::World);
-			SetActorLocation(NewLocation);
-			break;
-		}
+		const float SplineLength = SplineRef->GetSpline()->GetSplineLength();
+		const float DistanceAlongSpline = FMath::Clamp(NormalizedX * SplineLength, 0.0f, SplineLength);
+		const FVector NewLocation = SplineRef->GetSpline()->GetLocationAtDistanceAlongSpline(DistanceAlongSpline, ESplineCoordinateSpace::World);
+		SetActorLocation(NewLocation);
 	}
 }
 
@@ -183,22 +155,22 @@ void AWorldMapPlayerCharacter::HandleTimelineFinished()
 	}
 }
 
-void AWorldMapPlayerCharacter::MoveForward(EDirectionWorldMap InDirection)
+void AWorldMapPlayerCharacter::Move(EDirectionWorldMap InDirection)
 {
-	CurrentDirection = InDirection;
-
 	if (Timeline != nullptr)
 	{
-		Timeline->PlayFromStart();
-	}
-}
-
-void AWorldMapPlayerCharacter::MoveBackward()
-{
-	CurrentDirection = EDirectionWorldMap::Backward;
-
-	if (Timeline != nullptr)
-	{
-		Timeline->ReverseFromEnd();
+		switch (InDirection)
+		{
+		case EDirectionWorldMap::Forward:
+			Timeline->PlayFromStart();
+			break;
+		
+		case EDirectionWorldMap::Backward:
+			Timeline->ReverseFromEnd();
+			break;
+		
+		default:
+			break;
+		}
 	}
 }
