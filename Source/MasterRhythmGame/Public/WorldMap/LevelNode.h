@@ -23,4 +23,20 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
+
+	UPROPERTY(EditAnywhere)
+	bool bIsUnlocked { false };
+
+	UPROPERTY()
+	TObjectPtr<USceneComponent> DefaultSceneRoot;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UStaticMeshComponent> Mesh { nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TArray<ALevelNode*> Neighbours { nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	FString LevelName;
 };
