@@ -44,6 +44,12 @@ void UAudioManagerSubsystem::StartClock()
 	if (ClockHandle != nullptr)
 	{
 		ClockHandle->StartClock(this, ClockHandle);
+
+		if (QuartzSubsystem)
+		{
+			LatencyBetweenThreads = QuartzSubsystem->GetAudioRenderThreadToGameThreadMaxLatency();
+		}
+		
 	}
 }
 
@@ -257,11 +263,20 @@ void UAudioManagerSubsystem::StopClock()
 void UAudioManagerSubsystem::OnQuartzClockBeat(FName ClockName, EQuartzCommandQuantization QuantizationType,
 	int32 NumBars, int32 Beat, float BeatFraction)
 {
-	//UKismetSystemLibrary::PrintString(this, FString::FormatAsNumber(Beat), true, true, FLinearColor::Green, 10.0f);
+	if (QuartzSubsystem)
+	{
+		// LastBeatAudioTimeSeconds = QuartzSubsystem->GetAudioRenderThreadToGameThreadMaxLatency();
+		LastBeatAudioTimeSeconds = FPlatformTime::Seconds();
+	}
+
+	UKismetSystemLibrary::PrintString(this, FString::FormatAsNumber(Beat), true, true, FLinearColor::Green, 10.0f);
 }
 
 void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output)
 {
+	//Test for Latency
+	MetaSoundOutputTimeSeconds = FPlatformTime::Seconds();
+
 	// Extract MIDI note as int32 and print it
 	int32 MidiNote = -1;
 	if (Output.Get<int32>(MidiNote))

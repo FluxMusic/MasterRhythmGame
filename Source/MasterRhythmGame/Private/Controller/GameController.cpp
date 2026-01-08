@@ -146,6 +146,21 @@ void AGameController::Tick(float DeltaSeconds)
 void AGameController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel,
 	int32 Note, int32 Velocity)
 {
+	//Test for Input Latency
+	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
+	if (AudioManager && AudioManager->GetQuartzSubsystem())
+	{
+		double LatencyBetweenThreads = AudioManager->GetLatencyBetweenThreads();
+
+		// double Latency = (FPlatformTime::Seconds() - AudioManager->GetBeatSeconds()) * 1000.0;
+		double Latency = (FPlatformTime::Seconds() - AudioManager->GetMetaSoundOutputTimeSeconds()) * 1000.0;
+
+		UE_LOG(LogTemp, Warning, TEXT("Audio Thread to Game Thread Latency: %f ms"), LatencyBetweenThreads);
+		UE_LOG(LogTemp, Warning, TEXT("Input Latency: %f ms"), Latency);
+		UE_LOG(LogTemp, Warning, TEXT("Full Latency: %f ms"), Latency + LatencyBetweenThreads);
+	}
+
+
 	NotePlayed = Note;
 
 	// Convert incoming MIDI note number to semitone class (0-11) and map to ENote.

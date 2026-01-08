@@ -93,4 +93,13 @@ protected:
 	// Timer handle used for delayed destroy (max 60ms)
 	UPROPERTY()
 	FTimerHandle DestroyTimerHandle;
+
+	/**
+	 * The Time added for the note to stay by the player to account for latency
+	 * Max Latency between Audio and Game Thread: approx. 45 Ms
+	 * Input Latency with good timing: about 120 Ms
+	 * Altogether, an Offset of 200 should be good for players with a good feel of Rhythm
+	 * For Players with a worse sense of Rhythm, we should keep the offset higher, like 250 Ms
+	 */
+	double LatencyOffsetMs { 250.0 };
 };

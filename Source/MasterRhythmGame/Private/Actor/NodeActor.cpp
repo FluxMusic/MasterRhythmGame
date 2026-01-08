@@ -242,7 +242,7 @@ void ANodeActor::HandleTimelineFinished()
 
 	if (GetWorld())
 	{
-		const float DelaySeconds = 0.1f;
+		const double DelaySeconds = LatencyOffsetMs / 1000.0;
 
 		// Ensure any previous timer is cleared, then set the new timer
 		GetWorld()->GetTimerManager().ClearTimer(DestroyTimerHandle);

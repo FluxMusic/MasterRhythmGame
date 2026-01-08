@@ -54,6 +54,17 @@ public:
 	// --- Part Name Fix accessors ---
 	FString GetPartNameFix() const { return PartNameFix; }
 
+    //Get Beat Seconds used for Input Latency Test
+    double GetBeatSeconds() const { return LastBeatAudioTimeSeconds; }
+    
+    //Gets the Time when the Output of the Metasound is read used for Latency Test
+    double GetMetaSoundOutputTimeSeconds() const { return LastBeatAudioTimeSeconds; }
+
+    double GetLatencyBetweenThreads() const { return LatencyBetweenThreads; }
+
+    //Get the Subsystem, used for Input Latency Test
+    UQuartzSubsystem* GetQuartzSubsystem() { return QuartzSubsystem; }
+
 private:
 
     UFUNCTION()
@@ -161,4 +172,12 @@ private:
 
     UPROPERTY()
     TObjectPtr<AGameHUD> GameHUD { nullptr }; 
+
+    //Test for Input Latency
+    double LastBeatAudioTimeSeconds { 0.0 };
+    
+    //The Time when the MetaSound Output is read
+    double MetaSoundOutputTimeSeconds { 0.0 };
+
+    double LatencyBetweenThreads { 0.0 };
 };
