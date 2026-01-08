@@ -113,6 +113,26 @@ void UAudioManagerSubsystem::PlayQuantized(UAudioComponent* AudioComponent)
 	StartMusic();
 }
 
+void UAudioManagerSubsystem::SetRootNote(ENote RootNoteIn)
+{
+	RootNote = RootNoteIn;
+
+	if (AGameController* Controller = Cast<AGameController>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
+	{
+		Controller->SetRootNote(RootNoteIn);
+	}	
+}
+
+void UAudioManagerSubsystem::SetScale(EScale ScaleIn)
+{
+	Scale = ScaleIn;
+
+	if (AGameController* Controller = Cast<AGameController>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
+	{
+		Controller->SetScale(ScaleIn);
+	}
+}
+
 void UAudioManagerSubsystem::WatchOutputPartFinishedName(FName OutputName, const FMetaSoundOutput& Output)
 {
 	// Try to extract a string name from the MetaSound output that indicates which part finished.
@@ -285,7 +305,7 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 		{
 			return;
 		}
-		MidiNote = MidiNote % 12;
+		MidiNote = (MidiNote - static_cast<int32>(RootNote)) % 12;
 
 		const FString Msg = FString::Printf(TEXT("%s = %d"), *OutputName.ToString(), MidiNote);
 		UKismetSystemLibrary::PrintString(this, Msg, true, true, FLinearColor::Red, 5.0f);
@@ -313,7 +333,9 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 	{
 		Enemy->SetSplineRef(Spline->GetSplines(MidiNote));
 
-		FVector SplineWorldLocation = Enemy->GetSplineRef()->GetLocationAtSplinePoint(0, ESplineCoordinateSpace::World);               
+		const int32 Index = Enemy->GetSplineRef()->GetNumberOfSplinePoints() - 1;
+
+		FVector SplineWorldLocation = Enemy->GetSplineRef()->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);               
 
 		Enemy->SetActorLocation(SplineWorldLocation);
 

@@ -31,13 +31,25 @@ enum class ENote : uint8
 	B      = 11
 };
 
+UENUM(BlueprintType)
+enum class EScale : uint8
+{
+	Major      UMETA(DisplayName="Major"),      //Ionian
+	Minor      UMETA(DisplayName="Minor"),      //Dorian
+	Phrygian   UMETA(DisplayName="Phrygian"),   //Phrygian
+	Lydian     UMETA(DisplayName="Lydian"),     //Lydian
+	Mixolydian UMETA(DisplayName="Mixolydian"), //Mixolydian
+	Aeolian    UMETA(DisplayName="Aeolian"),    //Aeolian
+	Locrian    UMETA(DisplayName="Locrian"),    //Locrian
+};
+
 USTRUCT(BlueprintType)
-struct FScale
+struct FScaleDegrees
 {
     GENERATED_USTRUCT_BODY()
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
-    TArray<int32> Scale;
+    TArray<int32> ScaleDegrees;
 };
 
 UENUM(BlueprintType)

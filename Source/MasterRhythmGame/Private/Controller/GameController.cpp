@@ -172,6 +172,11 @@ void AGameController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceControl
 	{
 		case EControllerStateGame::Game:
 		{
+			//Remap incoming MIDI Note to allow different musical scales
+			//Maps the incoming scale onto the enharmonic scale with C as root note
+			//Meaning: If the scale is A minor and the player presses A, it comes out as C etc.
+			const int32 RemappedSemitone = (Note - static_cast<int32>(RootNote)) % 12;
+			NoteEnum = static_cast<ENote>(RemappedSemitone);
 			GameControl(NoteEnum);
 			break;
 		}
@@ -311,7 +316,7 @@ void AGameController::HandleAttack(ENote Note)
 				{
 					NoteActor->GetTimeline()->SetPlayRate(.25f);
 					NoteActor->SetSplineRef(GameCharacter->GetSplineRef());
-					NoteActor->MoveRight();
+					NoteActor->MoveLeft();
 				}
 			}
 			else
@@ -363,9 +368,7 @@ void AGameController::MovePlayer(ENote Note)
 
 		GameCharacter->SetSplineRef(SplineRef);
 
-		const int32 Index = SplineRef->GetNumberOfSplinePoints() - 1;
-
-		FVector SplineWorldLocation = SplineRef->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);
+		FVector SplineWorldLocation = SplineRef->GetLocationAtSplinePoint(0, ESplineCoordinateSpace::World);
 
 		GameCharacter->GetCapsuleComponent()->SetWorldLocation(SplineWorldLocation);
 	}

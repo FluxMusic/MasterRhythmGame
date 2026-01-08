@@ -31,6 +31,10 @@ public:
 
 	void SetControllerState(EControllerStateGame NewState) { ControllerState = NewState; }
 
+	void SetRootNote(ENote RootNoteIn) { RootNote = RootNoteIn; }
+
+	void SetScale(EScale ScaleIn) { Scale = ScaleIn; }
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -121,6 +125,10 @@ protected:
 	void DeathMenuSwitchButton(EDeathState InDeathState);
 
 private:
+
+	ENote RootNote { ENote::C };
+
+	EScale Scale { EScale::Major };
 
 	int32 NotePlayed { -1 };
 

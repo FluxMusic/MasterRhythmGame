@@ -6,6 +6,7 @@
 #include "Components/SplineComponent.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Controller/MainMenuController.h"
+#include "Manager/AudioManagerSubsystem.h"
 
 // Sets default values
 ASplineActor::ASplineActor()
@@ -26,31 +27,31 @@ ASplineActor::ASplineActor()
 	}
 	
 
-	SplineC      = CreateDefaultSubobject<USplineComponent>("SplineC");
-	SplineCSharp = CreateDefaultSubobject<USplineComponent>("SplineCSharp");
-	SplineD      = CreateDefaultSubobject<USplineComponent>("SplineD");
-	SplineDSharp = CreateDefaultSubobject<USplineComponent>("SplineDSharp");
-	SplineE      = CreateDefaultSubobject<USplineComponent>("SplineE");
-	SplineF      = CreateDefaultSubobject<USplineComponent>("SplineF");
-	SplineFSharp = CreateDefaultSubobject<USplineComponent>("SplineFSharp");
-	SplineG      = CreateDefaultSubobject<USplineComponent>("SplineG");
-	SplineGSharp = CreateDefaultSubobject<USplineComponent>("SplineGSharp");
-	SplineA      = CreateDefaultSubobject<USplineComponent>("SplineA");
-	SplineASharp = CreateDefaultSubobject<USplineComponent>("SplineASharp");
-	SplineB      = CreateDefaultSubobject<USplineComponent>("SplineB");
+	Spline11 = CreateDefaultSubobject<USplineComponent>("Spline11");
+	Spline10 = CreateDefaultSubobject<USplineComponent>("Spline10");
+	Spline9  = CreateDefaultSubobject<USplineComponent>("Spline9");
+	Spline8  = CreateDefaultSubobject<USplineComponent>("Spline8");
+	Spline7  = CreateDefaultSubobject<USplineComponent>("Spline7");
+	Spline6  = CreateDefaultSubobject<USplineComponent>("Spline6");
+	Spline5  = CreateDefaultSubobject<USplineComponent>("Spline5");
+	Spline4  = CreateDefaultSubobject<USplineComponent>("Spline4");
+	Spline3  = CreateDefaultSubobject<USplineComponent>("Spline3");
+	Spline2  = CreateDefaultSubobject<USplineComponent>("Spline2");
+	Spline1  = CreateDefaultSubobject<USplineComponent>("Spline1");
+	Spline0  = CreateDefaultSubobject<USplineComponent>("Spline0");
 
-	SplineC->     SetupAttachment(RootComponent);
-	SplineCSharp->SetupAttachment(RootComponent);
-	SplineD->     SetupAttachment(RootComponent);
-	SplineDSharp->SetupAttachment(RootComponent);
-	SplineE->     SetupAttachment(RootComponent);
-	SplineF->     SetupAttachment(RootComponent);
-	SplineFSharp->SetupAttachment(RootComponent);
-	SplineG->     SetupAttachment(RootComponent);
-	SplineGSharp->SetupAttachment(RootComponent);
-	SplineA->     SetupAttachment(RootComponent);
-	SplineASharp->SetupAttachment(RootComponent);
-	SplineB->     SetupAttachment(RootComponent);
+	Spline11->SetupAttachment(RootComponent);
+	Spline10->SetupAttachment(RootComponent);
+	Spline9 ->SetupAttachment(RootComponent);
+	Spline8 ->SetupAttachment(RootComponent);
+	Spline7 ->SetupAttachment(RootComponent);
+	Spline6 ->SetupAttachment(RootComponent);
+	Spline5 ->SetupAttachment(RootComponent);
+	Spline4 ->SetupAttachment(RootComponent);
+	Spline3 ->SetupAttachment(RootComponent);
+	Spline2 ->SetupAttachment(RootComponent);
+	Spline1 ->SetupAttachment(RootComponent);
+	Spline0 ->SetupAttachment(RootComponent);
 }
 
 // Called every frame
@@ -70,51 +71,51 @@ USplineComponent* ASplineActor::GetSplines(int32 Int)
 	{
 		case ENote::C:
 		{
-			return SplineC;
+			return Spline0;
 		}
 		case ENote::CSharp:
 		{
-			return SplineCSharp;
+			return Spline1;
 		}
 		case ENote::D:
 		{
-			return SplineD;
+			return Spline2;
 		}
 		case ENote::DSharp:
 		{
-			return SplineDSharp;
+			return Spline3;
 		}
 		case ENote::E:
 		{
-			return SplineE;
+			return Spline4;
 		}
 		case ENote::F:
 		{
-			return SplineF;
+			return Spline5;
 		}
 		case ENote::FSharp:
 		{
-			return SplineFSharp;
+			return Spline6;
 		}
 		case ENote::G:
 		{
-			return SplineG;
+			return Spline7;
 		}
 		case ENote::GSharp:
 		{
-			return SplineGSharp;
+			return Spline8;
 		}
 		case ENote::A:
 		{
-			return SplineA;
+			return Spline9;
 		}
 		case ENote::ASharp:
 		{
-			return SplineASharp;
+			return Spline10;
 		}
 		case ENote::B:
 		{
-			return SplineB;
+			return Spline11;
 		}
 		default:
 		{
@@ -170,100 +171,106 @@ FVector ASplineActor::GetSplinesY(int32 Int)
 void ASplineActor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
+	if (AudioManager)
+	{
+		AudioManager->SetRootNote(RootNote);
+		AudioManager->SetScale(Scale);
+	}
 }
 
 void ASplineActor::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	SplineC->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  0.f));
-	SplineCSharp->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  1.f));
-	SplineD->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  2.f));
-	SplineDSharp->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  3.f));
-	SplineE->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  4.f));
-	SplineF->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  5.f));
-	SplineFSharp->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  6.f));
-	SplineG->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  7.f));
-	SplineGSharp->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  8.f));
-	SplineA->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  9.f));
-	SplineASharp->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing * 10.f));
-	SplineB->     SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing * 11.f));
+	Spline0 ->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  0.f));
+	Spline1 ->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  1.f));
+	Spline2 ->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  2.f));
+	Spline3 ->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  3.f));
+	Spline4 ->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  4.f));
+	Spline5 ->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  5.f));
+	Spline6 ->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  6.f));
+	Spline7 ->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  7.f));
+	Spline8 ->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  8.f));
+	Spline9 ->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  9.f));
+	Spline10->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing * 10.f));
+	Spline11->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing * 11.f));
 
 	FVector Location;
 
-	//SplineC
-	Location = SplineC->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	//Spline0
+	Location = Spline0->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
 	Location.X = SplineLength;
-	SplineC->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	Spline0->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
 	
-	//SplineCSharp
-	Location = SplineCSharp->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	//Spline1
+	Location = Spline1->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
 	Location.X = SplineLength;
-	SplineCSharp->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	Spline1->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
 
-	//SplineD
-	Location = SplineD->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	//Spline2
+	Location = Spline2->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
 	Location.X = SplineLength;
-	SplineD->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	Spline2->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
 	
-	//SplineDSharp
-	Location = SplineDSharp->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	//Spline3
+	Location = Spline3->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
 	Location.X = SplineLength;
-	SplineDSharp->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	Spline3->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
 	
-	//SplineE
-	Location = SplineE->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	//Spline4
+	Location = Spline4->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
 	Location.X = SplineLength;
-	SplineE->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	Spline4->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
 	
-	//SplineF
-	Location = SplineF->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	//Spline5
+	Location = Spline5->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
 	Location.X = SplineLength;
-	SplineF->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	Spline5->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
 	
-	//SplineFSharp
-	Location = SplineFSharp->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	//Spline6
+	Location = Spline6->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
 	Location.X = SplineLength;
-	SplineFSharp->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	Spline6->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
 	
-	//SplineG
-	Location = SplineG->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	//Spline7
+	Location = Spline7->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
 	Location.X = SplineLength;
-	SplineG->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	Spline7->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
 	
-	//SplineGSharp
-	Location = SplineGSharp->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	//Spline8
+	Location = Spline8->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
 	Location.X = SplineLength;
-	SplineGSharp->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	Spline8->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
 	
-	//SplineA
-	Location = SplineA->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	//Spline9
+	Location = Spline9->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
 	Location.X = SplineLength;
-	SplineA->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	Spline9->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
 	
-	//SplineASharp
-	Location = SplineASharp->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	//Spline10
+	Location = Spline10->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
 	Location.X = SplineLength;
-	SplineASharp->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	Spline10->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
 	
-	//SplineB
-	Location = SplineB->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
+	//Spline11
+	Location = Spline11->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);
 	Location.X = SplineLength;
-	SplineB->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
+	Spline11->SetLocationAtSplinePoint(1, Location, ESplineCoordinateSpace::Local);
 
-	SplineC->     SetVisibility(false);
-	SplineCSharp->SetVisibility(false);
-	SplineD->     SetVisibility(false);
-	SplineDSharp->SetVisibility(false);
-	SplineE->     SetVisibility(false);
-	SplineF->     SetVisibility(false);
-	SplineFSharp->SetVisibility(false);
-	SplineG->     SetVisibility(false);
-	SplineGSharp->SetVisibility(false);
-	SplineA->     SetVisibility(false);
-	SplineASharp->SetVisibility(false);
-	SplineB->     SetVisibility(false);
+	Spline11->SetVisibility(false);
+	Spline10->SetVisibility(false);
+	Spline9 ->SetVisibility(false);
+	Spline8 ->SetVisibility(false);
+	Spline7 ->SetVisibility(false);
+	Spline6 ->SetVisibility(false);
+	Spline5 ->SetVisibility(false);
+	Spline4 ->SetVisibility(false);
+	Spline3 ->SetVisibility(false);
+	Spline2 ->SetVisibility(false);
+	Spline1 ->SetVisibility(false);
+	Spline0 ->SetVisibility(false);
 
 	if (MeshInstances && Mesh)
 	{
@@ -272,7 +279,7 @@ void ASplineActor::OnConstruction(const FTransform& Transform)
 
 		const float MeshLength = Mesh->GetBounds().BoxExtent.X * 2.f;
 		
-		for (int32 ScaleDegree : ScaleLookupTable.Find(Scale)->Scale)
+		for (int32 ScaleDegree : ScaleDegreeLookupTable.Find(Scale)->ScaleDegrees)
 		{
 			auto* Spline = GetSplines(ScaleDegree);
 			Spline->SetVisibility(true);

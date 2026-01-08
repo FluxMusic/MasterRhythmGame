@@ -40,42 +40,42 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "DefaultSceneRoot") 
 	TObjectPtr<USceneComponent> DefaultSceneRoot { nullptr };
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "SplineB")
-	TObjectPtr<USplineComponent> SplineB      { nullptr };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline11")
+	TObjectPtr<USplineComponent> Spline11 { nullptr };
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "SplineASharp")
-	TObjectPtr<USplineComponent> SplineASharp { nullptr };
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "SplineA")
-	TObjectPtr<USplineComponent> SplineA      { nullptr };
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "SplineGSharp")
-	TObjectPtr<USplineComponent> SplineGSharp { nullptr };
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "SplineG")
-	TObjectPtr<USplineComponent> SplineG      { nullptr };
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "SplineFSharp")
-	TObjectPtr<USplineComponent> SplineFSharp { nullptr };
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "SplineF")
-	TObjectPtr<USplineComponent> SplineF      { nullptr };
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "SplineE")
-	TObjectPtr<USplineComponent> SplineE      { nullptr };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline10")
+	TObjectPtr<USplineComponent> Spline10 { nullptr };
 	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "SplineDSharp")
-	TObjectPtr<USplineComponent> SplineDSharp { nullptr };
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "SplineD")
-	TObjectPtr<USplineComponent> SplineD      { nullptr };
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default")
-	TObjectPtr<USplineComponent> SplineCSharp { nullptr };
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "SplineC")
-	TObjectPtr<USplineComponent> SplineC      { nullptr };
-
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline9")
+	TObjectPtr<USplineComponent> Spline9  { nullptr };
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline8")
+	TObjectPtr<USplineComponent> Spline8  { nullptr };
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline7")
+	TObjectPtr<USplineComponent> Spline7  { nullptr };
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline6")
+	TObjectPtr<USplineComponent> Spline6  { nullptr };
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline5")
+	TObjectPtr<USplineComponent> Spline5  { nullptr };
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline4")
+	TObjectPtr<USplineComponent> Spline4  { nullptr };
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline3")
+	TObjectPtr<USplineComponent> Spline3  { nullptr };
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline2")
+	TObjectPtr<USplineComponent> Spline2  { nullptr };
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline1")
+	TObjectPtr<USplineComponent> Spline1  { nullptr };
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline0")
+	TObjectPtr<USplineComponent> Spline0  { nullptr };
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	float LineSpacing { 75.f };
 
@@ -91,19 +91,23 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	TObjectPtr<UMaterialInterface> Material;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", DisplayName = "Root Note")
+	ENote RootNote { ENote::C };
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", DisplayName = "Scale")
-	EWorld Scale { EWorld::Swamp };
+	EScale Scale { EScale::Major };
 
 private:
 	//Lookup Table to remap the Notes to the scale of the World's Theme
 	UPROPERTY()
-    TMap<EWorld, FScale> ScaleLookupTable
+    TMap<EScale, FScaleDegrees> ScaleDegreeLookupTable
     {
-        { EWorld::Swamp,     { { 0, 2, 4, 5, 7, 9, 11 } } }, // C Major
-        { EWorld::Cyberpunk, { { 0, 2, 3, 5, 7, 9, 10 } } }, // G Aeolian
-        { EWorld::Steampunk, { { 0, 2, 3, 5, 7, 8, 10 } } }, // F Dorian
-        { EWorld::Space,     { { 1, 2, 4, 6, 7, 9, 11 } } }, // E Dorian
-        { EWorld::Ice,       { { 0, 1, 3, 5, 7, 8, 10 } } }, // F Aeolian
-        { EWorld::Volcano,   { { 0, 2, 4, 5, 7, 9, 11 } } }  // A Minor
+        { EScale::Major,      { { 0, 2, 4, 5, 7, 9, 11 } } },
+        { EScale::Minor,      { { 0, 2, 3, 5, 7, 9, 10 } } },
+        { EScale::Phrygian,   { { 0, 1, 3, 5, 7, 8, 10 } } },
+        { EScale::Lydian,     { { 0, 2, 4, 6, 7, 9, 11 } } },
+        { EScale::Mixolydian, { { 0, 2, 4, 5, 7, 9, 10 } } },
+        { EScale::Aeolian,    { { 0, 2, 3, 5, 7, 8, 10 } } }, 
+        { EScale::Locrian,    { { 0, 1, 3, 5, 6, 8, 10 } } } 
     };
 };

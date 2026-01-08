@@ -154,7 +154,7 @@ void ATestEnemyActor::Attack(int32 InBPM)
 	{
 		Note->SetBarLength(InBPM);
 		Note->SetSplineRef(SplineRef);
-		Note->MoveLeft();
+		Note->MoveRight();
 	}
 }
 

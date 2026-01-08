@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../CoreTypes.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "TimerManager.h"
 #include "AudioManagerSubsystem.generated.h"
@@ -65,6 +66,10 @@ public:
     //Get the Subsystem, used for Input Latency Test
     UQuartzSubsystem* GetQuartzSubsystem() { return QuartzSubsystem; }
 
+    void SetRootNote(ENote RootNoteIn);
+
+    void SetScale(EScale ScaleIn);
+
 private:
 
     UFUNCTION()
@@ -118,12 +123,6 @@ private:
     UFUNCTION()
 	void UnmuteLeads();
 
-public:
-
-    // --- Note spawning ---
-    UPROPERTY(EditAnywhere, BlueprintReadOnly)
-    TSubclassOf<ANodeActor> NoteActorClass;
-
 private:
 
     UPROPERTY()
@@ -172,6 +171,14 @@ private:
 
     UPROPERTY()
     TObjectPtr<AGameHUD> GameHUD { nullptr }; 
+
+    UPROPERTY()
+    ENote RootNote { ENote::C };
+    
+    UPROPERTY()
+    EScale Scale { EScale::Major };
+
+
 
     //Test for Input Latency
     double LastBeatAudioTimeSeconds { 0.0 };
