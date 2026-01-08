@@ -14,6 +14,9 @@ ALevelNode::ALevelNode()
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
+
+	Mesh->SetGenerateOverlapEvents(false);
+	Mesh->SetCollisionProfileName(TEXT("NoCollision"));
 }
 // Called when the game starts or when spawned
 void ALevelNode::BeginPlay()

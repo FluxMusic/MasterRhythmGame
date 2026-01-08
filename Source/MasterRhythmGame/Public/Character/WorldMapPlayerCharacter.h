@@ -4,11 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "../Public/CoreTypes.h"
 #include "WorldMapPlayerCharacter.generated.h"
 
 
-class AWorldMapPath;
-class AWorldMapNode;
+class ALevelNode;
+class ALevelPath;
+class USplineComponent;
+class UTimelineComponent;
 
 UCLASS()
 class AWorldMapPlayerCharacter : public ACharacter
@@ -30,6 +33,23 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Timeline progress callback — only float because Timeline delegate supplies only a float
+	UFUNCTION()
+	void HandleTimelineProgress(float Value);
+
+	UFUNCTION()
+	void HandleTimelineFinished();
+
+	UFUNCTION()
+	void MoveForward(EDirectionWorldMap InDirection);
+
+	UFUNCTION()
+	void MoveBackward();
+
+	// --- Level Node Ref ---
+	TObjectPtr<ALevelNode> GetLevelNodeRef() const { return LevelNodeRef; }
+	void SetLevelNodeRef(TObjectPtr<ALevelNode> InLevelNodeRef) { LevelNodeRef = InLevelNodeRef; }
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UAudioComponent> AudioComponent { nullptr };
@@ -37,5 +57,15 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TObjectPtr<USceneComponent> SceneComponent { nullptr };
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UTimelineComponent> Timeline;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TSubclassOf<ALevelNode> LevelNodeClass { nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<ALevelNode> LevelNodeRef { nullptr };
+
+	// Current direction used during timeline movement
+	EDirectionWorldMap CurrentDirection { EDirectionWorldMap::Forward };
 };

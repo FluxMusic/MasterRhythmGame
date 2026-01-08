@@ -2,7 +2,6 @@
 
 #include "CoreTypes.generated.h"
 
-
 UENUM(BlueprintType)
 enum class EWorld : uint8
 {
@@ -152,4 +151,13 @@ enum class EDeathState : uint8
 	Respawn,
 	WorldMap,
 	MainMenu
+};
+
+UENUM(BlueprintType)
+enum class EDirectionWorldMap : uint8
+{
+	Forward,
+	Backward,
+	Right,
+	Left
 };
