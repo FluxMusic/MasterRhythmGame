@@ -3,41 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "MainMenuController.h"
 #include "MIDIDeviceInputController.h"
 #include "GameFramework/PlayerController.h"
 #include "HUD/WorldMapHUD.h"
+#include "../CoreTypes.h"
 #include "WorldMapController.generated.h"
-
-enum class EWorldMapItem : uint8
-{
-	LevelOne = 0,
-	LevelTwo = 1,
-	LevelThree = 2,
-	LevelFour = 3,
-	LevelFive = 4,
-	LevelSix = 5,
-	MainMenu = 6
-};
-
-enum class EControllerStateWorldMap
-{
-	WorldMap,
-	PauseMenu,
-	AudioMenu,
-	GraphicsMenu,
-	SettingMenu
-};
-
-enum class EPauseMenuItem
-{
-	Resume = 0,
-	Save = 1,
-	Load = 2,
-	Settings = 3,
-	MainMenu = 4,
-	Quit = 5
-};
 
 /**
  * 
@@ -112,9 +82,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AWorldMapHUD> WorldMapHUD { nullptr };
-
-	UPROPERTY(VisibleAnywhere, DisplayName = "WorldMapIndex", Category = "Components")
-	int32 WorldMapIndex { 0 };
 
 	UPROPERTY(VisibleAnywhere, DisplayName = "AudioMenuIndex", Category = "Components")
 	int32 AudioMenuIndex{ 0 };

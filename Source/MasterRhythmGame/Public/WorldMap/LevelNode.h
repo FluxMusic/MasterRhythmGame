@@ -6,6 +6,9 @@
 #include "GameFramework/Actor.h"
 #include "LevelNode.generated.h"
 
+class UTimelineComponent;
+class USplineComponent;
+
 UCLASS()
 class MASTERRHYTHMGAME_API ALevelNode : public AActor
 {
@@ -22,6 +25,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	// --- Neigbhours ---
+	TArray<ALevelNode*> GetNeighbours() const { return Neighbours; }
 
 private:
 

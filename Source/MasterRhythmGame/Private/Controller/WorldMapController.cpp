@@ -156,90 +156,41 @@ void AWorldMapController::WorldMapControl(ENote Note)
 	{
 		switch (Note)
 		{
-			case ENote::C:
+			// Left
+			case ENote::E:
 			{
-				WorldMapIndex++;
-				WorldMapIndex = FMath::Clamp(WorldMapIndex, 0, 6);
-				UE_LOG(LogTemp, Log, TEXT("WorldMapIndex: %d"), WorldMapIndex);
 				break;
 			}
-			case ENote::D:
+			// Backward
+			case ENote::F:
 			{
-				WorldMapIndex--;
-				WorldMapIndex = FMath::Clamp(WorldMapIndex, 0, 6);
-				UE_LOG(LogTemp, Log, TEXT("WorldMapIndex: %d"), WorldMapIndex);
 				break;
 			}
-			// Later use instead of C+D -> E+F+G+Gb for WASD control
-			//case ENote::E:
-			//{	
-			//	break;
-			//}
-			//case ENote::F:
-			//{	
-			//	break;
-			//}
-			//case ENote::G:
-			//{	
-			//	break;
-			//}
-			//case ENote::GSharp:
-			//{	
-			//	break;
-			//}
+			// Right
+			case ENote::G:
+			{
+				break;
+			}
+			// Forward
+			case ENote::GSharp:
+			{
+				break;
+			}
 			case ENote::CSharp:
 			{
 				SetControllerState(EControllerStateWorldMap::PauseMenu);
 				if (WorldMapHUD != nullptr)
 				{
 					WorldMapHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-					WorldMapHUD->GetWorldMapInstance()->SetVisibility(ESlateVisibility::Hidden);
+					// TODO: Change UI first 
+					//WorldMapHUD->GetWorldMapInstance()->SetVisibility(ESlateVisibility::Hidden);
 				}
 				break;
 			}
 			case ENote::B:
 			{
-				if (WorldMapHUD->GetWorldMapInstance()->GetLevelOneButton()->HasKeyboardFocus())
-				{
-					WorldMapIndex = 0;
-					WorldMapHUD->GetWorldMapInstance()->LevelOneButtonClicked();
-					break;
-				}
-				if (WorldMapHUD->GetWorldMapInstance()->GetLevelTwoButton()->HasKeyboardFocus())
-				{
-					WorldMapIndex = 0;
-					WorldMapHUD->GetWorldMapInstance()->LevelTwoButtonClicked();
-					break;
-				}
-				if (WorldMapHUD->GetWorldMapInstance()->GetLevelThreeButton()->HasKeyboardFocus())
-				{
-					WorldMapIndex = 0;
-					break;
-				}
-				if (WorldMapHUD->GetWorldMapInstance()->GetLevelFourButton()->HasKeyboardFocus())
-				{
-					WorldMapIndex = 0;
-					WorldMapHUD->GetWorldMapInstance()->LevelThreeButtonClicked();
-					break;
-				}
-				if (WorldMapHUD->GetWorldMapInstance()->GetLevelFiveButton()->HasKeyboardFocus())
-				{
-					WorldMapIndex = 0;
-					WorldMapHUD->GetWorldMapInstance()->LevelFourButtonClicked();
-					break;
-				}
-				if (WorldMapHUD->GetWorldMapInstance()->GetLevelSixButton()->HasKeyboardFocus())
-				{
-					WorldMapIndex = 0;
-					WorldMapHUD->GetWorldMapInstance()->LevelFiveButtonClicked();
-					break;
-				}
-				if (WorldMapHUD->GetWorldMapInstance()->GetMainMenuButton()->HasKeyboardFocus())
-				{
-					WorldMapIndex = 0;
-					WorldMapHUD->GetWorldMapInstance()->MainMenuButtonClicked();
-					break;
-				}
+				// TODO: Get Level Actor and Load Level
+				break;
 			}
 			default:
 			{
@@ -248,7 +199,6 @@ void AWorldMapController::WorldMapControl(ENote Note)
 			}
 		}
 	}
-	WorldMapSwitchButton(static_cast<EWorldMapItem>(WorldMapIndex));
 }
 
 void AWorldMapController::PauseMenuControl(ENote Note)

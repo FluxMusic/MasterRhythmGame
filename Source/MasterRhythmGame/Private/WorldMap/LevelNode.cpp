@@ -15,12 +15,11 @@ ALevelNode::ALevelNode()
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 }
-
 // Called when the game starts or when spawned
 void ALevelNode::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame

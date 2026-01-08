@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "MIDIDeviceInputController.h"
 #include "GameFramework/PlayerController.h"
+#include "../CoreTypes.h"
 #include "GameController.generated.h"
 
 
@@ -12,31 +13,9 @@ class ASplineActor;
 class ATestEnemyActor;
 class ANodeActor;
 class UInputAction;
-
-enum class EControllerStateGame
-{
-	PauseMenu,
-	Game,
-	SettingMenu,
-	GraphicsMenu,
-	AudioMenu,
-	DeathMenu
-};
-
-enum class EDeathState : uint8
-{
-	Respawn,
-	WorldMap,
-	MainMenu
-};
-
 class UInputMappingContext;
 class AGameCharacter;
 class AGameHUD;
-enum class EAudioSettingItem : uint8;
-enum class EGraphicSettingItem : uint8;
-enum class EMainSettingItem : uint8;
-enum class EPauseMenuItem;
 
 /**
  * 

@@ -30,4 +30,12 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UAudioComponent> AudioComponent { nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<USceneComponent> SceneComponent { nullptr };
+
+
 };
