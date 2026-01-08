@@ -9,6 +9,8 @@
 #include "../CoreTypes.h"
 #include "WorldMapController.generated.h"
 
+class AWorldMapPlayerCharacter;
+class ALevelNode;
 /**
  * 
  */
@@ -96,4 +98,10 @@ private:
 	int32 PauseMenuIndex { 0 };
 
 	EControllerStateWorldMap ControllerStateWorldMap { EControllerStateWorldMap::WorldMap };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TSubclassOf<AWorldMapPlayerCharacter> PlayerCharacterClass { nullptr };
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<AWorldMapPlayerCharacter> PlayerCharacter { nullptr };
 };

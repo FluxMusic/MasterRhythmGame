@@ -3,9 +3,12 @@
 
 #include "Controller/WorldMapController.h"
 #include "MIDIDeviceManager.h"
+#include "Character/WorldMapPlayerCharacter.h"
 #include "Components/Button.h"
 #include "Components/Slider.h"
 #include "Controller/MainMenuController.h"
+#include "Kismet/GameplayStatics.h"
+#include "WorldMap/LevelNode.h"
 
 AWorldMapController::AWorldMapController()
 {
@@ -21,12 +24,14 @@ void AWorldMapController::BeginPlay()
 
 	InitMidi();
 
-	AWorldMapController* PlayerController = Cast<AWorldMapController>(this);
-
-	if (PlayerController != nullptr)
+	if (PlayerCharacterClass)
 	{
-		WorldMapHUD = Cast<AWorldMapHUD>(PlayerController->GetHUD());
+		// Try to find an existing actor of the specified Blueprint class
+		AActor* Found = UGameplayStatics::GetActorOfClass(GetWorld(), PlayerCharacterClass);
+		PlayerCharacter = Cast<AWorldMapPlayerCharacter>(Found);
 	}
+
+	WorldMapHUD = Cast<AWorldMapHUD>(GetHUD());
 }
 
 void AWorldMapController::SetupInputComponent()
@@ -154,26 +159,55 @@ void AWorldMapController::WorldMapControl(ENote Note)
 {
 	if (WorldMapHUD != nullptr)
 	{
+		if (PlayerCharacter == nullptr)
+		{
+			return;
+		}
+
 		switch (Note)
 		{
 			// Left
 			case ENote::E:
 			{
+				if (PlayerCharacter->GetLevelNodeRef()->GetSplineLeft() != nullptr)
+				{
+					// TODO: Set Spline Target
+					PlayerCharacter->MoveForward(EDirectionWorldMap::Left);
+					break;
+				}
 				break;
 			}
 			// Backward
 			case ENote::F:
 			{
+				if (PlayerCharacter->GetLevelNodeRef()->GetSplineBackward() != nullptr)
+				{
+					// TODO: Set Spline Target
+					PlayerCharacter->MoveBackward();
+					break;
+				}
 				break;
 			}
 			// Right
 			case ENote::G:
 			{
+				if (PlayerCharacter->GetLevelNodeRef()->GetSplineRight() != nullptr)
+				{
+					// TODO: Set Spline Target
+					PlayerCharacter->MoveForward(EDirectionWorldMap::Right);
+					break;
+				}
 				break;
 			}
 			// Forward
 			case ENote::GSharp:
 			{
+				if (PlayerCharacter->GetLevelNodeRef()->GetSplineForward() != nullptr)
+				{
+					// TODO: Set Spline Target
+					PlayerCharacter->MoveForward(EDirectionWorldMap::Forward);
+					break;
+				}
 				break;
 			}
 			case ENote::CSharp:

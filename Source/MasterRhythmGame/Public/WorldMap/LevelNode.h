@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "LevelNode.generated.h"
 
+class ALevelPath;
 class UTimelineComponent;
 class USplineComponent;
 
@@ -29,6 +30,18 @@ public:
 	// --- Neigbhours ---
 	TArray<ALevelNode*> GetNeighbours() const { return Neighbours; }
 
+	// --- SplineForward Ref ---
+	TObjectPtr<ALevelPath> GetSplineForward() const { return SplineForward; }
+
+	// --- SplineBackward Ref ---
+	TObjectPtr<ALevelPath> GetSplineBackward() const { return SplineBackward; }
+
+	// --- SplineRight Ref ---
+	TObjectPtr<ALevelPath> GetSplineRight() const { return SplineRight; }
+
+	// --- SplineLeft Ref ---
+	TObjectPtr<ALevelPath> GetSplineLeft() const { return SplineLeft; }
+
 private:
 
 	UPROPERTY(EditAnywhere)
@@ -42,6 +55,18 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TArray<ALevelNode*> Neighbours { nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<ALevelPath> SplineForward { nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<ALevelPath> SplineBackward { nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<ALevelPath> SplineRight { nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<ALevelPath> SplineLeft { nullptr };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	FString LevelName;
