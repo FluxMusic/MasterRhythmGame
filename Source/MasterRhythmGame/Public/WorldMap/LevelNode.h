@@ -40,6 +40,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// --- Is Unlocked ---
+	bool GetIsUnlocked() const { return bIsUnlocked; }
+
 	// --- Neigbhours ---
 	TArray<ALevelNode*> GetNeighbours() const { return Neighbours; }
 
@@ -47,13 +50,16 @@ public:
 	FData GetSplineForward() const { return SplineForward; }
 
 	// --- SplineBackward Ref ---
-	TObjectPtr<ALevelPath> GetSplineBackward() const { return SplineBackward; }
+	FData GetSplineBackward() const { return SplineBackward; }
 
 	// --- SplineRight Ref ---
-	TObjectPtr<ALevelPath> GetSplineRight() const { return SplineRight; }
+	FData GetSplineRight() const { return SplineRight; }
 
 	// --- SplineLeft Ref ---
-	TObjectPtr<ALevelPath> GetSplineLeft() const { return SplineLeft; }
+	FData GetSplineLeft() const { return SplineLeft; }
+
+	// --- Level Name ---
+	FName GetLevelName() const { return LevelName; }
 
 private:
 
@@ -72,15 +78,15 @@ private:
 	UPROPERTY(EditAnywhere)
 	FData SplineForward;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	TObjectPtr<ALevelPath> SplineBackward { nullptr };
+	UPROPERTY(EditAnywhere)
+	FData SplineBackward;
+
+	UPROPERTY(EditAnywhere)
+	FData SplineRight;
+
+	UPROPERTY(EditAnywhere)
+	FData SplineLeft;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	TObjectPtr<ALevelPath> SplineRight { nullptr };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	TObjectPtr<ALevelPath> SplineLeft { nullptr };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	FString LevelName;
+	FName LevelName;
 };

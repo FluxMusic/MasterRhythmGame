@@ -15,7 +15,7 @@ AWorldMapController::AWorldMapController()
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	bShowMouseCursor = true;
+	bShowMouseCursor = false;
 }
 
 void AWorldMapController::BeginPlay()
@@ -164,15 +164,20 @@ void AWorldMapController::WorldMapControl(ENote Note)
 			return;
 		}
 
+		if (PlayerCharacter->GetIsMoving())
+		{
+			return;
+		}
+
 		switch (Note)
 		{
 			// Left
 			case ENote::E:
 			{
-				if (PlayerCharacter->GetLevelNodeRef()->GetSplineLeft() != nullptr)
+				if (PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetIsUnlocked())
 				{
-					// TODO: Set Spline Target
-					// PlayerCharacter->MoveForward(EDirectionWorldMap::Left);
+					PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().Spline);
+					PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().DirectionWorldMap);
 					break;
 				}
 				break;
@@ -180,10 +185,10 @@ void AWorldMapController::WorldMapControl(ENote Note)
 			// Backward
 			case ENote::F:
 			{
-				if (PlayerCharacter->GetLevelNodeRef()->GetSplineBackward() != nullptr)
+				if (PlayerCharacter->GetLevelNodeRef()->GetSplineBackward().Spline != nullptr)
 				{
-					// TODO: Set Spline Target
-					// PlayerCharacter->MoveBackward();
+					PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineBackward().Spline);
+					PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineBackward().DirectionWorldMap);
 					break;
 				}
 				break;
@@ -191,10 +196,10 @@ void AWorldMapController::WorldMapControl(ENote Note)
 			// Right
 			case ENote::G:
 			{
-				if (PlayerCharacter->GetLevelNodeRef()->GetSplineRight() != nullptr)
+				if (PlayerCharacter->GetLevelNodeRef()->GetSplineRight().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetIsUnlocked())
 				{
-					// TODO: Set Spline Target
-					// PlayerCharacter->MoveForward(EDirectionWorldMap::Right);
+					PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineRight().Spline);
+					 PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineRight().DirectionWorldMap);
 					break;
 				}
 				break;
@@ -202,9 +207,8 @@ void AWorldMapController::WorldMapControl(ENote Note)
 			// Forward
 			case ENote::FSharp:
 			{
-				if (PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline != nullptr)
+				if (PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetIsUnlocked())
 				{
-					// TODO: Set Spline Target
 					PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline);
 					PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().DirectionWorldMap);
 					break;
@@ -224,7 +228,7 @@ void AWorldMapController::WorldMapControl(ENote Note)
 			}
 			case ENote::B:
 			{
-				// TODO: Get Level Actor and Load Level
+				UGameplayStatics::OpenLevel(this, PlayerCharacter->GetLevelNodeRef()->GetLevelName());
 				break;
 			}
 			default:

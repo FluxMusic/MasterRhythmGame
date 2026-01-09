@@ -49,6 +49,10 @@ public:
 
 	void SetSplineRef(ALevelPath* SplineIn) { SplineRef = SplineIn; }
 
+	// --- Is Moving ---
+	bool GetIsMoving() const { return bIsMoving; }
+	void SetIsMoving(bool bInIsMoving) { bIsMoving = bInIsMoving; }
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UAudioComponent> AudioComponent { nullptr };
@@ -70,4 +74,8 @@ private:
 
 	// Current direction used during timeline movement
 	EDirectionWorldMap CurrentDirection { EDirectionWorldMap::Forward };
+
+	UPROPERTY(VisibleAnywhere)
+	bool bIsMoving { false };
+
 };

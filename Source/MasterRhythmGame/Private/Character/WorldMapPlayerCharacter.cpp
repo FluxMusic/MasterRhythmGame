@@ -119,6 +119,8 @@ void AWorldMapPlayerCharacter::HandleTimelineFinished()
 		return;
 	}
 
+	bIsMoving = false;
+
 	// Find the neighbour node that is closest to the player's current location
 	const FVector CurrentLocation = GetActorLocation();
 	ALevelNode* ClosestNeighbour = nullptr;
@@ -161,16 +163,23 @@ void AWorldMapPlayerCharacter::Move(EDirectionWorldMap InDirection)
 	{
 		switch (InDirection)
 		{
-		case EDirectionWorldMap::Forward:
-			Timeline->PlayFromStart();
-			break;
-		
-		case EDirectionWorldMap::Backward:
-			Timeline->ReverseFromEnd();
-			break;
-		
-		default:
-			break;
+			case EDirectionWorldMap::Forward:
+			{
+				bIsMoving = true;
+				Timeline->PlayFromStart();
+				break;
+			}
+			case EDirectionWorldMap::Backward:
+			{
+				bIsMoving = true;
+				Timeline->ReverseFromEnd();
+				break;
+			}
+			default:
+			{
+				// Should not happen
+				break;
+			}
 		}
 	}
 }
