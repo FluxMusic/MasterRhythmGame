@@ -35,14 +35,8 @@ public:
 
 	int32 CalcHealth(int32 InHealth);
 
-	// Timeline helpers
-	void SetupHealthTimeline();
-
 	UFUNCTION()
-	void OnHealthTimelineTick(float Value);
-
-	UFUNCTION()
-	void OnHealthTimelineFinished();
+	void SetupHUD();
 
 	// --- Health accessors ---
 	int32 GetHealth() const { return Health; }
@@ -95,11 +89,4 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AGameHUD> GameHUD { nullptr };
-
-	UPROPERTY()
-	TObjectPtr<UTimelineComponent> HealthTimeline { nullptr };
-
-	// Runtime-created curve used by the timeline (kept so GC doesn't collect it)
-	UPROPERTY()
-	TObjectPtr<UCurveFloat> HealthCurve { nullptr };
 };

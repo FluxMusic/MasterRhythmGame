@@ -34,9 +34,6 @@ ATestEnemyActor::ATestEnemyActor()
 		AudioComponent->SetupAttachment(RootComponent);
 		AudioComponent->bAutoActivate = false;
 	}
-
-	// Create Timeline component so it's available at runtime
-	HealthTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("Health Timeline"));
 }
 
 int32 ATestEnemyActor::CalcHealth1(int32 Value)
@@ -171,11 +168,9 @@ void ATestEnemyActor::BeginPlay()
 
 	CreateAndStartQuartzClock(BPM);
 
-	// Setup timeline that will execute one frame later to initialize enemy health UI
-	SetupHealthTimeline();
-	if (HealthTimeline != nullptr)
+	if (GetWorld())
 	{
-		HealthTimeline->PlayFromStart();
+		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &ATestEnemyActor::SetupHUD);
 	}
 }
 
@@ -185,62 +180,7 @@ void ATestEnemyActor::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ATestEnemyActor::SetupHealthTimeline()
-{
-	if (HealthTimeline == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("ATestEnemyActor::SetupHealthTimeline - HealthTimeline is null."));
-		return;
-	}
-
-	// Determine a single-frame duration. Default to 1/60s if delta not available.
-	float FrameTime = 1.0f / 60.0f;
-	if (GetWorld() && GetWorld()->GetDeltaSeconds() > 0.0f)
-	{
-		FrameTime = GetWorld()->GetDeltaSeconds();
-	}
-
-	// Create a short runtime curve that goes from 0 to 1 across one frame.
-	if (HealthCurve == nullptr)
-	{
-		HealthCurve = NewObject<UCurveFloat>(this, TEXT("EnemyHealthCurve_Dyn"));
-		if (HealthCurve != nullptr)
-		{
-			HealthCurve->FloatCurve.AddKey(0.0f, 0.0f);
-			HealthCurve->FloatCurve.AddKey(FrameTime, 1.0f);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("ATestEnemyActor::SetupHealthTimeline - Failed to create HealthCurve."));
-			return;
-		}
-	}
-
-	// Bind tick delegate (no-op but required) and finished delegate.
-	FOnTimelineFloat TickDelegate;
-	TickDelegate.BindUFunction(this, FName("OnHealthTimelineTick"));
-	HealthTimeline->AddInterpFloat(HealthCurve, TickDelegate);
-
-	FOnTimelineEvent FinishDelegate;
-	FinishDelegate.BindUFunction(this, FName("OnHealthTimelineFinished"));
-	HealthTimeline->SetTimelineFinishedFunc(FinishDelegate);
-
-	HealthTimeline->SetLooping(false);
-	HealthTimeline->SetTimelineLength(FrameTime);
-	HealthTimeline->SetTimelineLengthMode(ETimelineLengthMode::TL_TimelineLength);
-
-	if (!HealthTimeline->IsRegistered())
-	{
-		HealthTimeline->RegisterComponent();
-	}
-}
-
-void ATestEnemyActor::OnHealthTimelineTick(float Value)
-{
-	// no action required on tick; we only need the finished callback after one frame
-}
-
-void ATestEnemyActor::OnHealthTimelineFinished()
+void ATestEnemyActor::SetupHUD()
 {
 	if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
 	{
