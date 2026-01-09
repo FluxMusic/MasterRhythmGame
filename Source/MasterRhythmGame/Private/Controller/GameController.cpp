@@ -77,22 +77,48 @@ void AGameController::SetupInputComponent()
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent))
 	{
-		EnhancedInputComponent->BindAction(CAction, ETriggerEvent::Started, this, &AGameController::HandleCAttack);
-		EnhancedInputComponent->BindAction(DAction, ETriggerEvent::Started, this, &AGameController::HandleDAttack);
-		EnhancedInputComponent->BindAction(EAction, ETriggerEvent::Started, this, &AGameController::HandleEAttack);
-		EnhancedInputComponent->BindAction(FAction, ETriggerEvent::Started, this, &AGameController::HandleFAttack);
-		EnhancedInputComponent->BindAction(GAction, ETriggerEvent::Started, this, &AGameController::HandleGAttack);
-		EnhancedInputComponent->BindAction(AAction, ETriggerEvent::Started, this, &AGameController::HandleAAttack);
-		EnhancedInputComponent->BindAction(BAction, ETriggerEvent::Started, this, &AGameController::HandleBAttack);
+		EnhancedInputComponent->BindAction(C1Action,      ETriggerEvent::Started, this, &AGameController::HandleC1Attack);
+		EnhancedInputComponent->BindAction(CSharp1Action, ETriggerEvent::Started, this, &AGameController::HandleCSharp1Attack);
+		EnhancedInputComponent->BindAction(D1Action,      ETriggerEvent::Started, this, &AGameController::HandleD1Attack);
+		EnhancedInputComponent->BindAction(DSharp1Action, ETriggerEvent::Started, this, &AGameController::HandleDSharp1Attack);
+		EnhancedInputComponent->BindAction(E1Action,      ETriggerEvent::Started, this, &AGameController::HandleE1Attack);
+		EnhancedInputComponent->BindAction(F1Action,      ETriggerEvent::Started, this, &AGameController::HandleF1Attack);
+		EnhancedInputComponent->BindAction(FSharp1Action, ETriggerEvent::Started, this, &AGameController::HandleFSharp1Attack);
+		EnhancedInputComponent->BindAction(G1Action,      ETriggerEvent::Started, this, &AGameController::HandleG1Attack);
+		EnhancedInputComponent->BindAction(GSharp1Action, ETriggerEvent::Started, this, &AGameController::HandleGSharp1Attack);
+		EnhancedInputComponent->BindAction(A1Action,      ETriggerEvent::Started, this, &AGameController::HandleA1Attack);
+		EnhancedInputComponent->BindAction(ASharp1Action, ETriggerEvent::Started, this, &AGameController::HandleASharp1Attack);
+		EnhancedInputComponent->BindAction(B1Action,      ETriggerEvent::Started, this, &AGameController::HandleB1Attack);
+		EnhancedInputComponent->BindAction(C2Action,      ETriggerEvent::Started, this, &AGameController::HandleC2Attack);
+		EnhancedInputComponent->BindAction(CSharp2Action, ETriggerEvent::Started, this, &AGameController::HandleCSharp2Attack);
+		EnhancedInputComponent->BindAction(D2Action,      ETriggerEvent::Started, this, &AGameController::HandleD2Attack);
+		EnhancedInputComponent->BindAction(DSharp2Action, ETriggerEvent::Started, this, &AGameController::HandleDSharp2Attack);
+		EnhancedInputComponent->BindAction(E2Action,      ETriggerEvent::Started, this, &AGameController::HandleE2Attack);
+		EnhancedInputComponent->BindAction(F2Action,      ETriggerEvent::Started, this, &AGameController::HandleF2Attack);
+		EnhancedInputComponent->BindAction(FSharp2Action, ETriggerEvent::Started, this, &AGameController::HandleFSharp2Attack);
+		EnhancedInputComponent->BindAction(G2Action,      ETriggerEvent::Started, this, &AGameController::HandleG2Attack);
 		
 		//Trigger Release of note when releasing key
-		EnhancedInputComponent->BindAction(CAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
-		EnhancedInputComponent->BindAction(DAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
-		EnhancedInputComponent->BindAction(EAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
-		EnhancedInputComponent->BindAction(FAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
-		EnhancedInputComponent->BindAction(GAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
-		EnhancedInputComponent->BindAction(AAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
-		EnhancedInputComponent->BindAction(BAction, ETriggerEvent::Completed, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(C1Action,      ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(CSharp1Action, ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(D1Action,      ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(DSharp1Action, ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(E1Action,      ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(F1Action,      ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(FSharp1Action, ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(G1Action,      ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(GSharp1Action, ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(A1Action,      ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(ASharp1Action, ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(B1Action,      ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(C2Action,      ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(CSharp2Action, ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(D2Action,      ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(DSharp2Action, ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(E2Action,      ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(F2Action,      ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(FSharp2Action, ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
+		EnhancedInputComponent->BindAction(G2Action,      ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
 
 		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AGameController::HandlePause);
 	}
@@ -243,53 +269,135 @@ void AGameController::HandleControlChange(UMIDIDeviceInputController* MIDIDevice
 	AudioSoundControl(Type, NormalizedValue);
 }
 
-void AGameController::HandleCAttack()
+void AGameController::HandleC1Attack()
 {
-	NotePlayed = 60;
-	MovePlayer(ENote::C);
-	HandleAttack(ENote::C);
+	NotePlayed = static_cast<int32>(CNoteOctave);
+	HandleKeyboardAttack(NotePlayed);
 }
 
-void AGameController::HandleDAttack()
+void AGameController::HandleCSharp1Attack()
 {
-	NotePlayed = 62;
-	MovePlayer(ENote::D);
-	HandleAttack(ENote::D);
+	NotePlayed = static_cast<int32>(CNoteOctave) + 1;
+	HandleKeyboardAttack(NotePlayed);
 }
 
-void AGameController::HandleEAttack()
+void AGameController::HandleD1Attack()
 {
-	NotePlayed = 64;
-	MovePlayer(ENote::E);
-	HandleAttack(ENote::E);
+	NotePlayed = static_cast<int32>(CNoteOctave) + 2;
+	HandleKeyboardAttack(NotePlayed);
 }
 
-void AGameController::HandleFAttack()
+void AGameController::HandleDSharp1Attack()
 {
-	NotePlayed = 65;
-	MovePlayer(ENote::F);
-	HandleAttack(ENote::F);
+	NotePlayed = static_cast<int32>(CNoteOctave) + 3;
+	HandleKeyboardAttack(NotePlayed);
 }
 
-void AGameController::HandleGAttack()
+void AGameController::HandleE1Attack()
 {
-	NotePlayed = 67;
-	MovePlayer(ENote::G);
-	HandleAttack(ENote::G);
+	NotePlayed = static_cast<int32>(CNoteOctave) + 4;
+	HandleKeyboardAttack(NotePlayed);
 }
 
-void AGameController::HandleAAttack()
+void AGameController::HandleF1Attack()
 {
-	NotePlayed = 69;
-	MovePlayer(ENote::A);
-	HandleAttack(ENote::A);
+	NotePlayed = static_cast<int32>(CNoteOctave) + 5;
+	HandleKeyboardAttack(NotePlayed);
 }
 
-void AGameController::HandleBAttack()
+void AGameController::HandleFSharp1Attack()
 {
-	NotePlayed = 71;
-	MovePlayer(ENote::B);
-	HandleAttack(ENote::B);
+	NotePlayed = static_cast<int32>(CNoteOctave) + 6;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleG1Attack()
+{
+	NotePlayed = static_cast<int32>(CNoteOctave) + 7;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleGSharp1Attack()
+{
+	NotePlayed = static_cast<int32>(CNoteOctave) + 8;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleA1Attack()
+{
+	NotePlayed = static_cast<int32>(CNoteOctave) + 9;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleASharp1Attack()
+{
+	NotePlayed = static_cast<int32>(CNoteOctave) + 10;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleB1Attack()
+{
+	NotePlayed = static_cast<int32>(CNoteOctave) + 11;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleC2Attack()
+{
+	NotePlayed = static_cast<int32>(CNoteOctave) + 12;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleCSharp2Attack()
+{
+	NotePlayed = static_cast<int32>(CNoteOctave) + 13;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleD2Attack()
+{
+	NotePlayed = static_cast<int32>(CNoteOctave) + 14;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleDSharp2Attack()
+{
+	NotePlayed = static_cast<int32>(CNoteOctave) + 15;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleE2Attack()
+{
+	NotePlayed = static_cast<int32>(CNoteOctave) + 16;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleF2Attack()
+{
+	NotePlayed = static_cast<int32>(CNoteOctave) + 17;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleFSharp2Attack()
+{
+	NotePlayed = static_cast<int32>(CNoteOctave) + 18;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleG2Attack()
+{
+	NotePlayed = static_cast<int32>(CNoteOctave) + 19;
+	HandleKeyboardAttack(NotePlayed);
+}
+
+void AGameController::HandleKeyboardAttack(int32 MidiNote)
+{
+	//Remap Midi Note (See HandleMidiNoteOn)
+	const int32 RemappedSemitone = (MidiNote - static_cast<int32>(RootNote)) % 12;
+	ENote NoteEnum = static_cast<ENote>(RemappedSemitone);
+
+	//Handle Movement and Attacks
+	MovePlayer(NoteEnum);
+	HandleAttack(NoteEnum);
 }
 
 void AGameController::HandleAttack(ENote Note)

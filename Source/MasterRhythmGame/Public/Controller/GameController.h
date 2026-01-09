@@ -17,6 +17,19 @@ class UInputMappingContext;
 class AGameCharacter;
 class AGameHUD;
 
+UENUM(BlueprintType)
+enum class EOctave : uint8
+{
+	None  =  0 UMETA(DisplayName="None"),
+
+	One   = 24 UMETA(DisplayName="Octave 1"),
+	Two   = 36 UMETA(DisplayName="Octave 2"),
+	Three = 48 UMETA(DisplayName="Octave 3"),
+	Four  = 60 UMETA(DisplayName="Octave 4"),
+	Five  = 72 UMETA(DisplayName="Octave 5"),
+	Six   = 84 UMETA(DisplayName="Octave 6")
+};
+
 /**
  * 
  */
@@ -67,27 +80,73 @@ protected:
 	UFUNCTION()
 	void HandleControlChange(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Type, int32 Value);
 
-	//TODO: Add Logic to remap Note based on Key of the Song
-	UFUNCTION()
-	void HandleCAttack();
+#pragma region KeyboardAttacks
 
 	UFUNCTION()
-	void HandleDAttack();
+	void HandleC1Attack();
 
 	UFUNCTION()
-	void HandleEAttack();
+	void HandleCSharp1Attack();
 
 	UFUNCTION()
-	void HandleFAttack();
+	void HandleD1Attack();
+	
+	UFUNCTION()
+	void HandleDSharp1Attack();
 
 	UFUNCTION()
-	void HandleGAttack();
+	void HandleE1Attack();
 
 	UFUNCTION()
-	void HandleAAttack();
+	void HandleF1Attack();
+	
+	UFUNCTION()
+	void HandleFSharp1Attack();
 
 	UFUNCTION()
-	void HandleBAttack();
+	void HandleG1Attack();
+	
+	UFUNCTION()
+	void HandleGSharp1Attack();
+	
+	UFUNCTION()
+	void HandleA1Attack();
+	
+	UFUNCTION()
+	void HandleASharp1Attack();
+	
+	UFUNCTION()
+	void HandleB1Attack();
+	
+	UFUNCTION()
+	void HandleC2Attack();
+
+	UFUNCTION()
+	void HandleCSharp2Attack();
+
+	UFUNCTION()
+	void HandleD2Attack();
+	
+	UFUNCTION()
+	void HandleDSharp2Attack();
+
+	UFUNCTION()
+	void HandleE2Attack();
+
+	UFUNCTION()
+	void HandleF2Attack();
+	
+	UFUNCTION()
+	void HandleFSharp2Attack();
+
+	UFUNCTION()
+	void HandleG2Attack();
+
+	//Called by any of the bound Actions to the Input Actions
+	//Remaps Midi Note to the scale and handles Movement and Attacks
+	void HandleKeyboardAttack(int32 MidiNote);
+
+#pragma endregion KeyboardAttacks
 
 	UFUNCTION()
 	void HandleAttack(ENote Note);
@@ -123,6 +182,9 @@ protected:
 	void DeathMenuControl(ENote Note);
 
 	void DeathMenuSwitchButton(EDeathState InDeathState);
+
+public:
+	EOctave CNoteOctave { EOctave::Four };
 
 private:
 
@@ -181,26 +243,65 @@ private:
 	UPROPERTY(EditAnywhere, DisplayName = "MappingContext", Category = "InputAction")
 	TObjectPtr<UInputMappingContext> DefaultMappingContext { nullptr };
 
-	UPROPERTY(EditAnywhere, DisplayName = "C Action", Category = "InputAction")
-	UInputAction* CAction { nullptr };
+	UPROPERTY(EditAnywhere, DisplayName = "C1 Action", Category = "InputAction")
+	UInputAction* C1Action { nullptr };
 
-	UPROPERTY(EditAnywhere, DisplayName = "D Action", Category = "InputAction")
-	UInputAction* DAction { nullptr };
+	UPROPERTY(EditAnywhere, DisplayName = "C#1 Action", Category = "InputAction")
+	UInputAction* CSharp1Action { nullptr };
 
-	UPROPERTY(EditAnywhere, DisplayName = "E Action", Category = "InputAction")
-	UInputAction* EAction { nullptr };
+	UPROPERTY(EditAnywhere, DisplayName = "D1 Action", Category = "InputAction")
+	UInputAction* D1Action { nullptr };
+	
+	UPROPERTY(EditAnywhere, DisplayName = "D#1 Action", Category = "InputAction")
+	UInputAction* DSharp1Action { nullptr };
 
-	UPROPERTY(EditAnywhere, DisplayName = "F Action", Category = "InputAction")
-	UInputAction* FAction { nullptr };
+	UPROPERTY(EditAnywhere, DisplayName = "E1 Action", Category = "InputAction")
+	UInputAction* E1Action { nullptr };
 
-	UPROPERTY(EditAnywhere, DisplayName = "G Action", Category = "InputAction")
-	UInputAction* GAction { nullptr };
+	UPROPERTY(EditAnywhere, DisplayName = "F1 Action", Category = "InputAction")
+	UInputAction* F1Action { nullptr };
+	
+	UPROPERTY(EditAnywhere, DisplayName = "F#1 Action", Category = "InputAction")
+	UInputAction* FSharp1Action { nullptr };
 
-	UPROPERTY(EditAnywhere, DisplayName = "A Action", Category = "InputAction")
-	UInputAction* AAction { nullptr };
+	UPROPERTY(EditAnywhere, DisplayName = "G1 Action", Category = "InputAction")
+	UInputAction* G1Action { nullptr };
+	
+	UPROPERTY(EditAnywhere, DisplayName = "G#1 Action", Category = "InputAction")
+	UInputAction* GSharp1Action { nullptr };
 
-	UPROPERTY(EditAnywhere, DisplayName = "B Action", Category = "InputAction")
-	UInputAction* BAction { nullptr };
+	UPROPERTY(EditAnywhere, DisplayName = "A1 Action", Category = "InputAction")
+	UInputAction* A1Action { nullptr };
+	
+	UPROPERTY(EditAnywhere, DisplayName = "A#1 Action", Category = "InputAction")
+	UInputAction* ASharp1Action { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "B1 Action", Category = "InputAction")
+	UInputAction* B1Action { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "C2 Action", Category = "InputAction")
+	UInputAction* C2Action { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "C#2 Action", Category = "InputAction")
+	UInputAction* CSharp2Action { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "D2 Action", Category = "InputAction")
+	UInputAction* D2Action { nullptr };
+	
+	UPROPERTY(EditAnywhere, DisplayName = "D#2 Action", Category = "InputAction")
+	UInputAction* DSharp2Action { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "E2 Action", Category = "InputAction")
+	UInputAction* E2Action { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "F2 Action", Category = "InputAction")
+	UInputAction* F2Action { nullptr };
+	
+	UPROPERTY(EditAnywhere, DisplayName = "F#2 Action", Category = "InputAction")
+	UInputAction* FSharp2Action { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "G2 Action", Category = "InputAction")
+	UInputAction* G2Action { nullptr };
 	
 	UPROPERTY(EditAnywhere, DisplayName = "Pause Action", Category = "InputAction")
 	UInputAction* PauseAction { nullptr };
