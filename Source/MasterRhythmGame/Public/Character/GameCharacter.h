@@ -61,6 +61,14 @@ public:
 	UFUNCTION()
 	void StopNote();
 
+	//Anim Stuff - Handled in BP
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayAttackAnimation();
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayBlockAnimation();
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayHitAnimation();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

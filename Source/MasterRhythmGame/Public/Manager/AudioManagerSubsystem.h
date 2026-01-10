@@ -70,6 +70,9 @@ public:
 
     void SetScale(EScale ScaleIn);
 
+    UFUNCTION(BlueprintCallable)
+    float GetAnimTime();
+
 private:
 
     UFUNCTION()
@@ -177,6 +180,19 @@ private:
     
     UPROPERTY()
     EScale Scale { EScale::Major };
+
+    //Animation Stuff
+
+    //Animation has a small startup, this is used to calculate that (should be 0.17f but somehow that doesn't work)
+    // const float AnimStartupTime { 0.17f };
+    const float AnimStartupTime { 0.f };
+    //The Length of the idle Animation
+    const float AnimLength { 1.f };
+    //The Amount of bars the anim loops over
+    const float LoopLength { 2.f };
+
+    //The explicit Time of the animation, used to sync the idle anim to the BPM
+    float AnimTime { 0.f };
 
 
 

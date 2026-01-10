@@ -133,6 +133,31 @@ void UAudioManagerSubsystem::SetScale(EScale ScaleIn)
 	}
 }
 
+float UAudioManagerSubsystem::GetAnimTime()
+{
+	if (ClockHandle)
+	{
+		FQuartzTransportTimeStamp ClockTimestamp = ClockHandle->GetCurrentTimestamp(this);
+
+		const float SyncDuration = AnimLength - AnimStartupTime;
+
+		float ContinuousBeat = ClockTimestamp.Beat + ClockTimestamp.BeatFraction;
+
+		float IdleBeatPhase = FMath::Fmod(ContinuousBeat, LoopLength);
+
+		if (IdleBeatPhase < 0.f)
+		{
+			IdleBeatPhase += LoopLength;
+		}
+		
+		float MusicalPhase = IdleBeatPhase / 2.f;
+
+		AnimTime = AnimStartupTime + (MusicalPhase * SyncDuration);
+	}
+
+	return AnimTime;
+}
+
 void UAudioManagerSubsystem::WatchOutputPartFinishedName(FName OutputName, const FMetaSoundOutput& Output)
 {
 	// Try to extract a string name from the MetaSound output that indicates which part finished.

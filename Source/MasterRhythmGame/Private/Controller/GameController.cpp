@@ -410,6 +410,9 @@ void AGameController::HandleAttack(ENote Note)
 			auto Defended = GameCharacter->GetDefended() - 1;
 			UE_LOG(LogTemp, Warning, TEXT("Defended Left: %d"), Defended);
 			GameCharacter->SetDefended(Defended);
+
+			//Play Player Attack Anim
+			GameCharacter->PlayAttackAnimation();
 			
 			if (GameCharacter->GetSplineRef()->IsVisible())
 			{
@@ -424,7 +427,7 @@ void AGameController::HandleAttack(ENote Note)
 				{
 					NoteActor->GetTimeline()->SetPlayRate(.25f);
 					NoteActor->SetSplineRef(GameCharacter->GetSplineRef());
-					NoteActor->MoveLeft();
+					NoteActor->MoveRight();
 				}
 			}
 			else

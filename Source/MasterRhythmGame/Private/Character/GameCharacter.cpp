@@ -113,6 +113,9 @@ void AGameCharacter::ApplyDamage(int32 DamageAmount)
 	int32 NewHealth = CalcHealth(DamageAmount);
 	UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::ApplyDamage - Damage=%d Health=%d"), DamageAmount, NewHealth);
 
+	//Play Hit Anim
+	PlayHitAnimation();
+
 	if (GetHealth() <= 0)
 	{
 		if (GameHUD != nullptr)

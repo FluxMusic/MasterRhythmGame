@@ -64,6 +64,9 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 			int32 Defended = OverlappingCharacter->GetDefended();
 			Defended++;
 			OverlappingCharacter->SetDefended(Defended);
+
+			//Play Player Block Anim
+			OverlappingCharacter->PlayBlockAnimation();
 			return;
 		}
 
@@ -115,7 +118,7 @@ void ANodeActor::MoveLeft()
 
 	if (Timeline)
 	{
-		Timeline->PlayFromStart();
+		Timeline->ReverseFromEnd();
 	}
 }
 
@@ -130,12 +133,13 @@ void ANodeActor::MoveRight()
 
 	if (Timeline)
 	{
-		Timeline->ReverseFromEnd();
+		Timeline->PlayFromStart();
 	}
 }
 
 void ANodeActor::SetBarLength(double BPM)
 {
+	//TODO: Make this modular
 	BPM = BPM / 240.0f;
 	BPM /= 8;
 
