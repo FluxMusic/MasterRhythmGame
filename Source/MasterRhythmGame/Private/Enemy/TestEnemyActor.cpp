@@ -118,6 +118,10 @@ void ATestEnemyActor::ApplyDamage(int32 DamageValue)
 			}
 		}
 		// TODO: If enemy health reaches zero do sth
+
+
+		//Play Hit Anim
+		PlayHitAnimation();
 	}
 }
 
@@ -152,6 +156,9 @@ void ATestEnemyActor::Attack(int32 InBPM)
 		Note->SetBarLength(InBPM);
 		Note->SetSplineRef(SplineRef);
 		Note->MoveLeft();
+
+		//Play Attack Anim
+		PlayAttackAnimation();
 	}
 }
 

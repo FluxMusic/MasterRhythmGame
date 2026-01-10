@@ -92,6 +92,10 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 			// Per requirement: when MoveRight executed and enemy collides with the note, nothing happens.
 			// Mark collided so the enemy will not receive damage from this note when it finishes.
 			bCollidedWithEnemy = true;
+
+			//Play Enemy block Anim
+			OverlappingEnemy->PlayBlockAnimation();
+
 			return;
 		}
 
