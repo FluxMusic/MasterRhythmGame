@@ -482,6 +482,14 @@ void AGameController::MovePlayer(ENote Note)
 		FVector SplineWorldLocation = SplineRef->GetLocationAtSplinePoint(0, ESplineCoordinateSpace::World);
 
 		GameCharacter->GetCapsuleComponent()->SetWorldLocation(SplineWorldLocation);
+		
+		//Collision stuff
+		GameCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+		
+		GetWorld()->GetTimerManager().ClearTimer(CollisionTimerHandle);
+
+		float TimerDelay = FrameToSeconds();
+		GetWorld()->GetTimerManager().SetTimer(CollisionTimerHandle, this, &AGameController::DisablePlayerCollision, TimerDelay, false);
 	}
 }
 
@@ -1066,3 +1074,24 @@ void AGameController::DeathMenuSwitchButton(EDeathState InDeathState)
 		}
 	}
 }
+
+float AGameController::FrameToSeconds()
+{
+	float Seconds = 1.f;
+	if (auto* World = GetWorld())
+	{
+		float FrameTime = World->GetDeltaSeconds();
+		Seconds = FrameTime * FramesToEnableCollision;
+	}
+	return Seconds;
+}
+
+void AGameController::DisablePlayerCollision()
+{
+	if (GameCharacter && GameCharacter->GetCapsuleComponent())
+	{
+		GameCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+	
+}
+	

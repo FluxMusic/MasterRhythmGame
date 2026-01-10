@@ -183,6 +183,11 @@ protected:
 
 	void DeathMenuSwitchButton(EDeathState InDeathState);
 
+private:
+	float FrameToSeconds();
+
+	void DisablePlayerCollision();
+
 public:
 	EOctave CNoteOctave { EOctave::Four };
 
@@ -307,4 +312,8 @@ private:
 	UInputAction* PauseAction { nullptr };
 
 #pragma endregion
+
+	FTimerHandle CollisionTimerHandle;
+
+	int32 FramesToEnableCollision { 30 };
 };

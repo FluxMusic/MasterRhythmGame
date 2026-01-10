@@ -39,6 +39,8 @@ public:
     UFUNCTION()
     void ClockHandleInit(FName ClockName);
 
+    double GetBPM() { return Bpm; }
+
     UFUNCTION()
     void SetBeatsPerMinute(float InBPM, FQuartzQuantizationBoundary InBoundary, FOnQuartzCommandEventBP InDelegate);
 

@@ -9,6 +9,7 @@
 #include "Components/AudioComponent.h"
 #include "HUD/GameHUD.h"
 #include "Components/TimelineComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -30,6 +31,12 @@ AGameCharacter::AGameCharacter()
 
 	GetCharacterMovement()->GravityScale = 0;
 	GetCharacterMovement()->bApplyGravityWhileJumping = false;
+
+	if (GetCapsuleComponent())
+	{
+		GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+	
 }
 
 // Called when the game starts or when spawned
