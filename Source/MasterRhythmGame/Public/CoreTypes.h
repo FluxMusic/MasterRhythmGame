@@ -186,3 +186,14 @@ enum class EOctave : uint8
 	Five = 72 UMETA(DisplayName = "Octave 5"),
 	Six = 84 UMETA(DisplayName = "Octave 6")
 };
+
+UENUM(BlueprintType)
+enum class ELevels : uint8
+{
+	LevelOne,
+	LevelTwo,
+	LevelThree,
+	LevelFour,
+	LevelFive,
+	LevelSix
+};

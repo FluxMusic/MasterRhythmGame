@@ -21,6 +21,9 @@ struct FData
 	
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<ALevelPath> Spline { nullptr };
+
+	UPROPERTY(EditAnywhere)
+	bool bIsUnlocked{ false };
 };
 
 UCLASS()
@@ -39,9 +42,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// --- Is Unlocked ---
-	bool GetIsUnlocked() const { return bIsUnlocked; }
 
 	// --- Neigbhours ---
 	TArray<ALevelNode*> GetNeighbours() const { return Neighbours; }
@@ -62,9 +62,6 @@ public:
 	FName GetLevelName() const { return LevelName; }
 
 private:
-
-	UPROPERTY(EditAnywhere)
-	bool bIsUnlocked { false };
 
 	UPROPERTY()
 	TObjectPtr<USceneComponent> DefaultSceneRoot;
@@ -89,4 +86,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	FName LevelName;
+
+	UPROPERTY(EditAnywhere)
+	ELevels Level;
 };

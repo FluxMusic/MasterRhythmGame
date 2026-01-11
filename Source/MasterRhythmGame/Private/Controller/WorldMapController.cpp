@@ -180,7 +180,7 @@ void AWorldMapController::HandleMoveForward()
 		return;
 	}
 
-	if (PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetIsUnlocked())
+	if (PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetSplineForward().bIsUnlocked)
 	{
 		PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline);
 		PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().DirectionWorldMap);
@@ -208,7 +208,7 @@ void AWorldMapController::HandleMoveLeft()
 		return;
 	}
 
-	if (PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetIsUnlocked())
+	if (PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().bIsUnlocked)
 	{
 		PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().Spline);
 		PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().DirectionWorldMap);
@@ -222,7 +222,7 @@ void AWorldMapController::HandleMoveRight()
 		return;
 	}
 
-	if (PlayerCharacter->GetLevelNodeRef()->GetSplineRight().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetIsUnlocked())
+	if (PlayerCharacter->GetLevelNodeRef()->GetSplineRight().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetSplineRight().bIsUnlocked)
 	{
 		PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineRight().Spline);
 		PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineRight().DirectionWorldMap);
@@ -276,7 +276,7 @@ void AWorldMapController::WorldMapControl(ENote Note)
 			// Left
 			case ENote::E:
 			{
-				if (PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetIsUnlocked())
+				if (PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().bIsUnlocked)
 				{
 					PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().Spline);
 					PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().DirectionWorldMap);
@@ -298,7 +298,7 @@ void AWorldMapController::WorldMapControl(ENote Note)
 			// Right
 			case ENote::G:
 			{
-				if (PlayerCharacter->GetLevelNodeRef()->GetSplineRight().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetIsUnlocked())
+				if (PlayerCharacter->GetLevelNodeRef()->GetSplineRight().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetSplineRight().bIsUnlocked)
 				{
 					PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineRight().Spline);
 					 PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineRight().DirectionWorldMap);
@@ -309,7 +309,7 @@ void AWorldMapController::WorldMapControl(ENote Note)
 			// Forward
 			case ENote::FSharp:
 			{
-				if (PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetIsUnlocked())
+				if (PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetSplineForward().bIsUnlocked)
 				{
 					PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline);
 					PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().DirectionWorldMap);
