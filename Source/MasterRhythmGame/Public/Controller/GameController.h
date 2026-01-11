@@ -17,19 +17,6 @@ class UInputMappingContext;
 class AGameCharacter;
 class AGameHUD;
 
-UENUM(BlueprintType)
-enum class EOctave : uint8
-{
-	None  =  0 UMETA(DisplayName="None"),
-
-	One   = 24 UMETA(DisplayName="Octave 1"),
-	Two   = 36 UMETA(DisplayName="Octave 2"),
-	Three = 48 UMETA(DisplayName="Octave 3"),
-	Four  = 60 UMETA(DisplayName="Octave 4"),
-	Five  = 72 UMETA(DisplayName="Octave 5"),
-	Six   = 84 UMETA(DisplayName="Octave 6")
-};
-
 /**
  * 
  */

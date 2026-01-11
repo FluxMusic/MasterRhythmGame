@@ -2,6 +2,9 @@
 
 
 #include "Controller/WorldMapController.h"
+
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 #include "MIDIDeviceManager.h"
 #include "Character/WorldMapPlayerCharacter.h"
 #include "Components/Button.h"
@@ -32,11 +35,26 @@ void AWorldMapController::BeginPlay()
 	}
 
 	WorldMapHUD = Cast<AWorldMapHUD>(GetHUD());
+
+	if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
+	{
+		Subsystem->AddMappingContext(DefaultMappingContext, 0);
+	}
 }
 
 void AWorldMapController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
+
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent))
+	{
+		EnhancedInputComponent->BindAction(MoveForwardAction, ETriggerEvent::Started, this, &AWorldMapController::HandleMoveForward);
+		EnhancedInputComponent->BindAction(MoveBackwardAction, ETriggerEvent::Started, this, &AWorldMapController::HandleMoveBackward);
+		EnhancedInputComponent->BindAction(MoveLeftAction, ETriggerEvent::Started, this, &AWorldMapController::HandleMoveLeft);
+		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Started, this, &AWorldMapController::HandleMoveRight);
+		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AWorldMapController::HandleMoveForward);
+		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AWorldMapController::HandlePause);
+	}
 }
 
 void AWorldMapController::InitMidi()
@@ -153,6 +171,90 @@ void AWorldMapController::HandleControlChange(UMIDIDeviceInputController* MIDIDe
 	NormalizedValue = FMath::Clamp(NormalizedValue, 0.0f, 1.0f);
 
 	AudioSoundControl(Type, NormalizedValue);
+}
+
+void AWorldMapController::HandleMoveForward()
+{
+	if (PlayerCharacter->GetIsMoving())
+	{
+		return;
+	}
+
+	if (PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetIsUnlocked())
+	{
+		PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline);
+		PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().DirectionWorldMap);
+	}
+}
+
+void AWorldMapController::HandleMoveBackward()
+{
+	if (PlayerCharacter->GetIsMoving())
+	{
+		return;
+	}
+
+	if (PlayerCharacter->GetLevelNodeRef()->GetSplineBackward().Spline != nullptr)
+	{
+		PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineBackward().Spline);
+		PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineBackward().DirectionWorldMap);
+	}
+}
+
+void AWorldMapController::HandleMoveLeft()
+{
+	if (PlayerCharacter->GetIsMoving())
+	{
+		return;
+	}
+
+	if (PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetIsUnlocked())
+	{
+		PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().Spline);
+		PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineLeft().DirectionWorldMap);
+	}
+}
+
+void AWorldMapController::HandleMoveRight()
+{
+	if (PlayerCharacter->GetIsMoving())
+	{
+		return;
+	}
+
+	if (PlayerCharacter->GetLevelNodeRef()->GetSplineRight().Spline != nullptr && PlayerCharacter->GetLevelNodeRef()->GetIsUnlocked())
+	{
+		PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineRight().Spline);
+		PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineRight().DirectionWorldMap);
+	}
+}
+
+void AWorldMapController::HandlePause()
+{
+	SetControllerState(EControllerStateWorldMap::PauseMenu);
+
+	// Toggle pause state
+	bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
+	UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
+
+	if (bCurrentlyPaused == false)
+	{
+		if (WorldMapHUD != nullptr)
+		{
+			WorldMapHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+		}
+
+		// Show mouse cursor and switch to GameAndUI input so widgets receive focus
+		bShowMouseCursor = true;
+		FInputModeGameAndUI InputMode;
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		SetInputMode(InputMode);
+	}
+}
+
+void AWorldMapController::HandleOpenLevel()
+{
+	UGameplayStatics::OpenLevel(this, PlayerCharacter->GetLevelNodeRef()->GetLevelName());
 }
 
 void AWorldMapController::WorldMapControl(ENote Note)

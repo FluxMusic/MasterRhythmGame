@@ -9,6 +9,8 @@
 #include "../CoreTypes.h"
 #include "WorldMapController.generated.h"
 
+class UInputAction;
+class UInputMappingContext;
 class AWorldMapPlayerCharacter;
 class ALevelNode;
 /**
@@ -57,6 +59,24 @@ protected:
 	UFUNCTION()
 	void HandleControlChange(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel, int32 Type, int32 Value);
 
+	UFUNCTION()
+	void HandleMoveForward();
+
+	UFUNCTION()
+	void HandleMoveBackward();
+
+	UFUNCTION()
+	void HandleMoveLeft();
+
+	UFUNCTION()
+	void HandleMoveRight();
+
+	UFUNCTION()
+	void HandlePause();
+
+	UFUNCTION()
+	void HandleOpenLevel();
+
 	void WorldMapControl(ENote Note);
 
 	void PauseMenuControl(ENote Note);
@@ -104,4 +124,29 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<AWorldMapPlayerCharacter> PlayerCharacter { nullptr };
+
+#pragma region InputAction
+
+	UPROPERTY(EditAnywhere, DisplayName = "MappingContext", Category = "InputAction")
+	TObjectPtr<UInputMappingContext> DefaultMappingContext { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "Move Forward", Category = "InputAction")
+	UInputAction* MoveForwardAction { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "Move Backward", Category = "InputAction")
+	UInputAction* MoveBackwardAction { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "Move Right", Category = "InputAction")
+	UInputAction* MoveRightAction { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "Move Left", Category = "InputAction")
+	UInputAction* MoveLeftAction { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "Pause", Category = "InputAction")
+	UInputAction* PauseAction { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "OpenLevel", Category = "InputAction")
+	UInputAction* OpenLevelAction { nullptr };
+
+#pragma endregion
 };
