@@ -61,6 +61,18 @@ public:
 	// --- Level Name ---
 	FName GetLevelName() const { return LevelName; }
 
+	UFUNCTION(BlueprintCallable)
+	void SetIsUnlockedForward(bool bInUnlocked) { SplineForward.bIsUnlocked; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetIsUnlockedBackward(bool bInUnlocked) { SplineBackward.bIsUnlocked; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetIsUnlockedRight(bool bInUnlocked) { SplineRight.bIsUnlocked; }
+
+	UFUNCTION(BlueprintCallable)
+	void SetIsUnlockedLeft(bool bInUnlocked) { SplineLeft.bIsUnlocked; }
+
 private:
 
 	UPROPERTY()
@@ -89,4 +101,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	ELevels Level;
+
+	UPROPERTY(EditAnywhere)
+	bool bIsUnlocked { false };
 };
