@@ -53,6 +53,7 @@ void AWorldMapController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(MoveLeftAction, ETriggerEvent::Started, this, &AWorldMapController::HandleMoveLeft);
 		EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Started, this, &AWorldMapController::HandleMoveRight);
 		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AWorldMapController::HandleMoveForward);
+		EnhancedInputComponent->BindAction(OpenLevelAction, ETriggerEvent::Started, this, &AWorldMapController::HandleOpenLevel);
 		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AWorldMapController::HandlePause);
 	}
 }
