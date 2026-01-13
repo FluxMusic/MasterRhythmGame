@@ -49,7 +49,6 @@ void UAudioManagerSubsystem::StartClock()
 		{
 			LatencyBetweenThreads = QuartzSubsystem->GetAudioRenderThreadToGameThreadMaxLatency();
 		}
-		
 	}
 }
 
@@ -268,6 +267,38 @@ void UAudioManagerSubsystem::StartPart3()
 	if (ActiveAudioComponent)
 	{
 		ActiveAudioComponent->SetTriggerParameter("PlayPart3");
+	}
+}
+
+void UAudioManagerSubsystem::StartPart4Intro()
+{
+	if (ActiveAudioComponent)
+	{
+		ActiveAudioComponent->SetTriggerParameter("PlayPart4Intro");
+	}
+}
+
+void UAudioManagerSubsystem::StartPart4()
+{
+	if (ActiveAudioComponent)
+	{
+		ActiveAudioComponent->SetTriggerParameter("PlayPart4");
+	}
+}
+
+void UAudioManagerSubsystem::StartPart5Intro()
+{
+	if (ActiveAudioComponent)
+	{
+		ActiveAudioComponent->SetTriggerParameter("PlayPart5Intro");
+	}
+}
+
+void UAudioManagerSubsystem::StartPart5()
+{
+	if (ActiveAudioComponent)
+	{
+		ActiveAudioComponent->SetTriggerParameter("PlayPart5");
 	}
 }
 
@@ -502,7 +533,99 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 
 			UnmuteLeads();
 		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth3() <= 0) && PartFinish == EPartFinish::Three)
+		{
+			StartOutro();
+		}
 		else
+		{
+			StartPart4Intro();
+		}
+	}
+	else if (PartNameFix.Equals("Part4IntroEnd"))
+	{
+		StartPart4();
+		bEnemyCanAttack = true;
+		bPlayAgain = true;
+
+		UnmuteLeads();
+	}
+	else if (PartNameFix.Equals("Part4End"))
+	{
+		// Check if loop needed -> Check if Enemy no life
+		if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (bEnemyCanAttack))
+		{
+			bEnemyCanAttack = false;
+			bPlayerCanAttack = false;
+			StartPart4();
+			bPlayAgain = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && bPlayAgain)
+		{
+			StartPart4();
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
+		{
+			StartPart4();
+			bEnemyCanAttack = true;
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			UnmuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth4()) <= 0 && PartFinish == EPartFinish::Four)
+		{
+			StartOutro();
+		}
+		else
+		{
+			StartPart5Intro();
+		}
+	}
+	else if (PartNameFix.Equals("Part5IntroEnd"))
+	{
+		StartPart5();
+		bEnemyCanAttack = true;
+		bPlayAgain = true;
+
+		UnmuteLeads();
+	}
+	else if (PartNameFix.Equals("Part5End"))
+	{
+		// Check if loop needed -> Check if Enemy no life
+		if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (bEnemyCanAttack))
+		{
+			bEnemyCanAttack = false;
+			bPlayerCanAttack = false;
+			StartPart5();
+			bPlayAgain = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (!bEnemyCanAttack) && bPlayAgain)
+		{
+			StartPart5();
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
+		{
+			StartPart5();
+			bEnemyCanAttack = true;
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			UnmuteLeads();
+		}
+		else if (Enemy != nullptr && Enemy->GetHealth5() <= 0 && PartFinish == EPartFinish::Five)
 		{
 			StartOutro();
 		}

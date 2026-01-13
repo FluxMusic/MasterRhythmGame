@@ -111,6 +111,18 @@ private:
     void StartPart3();
 
     UFUNCTION()
+    void StartPart4Intro();
+
+    UFUNCTION()
+	void StartPart4();
+
+    UFUNCTION()
+    void StartPart5Intro();
+
+    UFUNCTION()
+    void StartPart5();
+
+    UFUNCTION()
     void StartOutro();
 
     UFUNCTION()
@@ -182,6 +194,9 @@ private:
     
     UPROPERTY()
     EScale Scale { EScale::Major };
+
+    UPROPERTY()
+    EPartFinish PartFinish { EPartFinish::Three };
 
     //Animation Stuff
 

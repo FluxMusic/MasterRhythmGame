@@ -37,15 +37,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int32 CalcHealth5(int32 Value);
 
-	UFUNCTION(BlueprintCallable)
-	int32 CalcHealth6(int32 Value);
-
-	UFUNCTION(BlueprintCallable)
-	int32 CalcHealth7(int32 Value);
-
-	UFUNCTION(BlueprintCallable)
-	int32 CalcHealth8(int32 Value);
-
 	UFUNCTION()
 	void ApplyDamage(int32 DamageValue);
 
@@ -78,15 +69,6 @@ public:
 
 	int32 GetHealth5() const { return HealthBar5; }
 	void SetHealth5(int32 InHealth) { HealthBar5 = InHealth; }
-
-	int32 GetHealth6() const { return HealthBar6; }
-	void SetHealth6(int32 InHealth) { HealthBar6 = InHealth; }
-
-	int32 GetHealth7() const { return HealthBar7; }
-	void SetHealth7(int32 InHealth) { HealthBar7 = InHealth; }
-
-	int32 GetHealth8() const { return HealthBar8; }
-	void SetHealth8(int32 InHealth) { HealthBar8 = InHealth; }
 
 	UFUNCTION()
 	void Attack(int32 InBPM);
@@ -134,15 +116,6 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 HealthBar5 { 0 };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar6 { 0 };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar7 { 0 };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar8 { 0 };
 
 	UPROPERTY()
 	TObjectPtr<USplineComponent> SplineRef { nullptr };

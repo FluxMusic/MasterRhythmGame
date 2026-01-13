@@ -66,24 +66,6 @@ int32 ATestEnemyActor::CalcHealth5(int32 Value)
 	return HealthBar5;
 }
 
-int32 ATestEnemyActor::CalcHealth6(int32 Value)
-{
-	HealthBar6 = FMath::Max(HealthBar6 - Value, 0);
-	return HealthBar6;
-}
-
-int32 ATestEnemyActor::CalcHealth7(int32 Value)
-{
-	HealthBar7 = FMath::Max(HealthBar7 - Value, 0);
-	return HealthBar7;
-}
-
-int32 ATestEnemyActor::CalcHealth8(int32 Value)
-{
-	HealthBar8 = FMath::Max(HealthBar8 - Value, 0);
-	return HealthBar8;
-}
-
 void ATestEnemyActor::ApplyDamage(int32 DamageValue)
 {
 	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
@@ -115,6 +97,22 @@ void ATestEnemyActor::ApplyDamage(int32 DamageValue)
 			if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
 			{
 				GameHUD->GetMainGameInstance()->SetHealthEnemy3(GetHealth3());
+			}
+		}
+		else if (PartName == "Part4End")
+		{
+			SetHealth4(CalcHealth4(DamageValue));
+			if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
+			{
+				GameHUD->GetMainGameInstance()->SetHealthEnemy4(GetHealth4());
+			}
+		}
+		else if (PartName == "Part5End")
+		{
+			SetHealth5(CalcHealth5(DamageValue));
+			if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
+			{
+				GameHUD->GetMainGameInstance()->SetHealthEnemy5(GetHealth5());
 			}
 		}
 		// TODO: If enemy health reaches zero do sth
@@ -198,9 +196,6 @@ void ATestEnemyActor::SetupHUD()
 		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy3(GetHealth3());
 		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy4(GetHealth4());
 		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy5(GetHealth5());
-		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy6(GetHealth6());
-		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy7(GetHealth7());
-		GameHUD->GetMainGameInstance()->SetMaxHealthEnemy8(GetHealth8());
 	}
 	else
 	{

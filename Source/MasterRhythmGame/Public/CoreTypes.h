@@ -197,3 +197,11 @@ enum class ELevels : uint8
 	LevelFive,
 	LevelSix
 };
+
+UENUM(BlueprintType)
+enum class EPartFinish : uint8
+{
+	Three,
+	Four,
+	Five
+};

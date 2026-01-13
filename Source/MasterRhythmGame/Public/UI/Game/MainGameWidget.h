@@ -34,13 +34,7 @@ public:
 	UFUNCTION()
 	void SetHealthEnemy5(int32 InHealth);
 	UFUNCTION()
-	void SetHealthEnemy6(int32 InHealth);
-	UFUNCTION()
-	void SetHealthEnemy7(int32 InHealth);
-	UFUNCTION()
-	void SetHealthEnemy8(int32 InHealth);
 
-	UFUNCTION()
 	void SetMaxHealthEnemy1(int32 InMaxHealth);
 	UFUNCTION()
 	void SetMaxHealthEnemy2(int32 InMaxHealth);
@@ -50,12 +44,6 @@ public:
 	void SetMaxHealthEnemy4(int32 InMaxHealth);
 	UFUNCTION()
 	void SetMaxHealthEnemy5(int32 InMaxHealth);
-	UFUNCTION()
-	void SetMaxHealthEnemy6(int32 InMaxHealth);
-	UFUNCTION()
-	void SetMaxHealthEnemy7(int32 InMaxHealth);
-	UFUNCTION()
-	void SetMaxHealthEnemy8(int32 InMaxHealth);
 
 	// --- LifeBarPlayer ---
 	UProgressBar* GetLifeBarPlayer() const { return LifeBarPlayer; }
@@ -74,15 +62,6 @@ public:
 	
 	// --- LifeBarEnemyFive ---
 	UProgressBar* GetLifeBarEnemy5() const { return LifeBarEnemyFive; }
-	
-	// --- LifeBarEnemySix ---
-	UProgressBar* GetLifeBarEnemy6() const { return LifeBarEnemySix; }
-	
-	// --- LifeBarEnemySeven ---
-	UProgressBar* GetLifeBarEnemy7() const { return LifeBarEnemySeven; }
-	
-	// --- LifeBarEnemyEight ---
-	UProgressBar* GetLifeBarEnemy8() const { return LifeBarEnemyEight; }
 	
 	// --- CompletionPercent ---
 	UTextBlock* GetCompletionPercent() const { return CompletionPercent; }
@@ -108,15 +87,6 @@ private:
 	
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UProgressBar* LifeBarEnemyFive { nullptr };
-	
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UProgressBar* LifeBarEnemySix { nullptr };
-	
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UProgressBar* LifeBarEnemySeven { nullptr };
-	
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UProgressBar* LifeBarEnemyEight { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* CompletionPercent { nullptr };
@@ -139,10 +109,4 @@ private:
 	int32 MaxEnemyHealth4 { 0 };
 	UPROPERTY()
 	int32 MaxEnemyHealth5 { 0 };
-	UPROPERTY()
-	int32 MaxEnemyHealth6 { 0 };
-	UPROPERTY()
-	int32 MaxEnemyHealth7 { 0 };
-	UPROPERTY()
-	int32 MaxEnemyHealth8 { 0 };
 };
