@@ -786,59 +786,6 @@ void AWorldMapController::AudioSoundControl(int32 Type, float SoundValue)
 	}
 }
 
-void AWorldMapController::WorldMapSwitchButton(EWorldMapItem InWorldMapItem)
-{
-	if (WorldMapHUD != nullptr)
-	{
-		switch (InWorldMapItem)
-		{
-			case EWorldMapItem::LevelOne:
-			{
-				WorldMapHUD->GetWorldMapInstance()->GetLevelOneButton()->SetKeyboardFocus();
-				WorldMapHUD->GetWorldMapInstance()->LevelOneButtonHovered();
-				break;
-			}
-			case EWorldMapItem::LevelTwo:
-			{
-				WorldMapHUD->GetWorldMapInstance()->GetLevelTwoButton()->SetKeyboardFocus();
-				WorldMapHUD->GetWorldMapInstance()->LevelTwoButtonHovered();
-				break;
-			}
-			case EWorldMapItem::LevelThree:
-			{
-				WorldMapHUD->GetWorldMapInstance()->GetLevelThreeButton()->SetKeyboardFocus();
-				WorldMapHUD->GetWorldMapInstance()->LevelThreeButtonHovered(); break;
-			}
-			case EWorldMapItem::LevelFour:
-			{
-				WorldMapHUD->GetWorldMapInstance()->GetLevelFourButton()->SetKeyboardFocus();
-				WorldMapHUD->GetWorldMapInstance()->LevelFourButtonHovered(); break;
-			}
-			case EWorldMapItem::LevelFive:
-			{
-				WorldMapHUD->GetWorldMapInstance()->GetLevelFiveButton()->SetKeyboardFocus();
-				WorldMapHUD->GetWorldMapInstance()->LevelFiveButtonHovered(); break;
-			}
-			case EWorldMapItem::LevelSix:
-			{
-				WorldMapHUD->GetWorldMapInstance()->GetLevelSixButton()->SetKeyboardFocus();
-				WorldMapHUD->GetWorldMapInstance()->LevelSixButtonHovered(); break;
-			}
-			case EWorldMapItem::MainMenu:
-			{
-				WorldMapHUD->GetWorldMapInstance()->GetMainMenuButton()->SetKeyboardFocus();
-				WorldMapHUD->GetWorldMapInstance()->MainMenuButtonHovered(); 
-				break;
-			}
-			default:
-			{
-				// Should not land here
-				break;
-			}
-		}
-	}
-}
-
 void AWorldMapController::PauseMenuSwitchButton(EPauseMenuItem InPauseMenuItem)
 {
 	if (WorldMapHUD != nullptr)

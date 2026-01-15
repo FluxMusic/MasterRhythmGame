@@ -95,8 +95,6 @@ protected:
 
 	void AudioSoundControl(int32 Type, float SoundValue);
 
-	void WorldMapSwitchButton(EWorldMapItem InWorldMapItem);
-
 	void PauseMenuSwitchButton(EPauseMenuItem InPauseMenuItem);
 private:
 	UPROPERTY(VisibleAnywhere, DisplayName = "Midi Controller", Category = "Components")

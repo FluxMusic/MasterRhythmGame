@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "UI/PauseMenuWidget.h"
-#include "UI/WorldMapWidget_TEMPORARILY.h"
 #include "UI/Settings/AudioSettingWidget.h"
 #include "UI/Settings/GraphicSettingWidget.h"
 #include "UI/Settings/MainMenuSettingWidget.h"
@@ -28,14 +27,6 @@ public:
 	// --- Pause Menu Instance ---
 	UPauseMenuWidget* GetPauseMenuInstance() const { return PauseMenuInstance; }
 	void SetPauseMenuInstance(UPauseMenuWidget* InInstance) { PauseMenuInstance = InInstance; }
-
-	// --- World Map Widget Class ---
-	TSubclassOf<UWorldMapWidget_TEMPORARILY> GetWorldMapWidgetClass() const { return WorldMapWidgetClass; }
-	void SetWorldMapWidgetClass(TSubclassOf<UWorldMapWidget_TEMPORARILY> InClass) { WorldMapWidgetClass = InClass; }
-
-	// --- World Map Instance ---
-	UWorldMapWidget_TEMPORARILY* GetWorldMapInstance () const { return WorldMapWidgetInstance; }
-	void SetWorldMapInstance(UWorldMapWidget_TEMPORARILY* InInstance) { WorldMapWidgetInstance = InInstance; }
 
 	// --- Main Menu Settings Widget Class ---
 	TSubclassOf<UMainMenuSettingWidget> GetMainMenuSettingWidgetClass() const { return MainMenuSettingWidgetClass; }
@@ -70,12 +61,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UPauseMenuWidget> PauseMenuInstance { nullptr };
-
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<UWorldMapWidget_TEMPORARILY> WorldMapWidgetClass;
-
-	UPROPERTY()
-	TObjectPtr<UWorldMapWidget_TEMPORARILY> WorldMapWidgetInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UMainMenuSettingWidget> MainMenuSettingWidgetClass;

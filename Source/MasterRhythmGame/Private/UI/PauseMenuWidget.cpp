@@ -22,10 +22,10 @@ void UPauseMenuWidget::ResumeButtonClicked()
 		{
 			WorldMapHud = Cast<AWorldMapHUD>(PlayerController->GetHUD());
 			PlayerController->SetControllerState(EControllerStateWorldMap::WorldMap);
-		}
-		if (WorldMapHud != nullptr)
-		{
-			WorldMapHud->GetWorldMapInstance()->SetVisibility(ESlateVisibility::Visible);
+			PlayerController->bShowMouseCursor = false;
+			FInputModeGameOnly GameInputMode;
+			PlayerController->SetInputMode(GameInputMode);
+			UGameplayStatics::SetGamePaused(GetWorld(), false);
 		}
 	}
 	else if (CurrentLevel == "TestMap")
