@@ -100,12 +100,14 @@ private:
 	UPROPERTY()
     TMap<EScale, FScaleDegrees> ScaleDegreeLookupTable
     {
-        { EScale::Major,      { { 0, 2, 4, 5, 7, 9, 11 } } },
-        { EScale::Minor,      { { 0, 2, 3, 5, 7, 9, 10 } } },
-        { EScale::Phrygian,   { { 0, 1, 3, 5, 7, 8, 10 } } },
-        { EScale::Lydian,     { { 0, 2, 4, 6, 7, 9, 11 } } },
-        { EScale::Mixolydian, { { 0, 2, 4, 5, 7, 9, 10 } } },
-        { EScale::Aeolian,    { { 0, 2, 3, 5, 7, 8, 10 } } }, 
-        { EScale::Locrian,    { { 0, 1, 3, 5, 6, 8, 10 } } } 
+        { EScale::Major,         { { 0, 2, 4, 5, 7, 9, 11 } } },
+        { EScale::Minor,         { { 0, 2, 3, 5, 7, 9, 10 } } },
+        { EScale::Phrygian,      { { 0, 1, 3, 5, 7, 8, 10 } } },
+        { EScale::Lydian,        { { 0, 2, 4, 6, 7, 9, 11 } } },
+        { EScale::Mixolydian,    { { 0, 2, 4, 5, 7, 9, 10 } } },
+        { EScale::Aeolian,       { { 0, 2, 3, 5, 7, 8, 10 } } }, 
+        { EScale::Locrian,       { { 0, 1, 3, 5, 6, 8, 10 } } },
+		{ EScale::HarmonicMinor, { { 0, 2, 3, 5, 7, 8, 11 } } },
+		{ EScale::MelodicMinor,  { { 0, 2, 3, 5, 7, 9, 11 } } }
     };
 };
