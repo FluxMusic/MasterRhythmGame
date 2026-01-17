@@ -96,25 +96,6 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
-void AGameCharacter::CreateAndStartQuartzClock(float InBpm)
-{
-	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
-	if (AudioManager != nullptr)
-	{
-		AudioManager->InitSubsystem();
-		AudioManager->ClockHandleInit(FName(TEXT("PlayerClock")));
-		FQuartzQuantizationBoundary QuantBoundary(EQuartzCommandQuantization::Bar, 1.0f, EQuarztQuantizationReference::BarRelative, true);
-		FOnQuartzCommandEventBP Delegate;
-		AudioManager->SetBeatsPerMinute(InBpm, QuantBoundary, Delegate);
-		AudioManager->StartClock();
-		AudioManager->PlayQuantized(AudioComponent);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::BeginPlay - UAudioManagerSubsystem not available."));
-	}
-}
-
 void AGameCharacter::ApplyDamage(int32 DamageAmount)
 {
 	int32 NewHealth = CalcHealth(DamageAmount);

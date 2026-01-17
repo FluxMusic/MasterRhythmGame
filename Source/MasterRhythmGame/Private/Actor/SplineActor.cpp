@@ -6,6 +6,11 @@
 #include "Components/SplineComponent.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "Controller/MainMenuController.h"
+#include "Data/LevelData.h"
+#include "Enemy/TestEnemyActor.h"
+#include "Character/GameCharacter.h"
+#include "Controller/GameController.h"
+#include "Kismet/GameplayStatics.h"
 #include "Manager/AudioManagerSubsystem.h"
 
 // Sets default values
@@ -172,11 +177,36 @@ void ASplineActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
-	if (AudioManager)
+	//Spawn Player and Enemy
+	if (!GetWorld()) return;
+	
+	if (LevelData)
 	{
-		AudioManager->SetRootNote(RootNote);
-		AudioManager->SetScale(Scale);
+		GetWorld()->SpawnActor<AGameCharacter> (LevelData->PlayerClass, Spline0->GetLocationAtSplinePoint(0, ESplineCoordinateSpace::World), GetActorRotation());
+		ATestEnemyActor* Enemy = GetWorld()->SpawnActor<ATestEnemyActor>(LevelData->EnemyClass,  Spline0->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::World), GetActorRotation());
+		Enemy->Init(LevelData);
+
+		if (AGameController* Controller = Cast<AGameController>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
+		{
+			Controller->SetRootNote(LevelData->RootNote);
+			Controller->SetScale(LevelData->Scale);
+		}
+		
+		UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
+		if (AudioManager)
+		{
+			AudioManager->InitSubsystem(LevelData);
+			AudioManager->ClockHandleInit(FName(TEXT("PlayerClock")));
+			FQuartzQuantizationBoundary QuantBoundary(EQuartzCommandQuantization::Bar, 1.0f, EQuarztQuantizationReference::BarRelative, true);
+			FOnQuartzCommandEventBP Delegate;
+			AudioManager->SetBeatsPerMinute(LevelData->BPM, QuantBoundary, Delegate);
+			AudioManager->StartClock();
+			AudioManager->PlayQuantized(Enemy->GetAudioComponent());
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("ASplineActor::BeginPlay - UAudioManagerSubsystem not available."));
+		}
 	}
 }
 
@@ -272,14 +302,14 @@ void ASplineActor::OnConstruction(const FTransform& Transform)
 	Spline1 ->SetVisibility(false);
 	Spline0 ->SetVisibility(false);
 
-	if (MeshInstances && Mesh)
+	if (MeshInstances && Mesh && LevelData)
 	{
 		MeshInstances->ClearInstances();
 		MeshInstances->SetStaticMesh(Mesh);
 
 		const float MeshLength = Mesh->GetBounds().BoxExtent.X * 2.f;
 		
-		for (int32 ScaleDegree : ScaleDegreeLookupTable.Find(Scale)->ScaleDegrees)
+		for (int32 ScaleDegree : ScaleDegreeLookupTable.Find(LevelData->Scale)->ScaleDegrees)
 		{
 			auto* Spline = GetSplines(ScaleDegree);
 			Spline->SetVisibility(true);

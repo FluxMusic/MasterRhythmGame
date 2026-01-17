@@ -14,6 +14,7 @@ class ATestEnemyActor;
 class ANodeActor;
 class UQuartzSubsystem;
 class UQuartzClockHandle;
+class ULevelData;
 struct FMetaSoundOutput;
 
 /**
@@ -27,7 +28,7 @@ public:
     UAudioManagerSubsystem();
 
     UFUNCTION()
-    void InitSubsystem();
+    void InitSubsystem(ULevelData* Data);
 
     // --- Quartz control ---
     UFUNCTION(BlueprintCallable)
@@ -38,8 +39,6 @@ public:
 
     UFUNCTION()
     void ClockHandleInit(FName ClockName);
-
-    double GetBPM() { return Bpm; }
 
     UFUNCTION()
     void SetBeatsPerMinute(float InBPM, FQuartzQuantizationBoundary InBoundary, FOnQuartzCommandEventBP InDelegate);
@@ -67,10 +66,6 @@ public:
 
     //Get the Subsystem, used for Input Latency Test
     UQuartzSubsystem* GetQuartzSubsystem() { return QuartzSubsystem; }
-
-    void SetRootNote(ENote RootNoteIn);
-
-    void SetScale(EScale ScaleIn);
 
     UFUNCTION(BlueprintCallable)
     float GetAnimTime();
@@ -149,9 +144,6 @@ private:
     UQuartzClockHandle* ClockHandle;
 
     UPROPERTY()
-    double Bpm { 120.f };
-
-    UPROPERTY()
     int32 NumBarsDelay { 1 };
 
     // The currently active audio component (set when PlayQuantized is called)
@@ -191,9 +183,6 @@ private:
 
     UPROPERTY()
     ENote RootNote { ENote::C };
-    
-    UPROPERTY()
-    EScale Scale { EScale::Major };
 
     UPROPERTY()
     EPartFinish PartFinish { EPartFinish::Three };

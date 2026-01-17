@@ -9,6 +9,7 @@
 #include "GameFramework/Actor.h"
 #include "SplineActor.generated.h"
 
+class ULevelData;
 class USplineComponent;
 
 UCLASS()
@@ -83,19 +84,16 @@ public:
 	double SplineLength { 2000.0f };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	TObjectPtr<UInstancedStaticMeshComponent> MeshInstances;
+	TObjectPtr<UInstancedStaticMeshComponent> MeshInstances { nullptr };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	TObjectPtr<UStaticMesh> Mesh;
+	TObjectPtr<UStaticMesh> Mesh { nullptr };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
-	TObjectPtr<UMaterialInterface> Material;
+	TObjectPtr<UMaterialInterface> Material { nullptr };
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", DisplayName = "Root Note")
-	ENote RootNote { ENote::C };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", DisplayName = "Scale")
-	EScale Scale { EScale::Major };
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
+	TObjectPtr<ULevelData> LevelData { nullptr };
 
 private:
 	//Lookup Table to remap the Notes to the scale of the World's Theme

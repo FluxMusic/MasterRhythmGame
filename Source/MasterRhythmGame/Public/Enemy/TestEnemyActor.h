@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Quartz/AudioMixerClockHandle.h"
+#include "Data/LevelData.h"
 #include "TestEnemyActor.generated.h"
 
 class UTimelineComponent;
@@ -21,6 +21,15 @@ class MASTERRHYTHMGAME_API ATestEnemyActor : public AActor
 public:
 	// Sets default values for this actor's properties
 	ATestEnemyActor();
+
+	UFUNCTION()
+	void Init(ULevelData* LevelDataIn);
+
+	//SkeletalMesh is in BP, don't want to construct in C++
+	//TODO: Kay do it and place the logic from this BP event into Init, thank you <3
+	UFUNCTION(BlueprintNativeEvent)
+	void OnInit();
+	void OnInit_Implementation() {}
 
 	UFUNCTION(BlueprintCallable)
 	int32 CalcHealth1(int32 Value);
@@ -41,10 +50,10 @@ public:
 	void ApplyDamage(int32 DamageValue);
 
 	UFUNCTION()
-	void CreateAndStartQuartzClock(int32 InBPM);
-
-	UFUNCTION()
 	void SetupHUD();
+
+	// --- AudioComponent accessors ---
+	UAudioComponent* GetAudioComponent() const { return AudioComponent; }
 
 	// --- SplineRef accessors ---
 	USplineComponent* GetSplineRef() const { return SplineRef; }
@@ -89,6 +98,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ULevelData* LevelData;
+
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TObjectPtr<UAudioComponent> AudioComponent { nullptr };
@@ -119,9 +133,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<USplineComponent> SplineRef { nullptr };
-
-	UPROPERTY()
-	TObjectPtr<UQuartzClockHandle> QuartzClockHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 BPM { 0 };

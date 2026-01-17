@@ -16,6 +16,7 @@
 #include "TimerManager.h"
 #include "Components/TextBlock.h"
 #include "Controller/GameController.h"
+#include "Data/LevelData.h"
 #include "HUD/GameHUD.h"
 
 UAudioManagerSubsystem::UAudioManagerSubsystem()
@@ -31,12 +32,18 @@ UAudioManagerSubsystem::UAudioManagerSubsystem()
 	Enemy = Cast<ATestEnemyActor>(FoundEnemy);
 }
 
-void UAudioManagerSubsystem::InitSubsystem()
+void UAudioManagerSubsystem::InitSubsystem(ULevelData* LevelData)
 {
 	if (QuartzSubsystem == nullptr)
 	{
 		QuartzSubsystem = UQuartzSubsystem::Get(GetWorld());
 	}
+	if (LevelData)
+	{
+		RootNote = LevelData->RootNote;
+		PartFinish = LevelData->NumSegments;
+	}
+	
 }
 
 void UAudioManagerSubsystem::StartClock()
@@ -110,26 +117,6 @@ void UAudioManagerSubsystem::PlayQuantized(UAudioComponent* AudioComponent)
 		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("PartFinishPercent")), PartPercentDelegate);
 	}
 	StartMusic();
-}
-
-void UAudioManagerSubsystem::SetRootNote(ENote RootNoteIn)
-{
-	RootNote = RootNoteIn;
-
-	if (AGameController* Controller = Cast<AGameController>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
-	{
-		Controller->SetRootNote(RootNoteIn);
-	}	
-}
-
-void UAudioManagerSubsystem::SetScale(EScale ScaleIn)
-{
-	Scale = ScaleIn;
-
-	if (AGameController* Controller = Cast<AGameController>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
-	{
-		Controller->SetScale(ScaleIn);
-	}
 }
 
 float UAudioManagerSubsystem::GetAnimTime()

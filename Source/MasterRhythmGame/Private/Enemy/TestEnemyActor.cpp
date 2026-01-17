@@ -15,17 +15,11 @@ ATestEnemyActor::ATestEnemyActor()
 	// Set this actor to call Tick() every frame.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SetBPM(141);
-
 	DefaultSceneRoot = CreateDefaultSubobject<USceneComponent>("DefaultSceneRoot");
 	Scene = CreateDefaultSubobject<USceneComponent>("Scene");
 
 	SetRootComponent(DefaultSceneRoot);
 	Scene->SetupAttachment(RootComponent);
-
-	SetHealth1(50);
-	SetHealth2(50);
-	SetHealth3(50);
 
 	// Create AudioComponent and attach it to the actor's RootComponent
 	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
@@ -34,6 +28,26 @@ ATestEnemyActor::ATestEnemyActor()
 		AudioComponent->SetupAttachment(RootComponent);
 		AudioComponent->bAutoActivate = false;
 	}
+}
+
+void ATestEnemyActor::Init(ULevelData* LevelDataIn)
+{
+	LevelData = LevelDataIn;
+
+	BPM = LevelData->BPM;
+	HealthBar1 = (LevelData->NumNotesMelody1 * LevelData->HealthPointsPerNote);
+	HealthBar2 = (LevelData->NumNotesMelody2 * LevelData->HealthPointsPerNote);
+	HealthBar3 = (LevelData->NumNotesMelody3 * LevelData->HealthPointsPerNote);
+	HealthBar4 = (LevelData->NumNotesMelody4 * LevelData->HealthPointsPerNote);
+	HealthBar5 = (LevelData->NumNotesMelody5 * LevelData->HealthPointsPerNote);
+
+	if (AudioComponent)
+	{
+		AudioComponent->SetSound(LevelData->Music);
+	}
+	
+
+	OnInit();
 }
 
 int32 ATestEnemyActor::CalcHealth1(int32 Value)
@@ -123,25 +137,6 @@ void ATestEnemyActor::ApplyDamage(int32 DamageValue)
 	}
 }
 
-void ATestEnemyActor::CreateAndStartQuartzClock(int32 InBPM)
-{
-	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
-	if (AudioManager != nullptr)
-	{
-		AudioManager->InitSubsystem();
-		AudioManager->ClockHandleInit(FName(TEXT("PlayerClock")));
-		FQuartzQuantizationBoundary QuantBoundary(EQuartzCommandQuantization::Bar, 1.0f, EQuarztQuantizationReference::BarRelative, true);
-		FOnQuartzCommandEventBP Delegate;
-		AudioManager->SetBeatsPerMinute(BPM, QuantBoundary, Delegate);
-		AudioManager->StartClock();
-		AudioManager->PlayQuantized(AudioComponent);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::BeginPlay - UAudioManagerSubsystem not available."));
-	}
-}
-
 void ATestEnemyActor::Attack(int32 InBPM)
 {
 	auto ActorLocation = AActor::GetActorLocation();
@@ -171,8 +166,6 @@ void ATestEnemyActor::BeginPlay()
 		GameHUD = Cast<AGameHUD>(PC->GetHUD());
 	}
 
-	CreateAndStartQuartzClock(BPM);
-
 	if (GetWorld())
 	{
 		GetWorld()->GetTimerManager().SetTimerForNextTick(this, &ATestEnemyActor::SetupHUD);
@@ -199,6 +192,6 @@ void ATestEnemyActor::SetupHUD()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ATestEnemyActor::OnHealthTimelineFinished - GameHUD or MainGameInstance not available."));
+		UE_LOG(LogTemp, Warning, TEXT("ATestEnemyActor::SetupHUD - GameHUD or MainGameInstance not available."));
 	}
 }
