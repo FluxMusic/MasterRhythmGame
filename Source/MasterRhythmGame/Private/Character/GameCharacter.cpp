@@ -11,6 +11,8 @@
 #include "Components/TimelineComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/SplineComponent.h"
+#include "Actor/SplineActor.h"
 
 // Sets default values
 AGameCharacter::AGameCharacter()
@@ -146,6 +148,13 @@ void AGameCharacter::SetupHUD()
 	if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
 	{
 		GameHUD->GetMainGameInstance()->SetMaxHealthPlayer(Health);
+
+		if (SplineRef)
+		{
+			TArray<int32> ScaleDegrees = Cast<ASplineActor>(SplineRef->GetOwner())->GetScaleDegrees();
+			
+			GameHUD->GetMainGameInstance()->GetKeyboardWidget()->SetScaleHighlights(ScaleDegrees);
+		}
 	}
 	else
 	{

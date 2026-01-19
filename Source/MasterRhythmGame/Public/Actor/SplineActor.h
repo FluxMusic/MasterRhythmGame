@@ -30,6 +30,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FVector GetSplinesY(int32 Int);
 
+	UFUNCTION()
+	TArray<int32> GetScaleDegrees();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

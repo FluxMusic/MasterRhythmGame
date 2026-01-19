@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "UI/Game/KeyboardWidget.h"
 #include "MainGameWidget.generated.h"
 
 class AGameCharacter;
@@ -66,6 +67,8 @@ public:
 	// --- CompletionPercent ---
 	UTextBlock* GetCompletionPercent() const { return CompletionPercent; }
 
+	UKeyboardWidget* GetKeyboardWidget() const { return KeyboardWidget; }
+
 private:
 	//Native Constructor
 	virtual void NativeConstruct() override;
@@ -90,6 +93,9 @@ private:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* CompletionPercent { nullptr };
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UKeyboardWidget* KeyboardWidget { nullptr };
 
 	//TODO: Kombotext
 

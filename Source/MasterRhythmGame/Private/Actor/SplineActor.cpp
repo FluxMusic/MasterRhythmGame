@@ -172,6 +172,18 @@ FVector ASplineActor::GetSplinesY(int32 Int)
 	}
 }
 
+TArray<int32> ASplineActor::GetScaleDegrees()
+{
+	TArray<int32> ScaleDegrees;
+
+	if (LevelData)
+	{
+		ScaleDegrees = ScaleDegreeLookupTable.Find(LevelData->Scale)->ScaleDegrees;
+	}
+	
+	return ScaleDegrees;
+}
+
 // Called when the game starts or when spawned
 void ASplineActor::BeginPlay()
 {
@@ -182,7 +194,8 @@ void ASplineActor::BeginPlay()
 	
 	if (LevelData)
 	{
-		GetWorld()->SpawnActor<AGameCharacter> (LevelData->PlayerClass, Spline0->GetLocationAtSplinePoint(0, ESplineCoordinateSpace::World), GetActorRotation());
+		AGameCharacter* Player = GetWorld()->SpawnActor<AGameCharacter> (LevelData->PlayerClass, Spline0->GetLocationAtSplinePoint(0, ESplineCoordinateSpace::World), GetActorRotation());
+		Player->SetSplineRef(Spline0);
 		ATestEnemyActor* Enemy = GetWorld()->SpawnActor<ATestEnemyActor>(LevelData->EnemyClass,  Spline0->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::World), GetActorRotation());
 		Enemy->Init(LevelData);
 
