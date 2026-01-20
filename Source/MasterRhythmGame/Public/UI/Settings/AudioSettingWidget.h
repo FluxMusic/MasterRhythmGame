@@ -99,5 +99,5 @@ private:
 	TObjectPtr<AMainMenuHUD> MainMenuHud { nullptr };
 
 	UPROPERTY()
-	TObjectPtr<AWorldMapHUD> WorldMapHud{ nullptr };
+	TObjectPtr<AWorldMapHUD> WorldMapHud { nullptr };
 };
