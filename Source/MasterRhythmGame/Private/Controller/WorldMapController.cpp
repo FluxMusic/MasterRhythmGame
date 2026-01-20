@@ -11,6 +11,7 @@
 #include "Components/Slider.h"
 #include "Controller/MainMenuController.h"
 #include "Kismet/GameplayStatics.h"
+#include "UI/ButtonWidget.h"
 #include "WorldMap/LevelNode.h"
 
 AWorldMapController::AWorldMapController()
@@ -420,19 +421,19 @@ void AWorldMapController::MainSettingSwitchButton(EMainSettingItem InMainSetting
 			case EMainSettingItem::Graphic:
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->GraphicButtonHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicButton()->HandleButtonHovered();
 				break;
 			}
 			case EMainSettingItem::Audio:
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->AudioButtonHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioButton()->HandleButtonHovered();
 				break;
 			}
 			case EMainSettingItem::MainMenu:
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetMainMenuButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->ReturnMainMenuButtonHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			default:
@@ -453,61 +454,61 @@ void AWorldMapController::GraphicMenuSwitchButton(EGraphicSettingItem InGraphicS
 			case EGraphicSettingItem::WindowModeDown:
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeDownHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::WindowModeUp:
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeUpHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::ResolutionDown:
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionDownHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::ResolutionUp:
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionUpHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::GraphicDown:
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicDownHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::GraphicUp:
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicUpHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::VSyncDown:
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncDownHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::VSyncUp:
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncUpHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::Apply:
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ApplyHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::Return:
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnSettingMenuHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			default:
@@ -561,7 +562,7 @@ void AWorldMapController::AudioMenuControl(ENote Note)
 					AudioMenuIndex = 0;
 					break;
 				}
-				if (WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->HasKeyboardFocus())
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->GetButton()->HasKeyboardFocus())
 				{
 					AudioMenuIndex = 0;
 					WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->ReturnMenu();
@@ -705,7 +706,7 @@ void AWorldMapController::GraphicMenuControl(ENote Note)
 				if (WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HasKeyboardFocus())
 				{
 					GraphicMenuIndex = 0;
-					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuUnhovered();
+					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HandleButtonUnhovered();
 					WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuClicked();
 					break;
 				}
@@ -749,8 +750,8 @@ void AWorldMapController::SwitchAudioMenuButton(EAudioSettingItem InAudioSetting
 			}
 			case EAudioSettingItem::Return:
 			{
-				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
-				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->ReturnSettingMenuHovered();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->GetButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			default:
@@ -795,37 +796,37 @@ void AWorldMapController::PauseMenuSwitchButton(EPauseMenuItem InPauseMenuItem)
 			case EPauseMenuItem::Resume:
 			{
 				WorldMapHUD->GetPauseMenuInstance()->GetResumeButton()->SetKeyboardFocus();
-				WorldMapHUD->GetPauseMenuInstance()->ResumeButtonHovered();
+				WorldMapHUD->GetPauseMenuInstance()->GetResumeButton()->HandleButtonHovered();
 				break;
 			}
 			case EPauseMenuItem::Save:
 			{
 				WorldMapHUD->GetPauseMenuInstance()->GetSaveGameButton()->SetKeyboardFocus();
-				WorldMapHUD->GetPauseMenuInstance()->SaveGameButtonHovered();
+				WorldMapHUD->GetPauseMenuInstance()->GetSaveGameButton()->HandleButtonHovered();
 				break;
 			}
 			case EPauseMenuItem::Load:
 			{
 				WorldMapHUD->GetPauseMenuInstance()->GetLoadGameButton()->SetKeyboardFocus();
-				WorldMapHUD->GetPauseMenuInstance()->LoadGameButtonHovered();
+				WorldMapHUD->GetPauseMenuInstance()->GetLoadGameButton()->HandleButtonHovered();
 				break;
 			}
 			case EPauseMenuItem::Settings:
 			{
 				WorldMapHUD->GetPauseMenuInstance()->GetSettingsButton()->SetKeyboardFocus();
-				WorldMapHUD->GetPauseMenuInstance()->SettingsButtonHovered();
+				WorldMapHUD->GetPauseMenuInstance()->GetSettingsButton()->HandleButtonHovered();
 				break;
 			}
 			case EPauseMenuItem::MainMenu:
 			{
 				WorldMapHUD->GetPauseMenuInstance()->GetMainMenuButton()->SetKeyboardFocus();
-				WorldMapHUD->GetPauseMenuInstance()->MainMenuButtonHovered();
+				WorldMapHUD->GetPauseMenuInstance()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			case EPauseMenuItem::Quit:
 			{
 				WorldMapHUD->GetPauseMenuInstance()->GetQuitButton()->SetKeyboardFocus();
-				WorldMapHUD->GetPauseMenuInstance()->QuitButtonHovered();
+				WorldMapHUD->GetPauseMenuInstance()->GetQuitButton()->HandleButtonHovered();
 				break;
 			}
 		}

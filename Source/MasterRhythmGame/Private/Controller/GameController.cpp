@@ -10,7 +10,6 @@
 #include "Components/Slider.h"
 #include "Components/SplineComponent.h"
 #include "Controller/MainMenuController.h"
-#include "Controller/WorldMapController.h"
 #include "HUD/GameHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
@@ -20,6 +19,7 @@
 #include "Components/TimelineComponent.h"
 #include "Manager/AudioManagerSubsystem.h"
 #include "Enemy/TestEnemyActor.h"
+#include "UI/ButtonWidget.h"
 
 AGameController::AGameController()
 {
@@ -508,63 +508,63 @@ void AGameController::PauseMenuControl(ENote Note)
 	{
 		switch (Note)
 		{
-		case ENote::C:
-		{
-			PauseMenuIndex++;
-			PauseMenuIndex = FMath::Clamp(PauseMenuIndex, 0, 5);
-			UE_LOG(LogTemp, Log, TEXT("PauseMenuIndex: %d"), PauseMenuIndex);
-			break;
-		}
-		case ENote::D:
-		{
-			PauseMenuIndex--;
-			PauseMenuIndex = FMath::Clamp(PauseMenuIndex, 0, 5);
-			UE_LOG(LogTemp, Log, TEXT("PauseMenuIndex: %d"), PauseMenuIndex); break;
-		}
-		case ENote::B:
-		{
-			if (GameHud->GetPauseMenuInstance()->GetResumeButton()->HasKeyboardFocus())
+			case ENote::C:
 			{
-				PauseMenuIndex = 0;
-				GameHud->GetPauseMenuInstance()->ResumeButtonClicked();
+				PauseMenuIndex++;
+				PauseMenuIndex = FMath::Clamp(PauseMenuIndex, 0, 5);
+				UE_LOG(LogTemp, Log, TEXT("PauseMenuIndex: %d"), PauseMenuIndex);
 				break;
 			}
-			if (GameHud->GetPauseMenuInstance()->GetSaveGameButton()->HasKeyboardFocus())
+			case ENote::D:
 			{
-				PauseMenuIndex = 0;
-				GameHud->GetPauseMenuInstance()->SaveGameButtonClicked();
+				PauseMenuIndex--;
+				PauseMenuIndex = FMath::Clamp(PauseMenuIndex, 0, 5);
+				UE_LOG(LogTemp, Log, TEXT("PauseMenuIndex: %d"), PauseMenuIndex); break;
+			}
+			case ENote::B:
+			{
+				if (GameHud->GetPauseMenuInstance()->GetResumeButton()->HasKeyboardFocus())
+				{
+					PauseMenuIndex = 0;
+					GameHud->GetPauseMenuInstance()->ResumeButtonClicked();
+					break;
+				}
+				if (GameHud->GetPauseMenuInstance()->GetSaveGameButton()->HasKeyboardFocus())
+				{
+					PauseMenuIndex = 0;
+					GameHud->GetPauseMenuInstance()->SaveGameButtonClicked();
+					break;
+				}
+				if (GameHud->GetPauseMenuInstance()->GetLoadGameButton()->HasKeyboardFocus())
+				{
+					PauseMenuIndex = 0;
+					GameHud->GetPauseMenuInstance()->LoadGameButtonClicked();
+					break;
+				}
+				if (GameHud->GetPauseMenuInstance()->GetSettingsButton()->HasKeyboardFocus())
+				{
+					PauseMenuIndex = 0;
+					GameHud->GetPauseMenuInstance()->SettingsButtonClicked();
+					break;
+				}
+				if (GameHud->GetPauseMenuInstance()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					PauseMenuIndex = 0;
+					GameHud->GetPauseMenuInstance()->MainMenuButtonClicked();
+					break;
+				}
+				if (GameHud->GetPauseMenuInstance()->GetQuitButton()->HasKeyboardFocus())
+				{
+					PauseMenuIndex = 0;
+					GameHud->GetPauseMenuInstance()->QuitButtonClicked();
+					break;
+				}
+			}
+			default:
+			{
+				// Should not land here
 				break;
 			}
-			if (GameHud->GetPauseMenuInstance()->GetLoadGameButton()->HasKeyboardFocus())
-			{
-				PauseMenuIndex = 0;
-				GameHud->GetPauseMenuInstance()->LoadGameButtonClicked();
-				break;
-			}
-			if (GameHud->GetPauseMenuInstance()->GetSettingsButton()->HasKeyboardFocus())
-			{
-				PauseMenuIndex = 0;
-				GameHud->GetPauseMenuInstance()->SettingsButtonClicked();
-				break;
-			}
-			if (GameHud->GetPauseMenuInstance()->GetMainMenuButton()->HasKeyboardFocus())
-			{
-				PauseMenuIndex = 0;
-				GameHud->GetPauseMenuInstance()->MainMenuButtonClicked();
-				break;
-			}
-			if (GameHud->GetPauseMenuInstance()->GetQuitButton()->HasKeyboardFocus())
-			{
-				PauseMenuIndex = 0;
-				GameHud->GetPauseMenuInstance()->QuitButtonClicked();
-				break;
-			}
-		}
-		default:
-		{
-			// Should not land here
-			break;
-		}
 		}
 	}
 	PauseMenuSwitchButton(static_cast<EPauseMenuItem>(PauseMenuIndex));
@@ -631,83 +631,83 @@ void AGameController::GraphicMenuControl(ENote Note)
 {
 	switch (Note)
 	{
-	case ENote::C:
-	{
-		GraphicMenuIndex++;
-		GraphicMenuIndex = FMath::Clamp(GraphicMenuIndex, 0, 9);
-		UE_LOG(LogTemp, Log, TEXT("GraphicMenuIndex: %d"), GraphicMenuIndex);
-		break;
-	}
-	case ENote::D:
-	{
-		GraphicMenuIndex--;
-		GraphicMenuIndex = FMath::Clamp(GraphicMenuIndex, 0, 9);
-		UE_LOG(LogTemp, Log, TEXT("GraphicMenuIndex: %d"), GraphicMenuIndex);
-		break;
-	}
-	case ENote::B:
-	{
-		if (GameHud != nullptr)
+		case ENote::C:
 		{
-			if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->HasKeyboardFocus())
+			GraphicMenuIndex++;
+			GraphicMenuIndex = FMath::Clamp(GraphicMenuIndex, 0, 9);
+			UE_LOG(LogTemp, Log, TEXT("GraphicMenuIndex: %d"), GraphicMenuIndex);
+			break;
+		}
+		case ENote::D:
+		{
+			GraphicMenuIndex--;
+			GraphicMenuIndex = FMath::Clamp(GraphicMenuIndex, 0, 9);
+			UE_LOG(LogTemp, Log, TEXT("GraphicMenuIndex: %d"), GraphicMenuIndex);
+			break;
+		}
+		case ENote::B:
+		{
+			if (GameHud != nullptr)
 			{
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeDownClicked();
-				break;
-			}
-			if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->HasKeyboardFocus())
-			{
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeUpClicked();
-				break;
-			}
-			if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->HasKeyboardFocus())
-			{
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionDownClicked();
-				break;
-			}
-			if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->HasKeyboardFocus())
-			{
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionUpClicked();
-				break;
-			}
-			if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->HasKeyboardFocus())
-			{
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicDownClicked();
-				break;
-			}
-			if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->HasKeyboardFocus())
-			{
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicUpClicked();
-				break;
-			}
-			if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->HasKeyboardFocus())
-			{
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncDownClicked();
-				break;
-			}
-			if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->HasKeyboardFocus())
-			{
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncUpClicked();
-				break;
-			}
-			if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->HasKeyboardFocus())
-			{
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ApplyClicked();
-				break;
-			}
-			if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HasKeyboardFocus())
-			{
-				GraphicMenuIndex = 0;
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuUnhovered();
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuClicked();
-				break;
+				if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->HasKeyboardFocus())
+				{
+					GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeDownClicked();
+					break;
+				}
+				if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->HasKeyboardFocus())
+				{
+					GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeUpClicked();
+					break;
+				}
+				if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->HasKeyboardFocus())
+				{
+					GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionDownClicked();
+					break;
+				}
+				if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->HasKeyboardFocus())
+				{
+					GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionUpClicked();
+					break;
+				}
+				if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->HasKeyboardFocus())
+				{
+					GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicDownClicked();
+					break;
+				}
+				if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->HasKeyboardFocus())
+				{
+					GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicUpClicked();
+					break;
+				}
+				if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->HasKeyboardFocus())
+				{
+					GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncDownClicked();
+					break;
+				}
+				if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->HasKeyboardFocus())
+				{
+					GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncUpClicked();
+					break;
+				}
+				if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->HasKeyboardFocus())
+				{
+					GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ApplyClicked();
+					break;
+				}
+				if (GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					GraphicMenuIndex = 0;
+					GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HandleButtonUnhovered();
+					GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuClicked();
+					break;
+				}
 			}
 		}
-	}
-	default:
-	{
-		//Should not land here
-		break;
-	}
+		default:
+		{
+			//Should not land here
+			break;
+		}
 	}
 	// map index -> enum
 	GraphicMenuSwitchButton(static_cast<EGraphicSettingItem>(GraphicMenuIndex));
@@ -776,66 +776,78 @@ void AGameController::GraphicMenuSwitchButton(EGraphicSettingItem InGraphicSetti
 {
 	if (GameHud != nullptr)
 	{
+		// Unhover all buttons first
+		GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->HandleButtonUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->HandleButtonUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->HandleButtonUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->HandleButtonUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->HandleButtonUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->HandleButtonUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->HandleButtonUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->HandleButtonUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->HandleButtonUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HandleButtonUnhovered();
+
 		switch (InGraphicSettingItem)
 		{
 			case EGraphicSettingItem::WindowModeDown:
 			{
 				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeDownHovered();
+				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::WindowModeUp:
 			{
 				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeUpHovered();
+				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::ResolutionDown:
 			{
 				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionDownHovered();
+				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::ResolutionUp:
 			{
 				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionUpHovered();
+				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::GraphicDown:
 			{
 				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicDownHovered();
+				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::GraphicUp:
 			{
 				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicUpHovered();
+				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::VSyncDown:
 			{
 				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncDownHovered();
+				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::VSyncUp:
 			{
 				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncUpHovered();
+				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::Apply:
 			{
 				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ApplyHovered();
+				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::Return:
 			{
 				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnSettingMenuHovered();
+				GameHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			default:
@@ -851,6 +863,12 @@ void AGameController::SwitchAudioMenuButton(EAudioSettingItem InAudioSettingItem
 {
 	if (GameHud != nullptr)
 	{
+		GameHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->HandleButtonUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->MasterVolumeSliderUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->MusicVolumeSliderUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->SfxVolumeSliderUnhovered();
+
+
 		switch (InAudioSettingItem)
 		{
 			case EAudioSettingItem::MasterVolumeSlider:
@@ -875,8 +893,8 @@ void AGameController::SwitchAudioMenuButton(EAudioSettingItem InAudioSettingItem
 			}
 			case EAudioSettingItem::Return:
 			{
-				GameHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->ReturnSettingMenuHovered();
+				GameHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->GetButton()->SetKeyboardFocus();
+				GameHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			default:
@@ -916,42 +934,50 @@ void AGameController::PauseMenuSwitchButton(EPauseMenuItem InPauseMenuItem)
 {
 	if (GameHud != nullptr)
 	{
+		// Unhover all buttons first
+		GameHud->GetPauseMenuInstance()->GetResumeButton()->HandleButtonUnhovered();
+		GameHud->GetPauseMenuInstance()->GetSaveGameButton()->HandleButtonUnhovered();
+		GameHud->GetPauseMenuInstance()->GetLoadGameButton()->HandleButtonUnhovered();
+		GameHud->GetPauseMenuInstance()->GetSettingsButton()->HandleButtonUnhovered();
+		GameHud->GetPauseMenuInstance()->GetMainMenuButton()->HandleButtonUnhovered();
+		GameHud->GetPauseMenuInstance()->GetQuitButton()->HandleButtonUnhovered();
+
 		switch (InPauseMenuItem)
 		{
 			case EPauseMenuItem::Resume:
 			{
 				GameHud->GetPauseMenuInstance()->GetResumeButton()->SetKeyboardFocus();
-				GameHud->GetPauseMenuInstance()->ResumeButtonHovered();
+				GameHud->GetPauseMenuInstance()->GetResumeButton()->HandleButtonHovered();
 				break;
 			}
 			case EPauseMenuItem::Save:
 			{
 				GameHud->GetPauseMenuInstance()->GetSaveGameButton()->SetKeyboardFocus();
-				GameHud->GetPauseMenuInstance()->SaveGameButtonHovered();
+				GameHud->GetPauseMenuInstance()->GetSaveGameButton()->HandleButtonHovered();
 				break;
 			}
 			case EPauseMenuItem::Load:
 			{
 				GameHud->GetPauseMenuInstance()->GetLoadGameButton()->SetKeyboardFocus();
-				GameHud->GetPauseMenuInstance()->LoadGameButtonHovered();
+				GameHud->GetPauseMenuInstance()->GetLoadGameButton()->HandleButtonHovered();
 				break;
 			}
 			case EPauseMenuItem::Settings:
 			{
 				GameHud->GetPauseMenuInstance()->GetSettingsButton()->SetKeyboardFocus();
-				GameHud->GetPauseMenuInstance()->SettingsButtonHovered();
+				GameHud->GetPauseMenuInstance()->GetSettingsButton()->HandleButtonHovered();
 				break;
 			}
 			case EPauseMenuItem::MainMenu:
 			{
 				GameHud->GetPauseMenuInstance()->GetMainMenuButton()->SetKeyboardFocus();
-				GameHud->GetPauseMenuInstance()->MainMenuButtonHovered();
+				GameHud->GetPauseMenuInstance()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			case EPauseMenuItem::Quit:
 			{
 				GameHud->GetPauseMenuInstance()->GetQuitButton()->SetKeyboardFocus();
-				GameHud->GetPauseMenuInstance()->QuitButtonHovered();
+				GameHud->GetPauseMenuInstance()->GetQuitButton()->HandleButtonHovered();
 				break;
 			}
 		}
@@ -962,24 +988,28 @@ void AGameController::MainSettingSwitchButton(EMainSettingItem InMainSettingItem
 {
 	if (GameHud != nullptr)
 	{
+		GameHud->GetMainMenuSettingInstance()->GetGraphicButton()->HandleButtonUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetAudioButton()->HandleButtonUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetMainMenuButton()->HandleButtonUnhovered();
+
 		switch (InMainSettingItem)
 		{
 			case EMainSettingItem::Graphic:
 			{
 				GameHud->GetMainMenuSettingInstance()->GetGraphicButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->GraphicButtonHovered();
+				GameHud->GetMainMenuSettingInstance()->GetGraphicButton()->HandleButtonHovered();
 				break;
 			}
 			case EMainSettingItem::Audio:
 			{
 				GameHud->GetMainMenuSettingInstance()->GetAudioButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->AudioButtonHovered();
+				GameHud->GetMainMenuSettingInstance()->GetAudioButton()->HandleButtonHovered();
 				break;
 			}
 			case EMainSettingItem::MainMenu:
 			{
 				GameHud->GetMainMenuSettingInstance()->GetMainMenuButton()->SetKeyboardFocus();
-				GameHud->GetMainMenuSettingInstance()->ReturnMainMenuButtonHovered();
+				GameHud->GetMainMenuSettingInstance()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			default:
@@ -1047,24 +1077,29 @@ void AGameController::DeathMenuSwitchButton(EDeathState InDeathState)
 {
 	if (GameHud != nullptr)
 	{
+		GameHud->GetDeathWidgetInstance()->GetRespawnButton()->HandleButtonUnhovered();
+		GameHud->GetDeathWidgetInstance()->GetMainMenuButton()->HandleButtonUnhovered();
+		GameHud->GetDeathWidgetInstance()->GetWorldMapButton()->HandleButtonUnhovered();
+
 		switch (InDeathState)
 		{
 			case EDeathState::Respawn:
 			{
-				GameHud->GetDeathWidgetInstance()->GetRespawnButton()->SetKeyboardFocus();
-				GameHud->GetDeathWidgetInstance()->RespawnButtonHovered();
+				GameHud->GetDeathWidgetInstance()->GetRespawnButton()->GetButton()->SetKeyboardFocus();
+				GameHud->GetDeathWidgetInstance()->GetRespawnButton()->HandleButtonHovered();
 				break;
 			}
 			case EDeathState::MainMenu:
 			{
-				GameHud->GetDeathWidgetInstance()->GetMainMenuButton()->SetKeyboardFocus();
-				GameHud->GetDeathWidgetInstance()->MainMenuButtonHovered();
+				GameHud->GetDeathWidgetInstance()->GetMainMenuButton()->GetButton()->SetKeyboardFocus();
+				GameHud->GetDeathWidgetInstance()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			case EDeathState::WorldMap:
 			{
-				GameHud->GetDeathWidgetInstance()->GetWorldMapButton()->SetKeyboardFocus();
-				GameHud->GetDeathWidgetInstance()->WorldMapButtonHovered();
+				GameHud->GetDeathWidgetInstance()->GetWorldMapButton()->GetButton()->SetKeyboardFocus();
+				GameHud->GetDeathWidgetInstance()->GetWorldMapButton()->HandleButtonHovered();
+				break;
 			}
 			default:
 			{
@@ -1092,6 +1127,4 @@ void AGameController::DisablePlayerCollision()
 	{
 		GameCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
-	
 }
-	

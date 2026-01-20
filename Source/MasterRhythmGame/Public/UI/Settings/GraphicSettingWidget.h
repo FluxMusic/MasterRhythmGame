@@ -7,7 +7,7 @@
 #include "GraphicSettingWidget.generated.h"
 
 class AWorldMapHUD;
-class UButton;
+class UButtonWidget;
 class AMainMenuHUD;
 /**
  * 
@@ -21,91 +21,31 @@ public:
 	void ReturnMainMenuClicked();
 
 	UFUNCTION()
-	void ReturnSettingMenuHovered();
-
-	UFUNCTION()
-	void ReturnMainMenuUnhovered();
-
-	UFUNCTION()
 	void WindowModeDownClicked();
-
-	UFUNCTION()
-	void WindowModeDownHovered();
-
-	UFUNCTION()
-	void WindowModeDownUnhovered();
 
 	UFUNCTION()
 	void WindowModeUpClicked();
 
 	UFUNCTION()
-	void WindowModeUpHovered();
-
-	UFUNCTION()
-	void WindowModeUpUnhovered();
-
-	UFUNCTION()
 	void ResolutionDownClicked();
-
-	UFUNCTION()
-	void ResolutionDownHovered();
-
-	UFUNCTION()
-	void ResolutionDownUnhovered();
 
 	UFUNCTION()
 	void ResolutionUpClicked();
 
 	UFUNCTION()
-	void ResolutionUpHovered();
-
-	UFUNCTION()
-	void ResolutionUpUnhovered();
-
-	UFUNCTION()
 	void GraphicDownClicked();
-
-	UFUNCTION()
-	void GraphicDownHovered();
-
-	UFUNCTION()
-	void GraphicDownUnhovered();
 
 	UFUNCTION()
 	void GraphicUpClicked();
 
 	UFUNCTION()
-	void GraphicUpHovered();
-
-	UFUNCTION()
-	void GraphicUpUnhovered();
-
-	UFUNCTION()
 	void VSyncDownClicked();
-
-	UFUNCTION()
-	void VSyncDownHovered();
-
-	UFUNCTION()
-	void VSyncDownUnhovered();
 
 	UFUNCTION()
 	void VSyncUpClicked();
 
 	UFUNCTION()
-	void VSyncUpHovered();
-
-	UFUNCTION()
-	void VSyncUpUnhovered();
-
-	UFUNCTION()
 	void ApplyClicked();
-
-	UFUNCTION()
-	void ApplyHovered();
-
-	UFUNCTION()
-	void ApplyUnhovered();
 
 	// --- Window Mode ---
 	TEnumAsByte<EWindowMode::Type> GetWindowMode() const { return WindowMode; }
@@ -128,34 +68,34 @@ public:
 	void SetVSync(bool bInVSync) { bVSync = bInVSync; }
 
 	// --- Main Menu Button ---
-	UButton* GetMainMenuButton() const { return MainMenu; }
+	UButtonWidget* GetMainMenuButton() const { return MainMenu; }
 
 	// --- Window Mode Down Button ---
-	UButton* GetWindowModeDownButton() const { return WindowModeDown; }
+	UButtonWidget* GetWindowModeDownButton() const { return WindowModeDown; }
 
 	// --- Window Mode Up Button ---
-	UButton* GetWindowModeUpButton() const { return WindowModeUp; }
+	UButtonWidget* GetWindowModeUpButton() const { return WindowModeUp; }
 
 	// --- Resolution Down Button ---
-	UButton* GetResolutionDownButton() const { return ResolutionDown; }
+	UButtonWidget* GetResolutionDownButton() const { return ResolutionDown; }
 
 	// --- Resolution Up Button ---
-	UButton* GetResolutionUpButton() const { return ResolutionUp; }
+	UButtonWidget* GetResolutionUpButton() const { return ResolutionUp; }
 
 	// --- Graphics Down Button ---
-	UButton* GetGraphicDownButton() const { return GraphicDown; }
+	UButtonWidget* GetGraphicDownButton() const { return GraphicDown; }
 
 	// --- Graphics Up Button ---
-	UButton* GetGraphicUpButton() const { return GraphicUp; }
+	UButtonWidget* GetGraphicUpButton() const { return GraphicUp; }
 
 	// --- VSync Down Button ---
-	UButton* GetVSyncDownButton() const { return VSyncDown; }
+	UButtonWidget* GetVSyncDownButton() const { return VSyncDown; }
 
 	// --- VSync Up Button ---
-	UButton* GetVSyncUpButton() const { return VSyncUp; }
+	UButtonWidget* GetVSyncUpButton() const { return VSyncUp; }
 
 	// --- Apply Button ---
-	UButton* GetApplyButton() const { return Apply; }
+	UButtonWidget* GetApplyButton() const { return Apply; }
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -180,34 +120,34 @@ private:
 	void SwitchResolution(int32 InResolutionIndex);
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* MainMenu{ nullptr };
+	UButtonWidget* MainMenu{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* WindowModeDown{ nullptr };
+	UButtonWidget* WindowModeDown{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* WindowModeUp{ nullptr };
+	UButtonWidget* WindowModeUp{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* ResolutionDown{ nullptr };
+	UButtonWidget* ResolutionDown{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* ResolutionUp{ nullptr };
+	UButtonWidget* ResolutionUp{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* GraphicDown{ nullptr };
+	UButtonWidget* GraphicDown{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* GraphicUp{ nullptr };
+	UButtonWidget* GraphicUp{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* VSyncDown{ nullptr };
+	UButtonWidget* VSyncDown{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* VSyncUp{ nullptr };
+	UButtonWidget* VSyncUp{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* Apply{ nullptr };
+	UButtonWidget* Apply{ nullptr };
 
 	UPROPERTY()
 	TObjectPtr<AMainMenuHUD> MainMenuHud { nullptr };

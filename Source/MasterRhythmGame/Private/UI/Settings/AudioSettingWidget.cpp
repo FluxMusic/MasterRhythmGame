@@ -2,8 +2,7 @@
 
 
 #include "UI/Settings/AudioSettingWidget.h"
-#include "HUD/MainMenuHUD.h"
-#include "Components/Button.h"
+#include "UI/ButtonWidget.h"
 #include "Components/Slider.h"
 #include "Controller/MainMenuController.h"
 #include "Controller/WorldMapController.h"
@@ -63,16 +62,6 @@ void UAudioSettingWidget::ReturnMenu()
 	{
 		WorldMapController->SetControllerState(EControllerStateWorldMap::SettingMenu);
 	}
-	ReturnMenuUnhovered();
-}
-
-void UAudioSettingWidget::ReturnSettingMenuHovered()
-{
-	MainMenu->SetBackgroundColor(FLinearColor::Green);
-
-	MasterVolumeSlider->SetSliderBarColor(FLinearColor::White);
-	MusicVolumeSlider->SetSliderBarColor(FLinearColor::White);
-	SfxVolumeSlider->SetSliderBarColor(FLinearColor::White);
 }
 
 void UAudioSettingWidget::MasterVolumeSliderHovered()
@@ -81,7 +70,6 @@ void UAudioSettingWidget::MasterVolumeSliderHovered()
 
 	MusicVolumeSlider->SetSliderBarColor(FLinearColor::White);
 	SfxVolumeSlider->SetSliderBarColor(FLinearColor::White);
-	MainMenu->SetBackgroundColor(FLinearColor::White);
 }
 
 void UAudioSettingWidget::MusicVolumeSliderHovered()
@@ -90,7 +78,6 @@ void UAudioSettingWidget::MusicVolumeSliderHovered()
 
 	MasterVolumeSlider->SetSliderBarColor(FLinearColor::White);
 	SfxVolumeSlider->SetSliderBarColor(FLinearColor::White);
-	MainMenu->SetBackgroundColor(FLinearColor::White);
 }
 
 void UAudioSettingWidget::SfxVolumeSliderHovered()
@@ -99,12 +86,6 @@ void UAudioSettingWidget::SfxVolumeSliderHovered()
 
 	MasterVolumeSlider->SetSliderBarColor(FLinearColor::White);
 	MusicVolumeSlider->SetSliderBarColor(FLinearColor::White);
-	MainMenu->SetBackgroundColor(FLinearColor::White);
-}
-
-void UAudioSettingWidget::ReturnMenuUnhovered()
-{
-	MainMenu->SetBackgroundColor(FLinearColor::White);
 }
 
 void UAudioSettingWidget::MasterVolumeSliderUnhovered()
@@ -134,7 +115,7 @@ void UAudioSettingWidget::NativeConstruct()
 
 	MasterVolumeSlider->SetSliderBarColor(FLinearColor::Green);
 
-	if ( auto GM = Cast<UMyGameInstance>(GetWorld()->GetGameInstance()))
+	if (auto GM = Cast<UMyGameInstance>(GetWorld()->GetGameInstance()))
 	{
 		MasterVolumeSlider->SetValue(GM->GetMasterVolume());
 		MusicVolumeSlider->SetValue(GM->GetMusicVolume());

@@ -2,7 +2,7 @@
 
 
 #include "UI/MainMenu/CreditsWidget.h"
-#include "Components/Button.h"
+#include "UI/ButtonWidget.h"
 #include "Controller/MainMenuController.h"
 
 void UCreditsWidget::NativeConstruct()
@@ -17,9 +17,6 @@ void UCreditsWidget::NativeConstruct()
 	}
 
 	ReturnMainMenu->OnClicked.AddDynamic(this, &UCreditsWidget::ReturnMainMenuButtonClicked);
-	ReturnMainMenu->OnHovered.AddDynamic(this, &UCreditsWidget::MainMenuOnHovered);
-	ReturnMainMenu->OnUnhovered.AddDynamic(this, &UCreditsWidget::MainMenuOnUnhovered);
-	ReturnMainMenu->SetBackgroundColor(FLinearColor::Green);
 }
 
 void UCreditsWidget::ReturnMainMenuButtonClicked()
@@ -34,14 +31,4 @@ void UCreditsWidget::ReturnMainMenuButtonClicked()
 			PlayerController->SetControllerState(EControllerState::MainMenu);
 		}
 	}
-}
-
-void UCreditsWidget::MainMenuOnHovered()
-{
-	ReturnMainMenu->SetBackgroundColor(FLinearColor::Green);
-}
-
-void UCreditsWidget::MainMenuOnUnhovered()
-{
-	ReturnMainMenu->SetBackgroundColor(FLinearColor::White);
 }

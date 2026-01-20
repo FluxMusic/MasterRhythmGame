@@ -4,6 +4,7 @@
 #include "Controller/MainMenuController.h"
 #include "EnhancedInputComponent.h"
 #include "Components/Button.h"
+#include "UI/ButtonWidget.h"
 #include "Components/Slider.h"
 #include "MIDIDevice/Public/MIDIDeviceInputController.h"
 #include "MIDIDevice/Public/MIDIDeviceManager.h"
@@ -183,7 +184,7 @@ void AMainMenuController::MainMenuControl(ENote Note)
 			}
 			case ENote::B:
 			{
-				if (MainMenuHud->GetMainMenuInstance()->GetNewGameButton()->HasKeyboardFocus())
+				if (MainMenuHud->GetMainMenuInstance()->GetNewGameButton()->GetButton()->HasKeyboardFocus())
 				{
 					MainMenuIndex = 0;
 					MainMenuHud->GetMainMenuInstance()->NewGameButtonClicked();
@@ -192,21 +193,21 @@ void AMainMenuController::MainMenuControl(ENote Note)
 				if (MainMenuHud->GetMainMenuInstance()->GetLoadGameButton()->HasKeyboardFocus())
 				{
 					MainMenuIndex = 0;
-					MainMenuHud->GetMainMenuInstance()->LoadGameUnhovered();
+					MainMenuHud->GetMainMenuInstance()->GetLoadGameButton()->HandleButtonUnhovered();
 					MainMenuHud->GetMainMenuInstance()->LoadGameButtonClicked();
 					break;
 				}
 				if (MainMenuHud->GetMainMenuInstance()->GetSettingButton()->HasKeyboardFocus())
 				{
 					MainMenuIndex = 0;
-					MainMenuHud->GetMainMenuInstance()->SettingUnhovered();
+					MainMenuHud->GetMainMenuInstance()->GetSettingButton()->HandleButtonUnhovered();
 					MainMenuHud->GetMainMenuInstance()->SettingButtonClicked();
 					break;
 				}
 				if (MainMenuHud->GetMainMenuInstance()->GetCreditsButton()->HasKeyboardFocus())
 				{
 					MainMenuIndex = 0;
-					MainMenuHud->GetMainMenuInstance()->CreditUnhovered();
+					MainMenuHud->GetMainMenuInstance()->GetCreditsButton()->HandleButtonUnhovered();
 					MainMenuHud->GetMainMenuInstance()->CreditsButtonClicked();
 					break;
 				}
@@ -439,7 +440,7 @@ void AMainMenuController::GraphicMenuControl(ENote Note)
 				if (MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HasKeyboardFocus())
 				{
 					GraphicMenuIndex = 0;
-					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuUnhovered();
+					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HandleButtonUnhovered();
 					MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnMainMenuClicked();
 					break;
 				}
@@ -495,7 +496,7 @@ void AMainMenuController::LoadMenuControl(ENote Note)
 				if (MainMenuHud->GetLoadMenuInstance()->GetReturnMainMenuButton()->HasKeyboardFocus())
 				{
 					LoadMenuIndex = 0;
-					MainMenuHud->GetLoadMenuInstance()->ReturnMainMenuButtonUnhovered();
+					MainMenuHud->GetLoadMenuInstance()->GetReturnMainMenuButton()->HandleButtonUnhovered();
 					MainMenuHud->GetLoadMenuInstance()->ReturnMainMenuButtonClicked();
 					break;
 				}
@@ -514,36 +515,42 @@ void AMainMenuController::MainMenuSwitchButton(EMainMenuItem InMainMenuItem)
 {
 	if (MainMenuHud != nullptr)
 	{
+		MainMenuHud->GetMainMenuInstance()->GetNewGameButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuInstance()->GetLoadGameButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuInstance()->GetSettingButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuInstance()->GetCreditsButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuInstance()->GetEscapeButton()->HandleButtonUnhovered();
+
 		switch (InMainMenuItem)
 		{
 			case EMainMenuItem::NewGame:
 			{
 				MainMenuHud->GetMainMenuInstance()->GetNewGameButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuInstance()->NewGameHovered();
+				MainMenuHud->GetMainMenuInstance()->GetNewGameButton()->HandleButtonHovered();
 				break;
 			}
 			case EMainMenuItem::LoadGame:
 			{
 				MainMenuHud->GetMainMenuInstance()->GetLoadGameButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuInstance()->LoadGameHovered();
+				MainMenuHud->GetMainMenuInstance()->GetLoadGameButton()->HandleButtonHovered();
 				break;
 			}
 			case EMainMenuItem::Setting:
 			{
 				MainMenuHud->GetMainMenuInstance()->GetSettingButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuInstance()->SettingHovered();
+				MainMenuHud->GetMainMenuInstance()->GetSettingButton()->HandleButtonHovered();
 				break;
 			}
 			case EMainMenuItem::Credits:
 			{
 				MainMenuHud->GetMainMenuInstance()->GetCreditsButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuInstance()->CreditHovered();
+				MainMenuHud->GetMainMenuInstance()->GetCreditsButton()->HandleButtonHovered();
 				break;
 			}
 			case EMainMenuItem::Escape:
 			{
 				MainMenuHud->GetMainMenuInstance()->GetEscapeButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuInstance()->EscapeHovered();
+				MainMenuHud->GetMainMenuInstance()->GetEscapeButton()->HandleButtonHovered();
 				break;
 			}
 			default:
@@ -559,24 +566,28 @@ void AMainMenuController::MainSettingSwitchButton(EMainSettingItem InMainSetting
 {
 	if (MainMenuHud != nullptr)
 	{
+		MainMenuHud->GetMainMenuSettingInstance()->GetGraphicButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetAudioButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetMainMenuButton()->HandleButtonUnhovered();
+
 		switch (InMainSettingItem)
 		{
 			case EMainSettingItem::Graphic:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->GraphicButtonHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicButton()->HandleButtonHovered();
 				break;
 			}
 			case EMainSettingItem::Audio:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetAudioButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->AudioButtonHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioButton()->HandleButtonHovered();
 				break;
 			}
 			case EMainSettingItem::MainMenu:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetMainMenuButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->ReturnMainMenuButtonHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			default:
@@ -592,66 +603,77 @@ void AMainMenuController::GraphicMenuSwitchButton(EGraphicSettingItem InGraphicS
 {
 	if (MainMenuHud != nullptr)
 	{
+		MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HandleButtonUnhovered();
+
 		switch (InGraphicSettingItem)
 		{
 			case EGraphicSettingItem::WindowModeDown:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeDownHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::WindowModeUp:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->WindowModeUpHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::ResolutionDown:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionDownHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::ResolutionUp:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ResolutionUpHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::GraphicDown:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicDownHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::GraphicUp:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GraphicUpHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::VSyncDown:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncDownHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::VSyncUp:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->VSyncUpHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::Apply:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ApplyHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->HandleButtonHovered();
 				break;
 			}
 			case EGraphicSettingItem::Return:
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->ReturnSettingMenuHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			default:
@@ -667,30 +689,35 @@ void AMainMenuController::LoadMenuSwitchButton(ELoadGameMenuItem InLoadGameItem)
 {
 	if (MainMenuHud != nullptr)
 	{
+		MainMenuHud->GetLoadMenuInstance()->GetLoadFirstButton()->HandleButtonUnhovered();
+		MainMenuHud->GetLoadMenuInstance()->GetLoadSecondButton()->HandleButtonUnhovered();
+		MainMenuHud->GetLoadMenuInstance()->GetLoadThirdButton()->HandleButtonUnhovered();
+		MainMenuHud->GetLoadMenuInstance()->GetReturnMainMenuButton()->HandleButtonUnhovered();
+
 		switch (InLoadGameItem)
 		{
 			case ELoadGameMenuItem::FirstLevel:
 			{
 				MainMenuHud->GetLoadMenuInstance()->GetLoadFirstButton()->SetKeyboardFocus();
-				MainMenuHud->GetLoadMenuInstance()->LoadFirstSaveButtonHovered();
+				MainMenuHud->GetLoadMenuInstance()->GetLoadFirstButton()->HandleButtonHovered();
 				break;
 			}
 			case ELoadGameMenuItem::SecondLevel:
 			{
 				MainMenuHud->GetLoadMenuInstance()->GetLoadSecondButton()->SetKeyboardFocus();
-				MainMenuHud->GetLoadMenuInstance()->LoadSecondSaveButtonHovered();
+				MainMenuHud->GetLoadMenuInstance()->GetLoadSecondButton()->HandleButtonHovered();
 				break;
 			}
 			case ELoadGameMenuItem::ThirdLevel:
 			{
 				MainMenuHud->GetLoadMenuInstance()->GetLoadThirdButton()->SetKeyboardFocus();
-				MainMenuHud->GetLoadMenuInstance()->LoadThirdSaveButtonHovered();
+				MainMenuHud->GetLoadMenuInstance()->GetLoadThirdButton()->HandleButtonHovered();
 				break;
 			}
 			case ELoadGameMenuItem::MainMenu:
 			{
 				MainMenuHud->GetLoadMenuInstance()->GetReturnMainMenuButton()->SetKeyboardFocus();
-				MainMenuHud->GetLoadMenuInstance()->ReturnMainMenuButtonHovered();
+				MainMenuHud->GetLoadMenuInstance()->GetReturnMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			default:
@@ -706,6 +733,11 @@ void AMainMenuController::SwitchAudioMenuButton(EAudioSettingItem InAudioSetting
 {
 	if (MainMenuHud != nullptr)
 	{
+		MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->MasterVolumeSliderUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->MusicVolumeSliderUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->SfxVolumeSliderUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->HandleButtonUnhovered();
+
 		switch (InAudioSettingItem)
 		{
 			case EAudioSettingItem::MasterVolumeSlider:
@@ -730,8 +762,8 @@ void AMainMenuController::SwitchAudioMenuButton(EAudioSettingItem InAudioSetting
 			}
 			case EAudioSettingItem::Return:
 			{
-				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
-				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->ReturnSettingMenuHovered();
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->GetButton()->SetKeyboardFocus();
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			default:

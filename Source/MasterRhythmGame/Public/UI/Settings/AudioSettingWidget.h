@@ -7,7 +7,7 @@
 #include "AudioSettingWidget.generated.h"
 
 class AWorldMapHUD;
-class UButton;
+class UButtonWidget;
 class USlider;
 class AMainMenuHUD;
 class USoundSubmix;
@@ -15,7 +15,7 @@ class USoundSubmix;
  * 
  */
 UCLASS()
-class MASTERRHYTHMGAME_API UAudioSettingWidget : public UUserWidget
+class MASTERRHYTHMGAME_API	UAudioSettingWidget : public UUserWidget
 {
 	GENERATED_BODY()
 public:
@@ -32,9 +32,6 @@ public:
 	void ReturnMenu();
 
 	UFUNCTION()
-	void ReturnSettingMenuHovered();
-
-	UFUNCTION()
 	void MasterVolumeSliderHovered();
 
 	UFUNCTION()
@@ -42,9 +39,6 @@ public:
 
 	UFUNCTION()
 	void SfxVolumeSliderHovered();
-
-	UFUNCTION()
-	void ReturnMenuUnhovered();
 
 	UFUNCTION()
 	void MasterVolumeSliderUnhovered();
@@ -65,7 +59,7 @@ public:
 	USlider* GetSfxVolumeSlider() const { return SfxVolumeSlider; }
 
 	// --- Main Menu Button ---
-	UButton* GetMainMenuButton() const { return MainMenu; }
+	UButtonWidget* GetMainMenuButton() const { return MainMenu; }
 
 	// --- Master Submix ---
 	USoundSubmix* GetMasterSubmix() const { return MasterSubmix; }
@@ -76,32 +70,30 @@ public:
 	// --- SFX Submix ---
 	USoundSubmix* GetSfxSubmix() const { return SfxSubmix; }
 
-	
-
 private:
 	//Native Constructor
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class USlider* MasterVolumeSlider{ nullptr };
+	USlider* MasterVolumeSlider{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class USlider* MusicVolumeSlider{ nullptr };
+	USlider* MusicVolumeSlider{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class USlider* SfxVolumeSlider{ nullptr };
+	USlider* SfxVolumeSlider{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* MainMenu{ nullptr };
+	UButtonWidget* MainMenu{ nullptr };
 
 	UPROPERTY(EditAnywhere)
-	class USoundSubmix* MasterSubmix{ nullptr };
+	USoundSubmix* MasterSubmix{ nullptr };
 
 	UPROPERTY(EditAnywhere)
-	class USoundSubmix* MusicSubmix{ nullptr };
+	USoundSubmix* MusicSubmix{ nullptr };
 
 	UPROPERTY(EditAnywhere)
-	class USoundSubmix* SfxSubmix{ nullptr };
+	USoundSubmix* SfxSubmix{ nullptr };
 
 	UPROPERTY()
 	TObjectPtr<AMainMenuHUD> MainMenuHud { nullptr };
