@@ -44,11 +44,8 @@ public:
 private:
 	virtual void NativeConstruct() override;
 
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget), meta = (AllowPrivateAccess = true))
 	UButton* Button { nullptr };
-
-	UPROPERTY(EditDefaultsOnly, Category = "Button")
-	USoundBase* ClickSound { nullptr };
 
 	// Store the original style to restore it
 	FButtonStyle OriginalStyle;
