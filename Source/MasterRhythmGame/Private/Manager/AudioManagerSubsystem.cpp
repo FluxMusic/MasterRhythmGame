@@ -16,6 +16,7 @@
 #include "TimerManager.h"
 #include "Components/TextBlock.h"
 #include "Controller/GameController.h"
+#include "Data/LevelData.h"
 #include "HUD/GameHUD.h"
 
 UAudioManagerSubsystem::UAudioManagerSubsystem()
@@ -31,12 +32,18 @@ UAudioManagerSubsystem::UAudioManagerSubsystem()
 	Enemy = Cast<ATestEnemyActor>(FoundEnemy);
 }
 
-void UAudioManagerSubsystem::InitSubsystem()
+void UAudioManagerSubsystem::InitSubsystem(ULevelData* LevelData)
 {
 	if (QuartzSubsystem == nullptr)
 	{
 		QuartzSubsystem = UQuartzSubsystem::Get(GetWorld());
 	}
+	if (LevelData)
+	{
+		RootNote = LevelData->RootNote;
+		PartFinish = LevelData->NumSegments;
+	}
+	
 }
 
 void UAudioManagerSubsystem::StartClock()
@@ -44,6 +51,11 @@ void UAudioManagerSubsystem::StartClock()
 	if (ClockHandle != nullptr)
 	{
 		ClockHandle->StartClock(this, ClockHandle);
+
+		if (QuartzSubsystem)
+		{
+			LatencyBetweenThreads = QuartzSubsystem->GetAudioRenderThreadToGameThreadMaxLatency();
+		}
 	}
 }
 
@@ -105,6 +117,31 @@ void UAudioManagerSubsystem::PlayQuantized(UAudioComponent* AudioComponent)
 		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("PartFinishPercent")), PartPercentDelegate);
 	}
 	StartMusic();
+}
+
+float UAudioManagerSubsystem::GetAnimTime()
+{
+	if (ClockHandle)
+	{
+		FQuartzTransportTimeStamp ClockTimestamp = ClockHandle->GetCurrentTimestamp(this);
+
+		const float SyncDuration = AnimLength - AnimStartupTime;
+
+		float ContinuousBeat = ClockTimestamp.Beat + ClockTimestamp.BeatFraction;
+
+		float IdleBeatPhase = FMath::Fmod(ContinuousBeat, LoopLength);
+
+		if (IdleBeatPhase < 0.f)
+		{
+			IdleBeatPhase += LoopLength;
+		}
+		
+		float MusicalPhase = IdleBeatPhase / 2.f;
+
+		AnimTime = AnimStartupTime + (MusicalPhase * SyncDuration);
+	}
+
+	return AnimTime;
 }
 
 void UAudioManagerSubsystem::WatchOutputPartFinishedName(FName OutputName, const FMetaSoundOutput& Output)
@@ -220,6 +257,38 @@ void UAudioManagerSubsystem::StartPart3()
 	}
 }
 
+void UAudioManagerSubsystem::StartPart4Intro()
+{
+	if (ActiveAudioComponent)
+	{
+		ActiveAudioComponent->SetTriggerParameter("PlayPart4Intro");
+	}
+}
+
+void UAudioManagerSubsystem::StartPart4()
+{
+	if (ActiveAudioComponent)
+	{
+		ActiveAudioComponent->SetTriggerParameter("PlayPart4");
+	}
+}
+
+void UAudioManagerSubsystem::StartPart5Intro()
+{
+	if (ActiveAudioComponent)
+	{
+		ActiveAudioComponent->SetTriggerParameter("PlayPart5Intro");
+	}
+}
+
+void UAudioManagerSubsystem::StartPart5()
+{
+	if (ActiveAudioComponent)
+	{
+		ActiveAudioComponent->SetTriggerParameter("PlayPart5");
+	}
+}
+
 void UAudioManagerSubsystem::StartMusic()
 {
 	if (ActiveAudioComponent)
@@ -257,11 +326,20 @@ void UAudioManagerSubsystem::StopClock()
 void UAudioManagerSubsystem::OnQuartzClockBeat(FName ClockName, EQuartzCommandQuantization QuantizationType,
 	int32 NumBars, int32 Beat, float BeatFraction)
 {
-	//UKismetSystemLibrary::PrintString(this, FString::FormatAsNumber(Beat), true, true, FLinearColor::Green, 10.0f);
+	if (QuartzSubsystem)
+	{
+		// LastBeatAudioTimeSeconds = QuartzSubsystem->GetAudioRenderThreadToGameThreadMaxLatency();
+		LastBeatAudioTimeSeconds = FPlatformTime::Seconds();
+	}
+
+	UKismetSystemLibrary::PrintString(this, FString::FormatAsNumber(Beat), true, true, FLinearColor::Green, 10.0f);
 }
 
 void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output)
 {
+	//Test for Latency
+	MetaSoundOutputTimeSeconds = FPlatformTime::Seconds();
+
 	// Extract MIDI note as int32 and print it
 	int32 MidiNote = -1;
 	if (Output.Get<int32>(MidiNote))
@@ -270,7 +348,7 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 		{
 			return;
 		}
-		MidiNote = MidiNote % 12;
+		MidiNote = (MidiNote - static_cast<int32>(RootNote)) % 12;
 
 		const FString Msg = FString::Printf(TEXT("%s = %d"), *OutputName.ToString(), MidiNote);
 		UKismetSystemLibrary::PrintString(this, Msg, true, true, FLinearColor::Red, 5.0f);
@@ -293,37 +371,21 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 		Spline = Cast<ASplineActor>(FoundSpline);
 	}
 
-	// TODO: Alex mach besser
-	if (Enemy != nullptr && Spline != nullptr && bEnemyCanAttack)
+	//Move the Enemy to the corresponding Line based on the Midi Note
+	if (Enemy != nullptr && Spline != nullptr)
 	{
 		Enemy->SetSplineRef(Spline->GetSplines(MidiNote));
 
 		const int32 Index = Enemy->GetSplineRef()->GetNumberOfSplinePoints() - 1;
 
-		FVector SplineWorldLocation = Enemy->GetSplineRef()->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);
+		FVector SplineWorldLocation = Enemy->GetSplineRef()->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);               
 
-		FVector FinalLocation;
-		FinalLocation.X = -2300.f;								
-		FinalLocation.Y = -3000.f;								
-		FinalLocation.Z = SplineWorldLocation.Z;                
+		Enemy->SetActorLocation(SplineWorldLocation);
 
-		Enemy->SetActorLocation(FinalLocation);
-		Enemy->Attack(Enemy->GetBPM());
-	}
-	else if (Enemy != nullptr && Spline != nullptr && !bEnemyCanAttack)
-	{
-		Enemy->SetSplineRef(Spline->GetSplines(MidiNote));
-
-		const int32 Index = Enemy->GetSplineRef()->GetNumberOfSplinePoints() - 1;
-
-		FVector SplineWorldLocation = Enemy->GetSplineRef()->GetLocationAtSplinePoint(Index, ESplineCoordinateSpace::World);
-
-		FVector FinalLocation;
-		FinalLocation.X = -2300.f;
-		FinalLocation.Y = -3000.f;
-		FinalLocation.Z = SplineWorldLocation.Z;
-
-		Enemy->SetActorLocation(FinalLocation);
+		if (bEnemyCanAttack)
+		{
+			Enemy->Attack(Enemy->GetBPM());
+		}
 	}
 }
 
@@ -458,7 +520,99 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 
 			UnmuteLeads();
 		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth3() <= 0) && PartFinish == EPartFinish::Three)
+		{
+			StartOutro();
+		}
 		else
+		{
+			StartPart4Intro();
+		}
+	}
+	else if (PartNameFix.Equals("Part4IntroEnd"))
+	{
+		StartPart4();
+		bEnemyCanAttack = true;
+		bPlayAgain = true;
+
+		UnmuteLeads();
+	}
+	else if (PartNameFix.Equals("Part4End"))
+	{
+		// Check if loop needed -> Check if Enemy no life
+		if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (bEnemyCanAttack))
+		{
+			bEnemyCanAttack = false;
+			bPlayerCanAttack = false;
+			StartPart4();
+			bPlayAgain = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && bPlayAgain)
+		{
+			StartPart4();
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
+		{
+			StartPart4();
+			bEnemyCanAttack = true;
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			UnmuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth4()) <= 0 && PartFinish == EPartFinish::Four)
+		{
+			StartOutro();
+		}
+		else
+		{
+			StartPart5Intro();
+		}
+	}
+	else if (PartNameFix.Equals("Part5IntroEnd"))
+	{
+		StartPart5();
+		bEnemyCanAttack = true;
+		bPlayAgain = true;
+
+		UnmuteLeads();
+	}
+	else if (PartNameFix.Equals("Part5End"))
+	{
+		// Check if loop needed -> Check if Enemy no life
+		if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (bEnemyCanAttack))
+		{
+			bEnemyCanAttack = false;
+			bPlayerCanAttack = false;
+			StartPart5();
+			bPlayAgain = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (!bEnemyCanAttack) && bPlayAgain)
+		{
+			StartPart5();
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
+		{
+			StartPart5();
+			bEnemyCanAttack = true;
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			UnmuteLeads();
+		}
+		else if (Enemy != nullptr && Enemy->GetHealth5() <= 0 && PartFinish == EPartFinish::Five)
 		{
 			StartOutro();
 		}

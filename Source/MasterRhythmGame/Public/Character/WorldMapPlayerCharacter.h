@@ -4,11 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "../Public/CoreTypes.h"
 #include "WorldMapPlayerCharacter.generated.h"
 
 
-class AWorldMapPath;
-class AWorldMapNode;
+class ALevelNode;
+class ALevelPath;
+class USplineComponent;
+class UTimelineComponent;
 
 UCLASS()
 class AWorldMapPlayerCharacter : public ACharacter
@@ -18,8 +21,6 @@ class AWorldMapPlayerCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	AWorldMapPlayerCharacter();
-
-	void TryMoveInDirection(const FVector2D& InputDir);
 
 protected:
 	// Called when the game starts or when spawned
@@ -32,20 +33,49 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Timeline progress callback only float because Timeline delegate supplies only a float
+	UFUNCTION()
+	void HandleTimelineProgress(float Value);
+
+	UFUNCTION()
+	void HandleTimelineFinished();
+
+	UFUNCTION()
+	void Move(EDirectionWorldMap InDirection);
+
+	// --- Level Node Ref ---
+	TObjectPtr<ALevelNode> GetLevelNodeRef() const { return LevelNodeRef; }
+	void SetLevelNodeRef(TObjectPtr<ALevelNode> InLevelNodeRef) { LevelNodeRef = InLevelNodeRef; }
+
+	void SetSplineRef(ALevelPath* SplineIn) { SplineRef = SplineIn; }
+
+	// --- Is Moving ---
+	bool GetIsMoving() const { return bIsMoving; }
+	void SetIsMoving(bool bInIsMoving) { bIsMoving = bInIsMoving; }
+
 private:
-	UPROPERTY(EditAnywhere)
-	AWorldMapNode* CurrentNode { nullptr };
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UAudioComponent> AudioComponent { nullptr };
 
-	UPROPERTY(EditAnywhere)
-	AWorldMapNode* TargetNode { nullptr };
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<USceneComponent> SceneComponent { nullptr };
 
-	UPROPERTY(EditAnywhere)
-	AWorldMapPath* CurrentPath { nullptr };
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<UTimelineComponent> Timeline;
 
-	UPROPERTY(EditAnywhere)
-	float Progress { 0.0f };
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TSubclassOf<ALevelNode> LevelNodeClass { nullptr };
 
-	UPROPERTY(EditAnywhere)
-	float MoveSpeed { 100.0f };
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TObjectPtr<ALevelNode> LevelNodeRef { nullptr };
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<ALevelPath> SplineRef { nullptr };
+
+	// Current direction used during timeline movement
+	EDirectionWorldMap CurrentDirection { EDirectionWorldMap::Forward };
+
+	UPROPERTY(VisibleAnywhere)
+	bool bIsMoving { false };
 
 };

@@ -1,9 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
 #include "Character/WorldMapPlayerCharacter.h"
-#include "WorldMap/WorldMapNode.h"
-#include "WorldMap/WorldMapPath.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Components/AudioComponent.h"
+#include "Components/TimelineComponent.h"
+#include "../Public/CoreTypes.h"
+#include "WorldMap/LevelNode.h"
+#include "Curves/CurveFloat.h"
+#include "Kismet/GameplayStatics.h"
+#include "WorldMap/LevelPath.h"
 
 // Sets default values
 AWorldMapPlayerCharacter::AWorldMapPlayerCharacter()
@@ -11,56 +16,22 @@ AWorldMapPlayerCharacter::AWorldMapPlayerCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-}
+	// Create AudioComponent and attach it to the actor's RootComponent
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("AudioComponent"));
+	if (AudioComponent != nullptr)
+	{
+		AudioComponent->SetupAttachment(RootComponent);
+		AudioComponent->bAutoActivate = false;
+	}
 
-void AWorldMapPlayerCharacter::TryMoveInDirection(const FVector2D& InputDir)
-{
-	if (!CurrentNode || TargetNode) return;
+	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
+	SceneComponent->SetupAttachment(RootComponent);
 
-    AWorldMapNode* BestNode = nullptr;
-    float BestDot = 0.5f;
+	GetCharacterMovement()->GravityScale = 0;
+	GetCharacterMovement()->bApplyGravityWhileJumping = false;
 
-	// Check all connected nodes
-    for (int32 i = 0; i < CurrentNode->GetConnectedNodes().Num(); i++)
-    {
-        AWorldMapNode* Candidate = CurrentNode->GetConnectedNodes()[i];
-        if (!Candidate) continue;
-
-        FVector2D Dir = FVector2D(
-            Candidate->GetActorLocation().X - CurrentNode->GetActorLocation().X,
-            Candidate->GetActorLocation().Y - CurrentNode->GetActorLocation().Y
-        ).GetSafeNormal();
-
-        float Dot = FVector2D::DotProduct(Dir, InputDir);
-
-        if (Dot > BestDot)
-        {
-            BestDot = Dot;
-            BestNode = Candidate;
-        }
-    }
-
-    if (BestNode)
-    {
-        TargetNode = BestNode;
-
-		// Find correct path
-        for (AWorldMapPath* Path : CurrentNode->GetConnectedPaths())
-        {
-            if (Path->GetStartNode() == CurrentNode && Path->GetEndNode() == BestNode)
-            {
-                CurrentPath = Path;
-                break;
-            }
-            if (Path->GetEndNode() == CurrentNode && Path->GetStartNode() == BestNode)
-            {
-                CurrentPath = Path;
-                break;
-            }
-        }
-
-        Progress = 0.f;
-    }
+	// Create and initialize Timeline component so it's not nullptr at runtime
+	Timeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("Timeline"));
 }
 
 // Called when the game starts or when spawned
@@ -68,30 +39,44 @@ void AWorldMapPlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Create a runtime float curve that goes from (time=0, value=2) to (time=2, value=0)
+	UCurveFloat* FloatCurve = NewObject<UCurveFloat>(this, TEXT("NoteFloatCurve"));
+	if (FloatCurve)
+	{
+		FloatCurve->FloatCurve.AddKey(0.0f, 2.0f);
+		FloatCurve->FloatCurve.AddKey(2.0f, 0.0f);
+	}
+
+	if (Timeline && FloatCurve)
+	{
+		// Bind update callback
+		FOnTimelineFloat ProgressCallback;
+		ProgressCallback.BindUFunction(this, FName(TEXT("HandleTimelineProgress")));
+
+		Timeline->AddInterpFloat(FloatCurve, ProgressCallback);
+
+		// Bind finished callback so actor is destroyed when timeline finishes
+		FOnTimelineEvent FinishedCallback;
+		FinishedCallback.BindUFunction(this, FName(TEXT("HandleTimelineFinished")));
+		Timeline->SetTimelineFinishedFunc(FinishedCallback);
+
+		Timeline->SetLooping(false);
+		Timeline->SetTimelineLength(2.0f); // normalized length: x from 0..2
+		Timeline->SetTimelineLengthMode(ETimelineLengthMode::TL_TimelineLength);
+	}
+
+	if (LevelNodeClass)
+	{
+		// Try to find an existing actor of the specified Blueprint class
+		AActor* Found = UGameplayStatics::GetActorOfClass(GetWorld(), LevelNodeClass);
+		LevelNodeRef = Cast<ALevelNode>(Found);
+	}
 }
 
 // Called every frame
 void AWorldMapPlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-    
-	if (TargetNode && CurrentPath)
-    {
-        Progress += DeltaTime * MoveSpeed;
-
-        FVector Pos = CurrentPath->GetLocationAtProgress(Progress);
-        FRotator Rot = CurrentPath->GetRotationAtProgress(Progress);
-
-        SetActorLocation(Pos);
-        SetActorRotation(Rot);
-
-        if (Progress >= 1.f)
-        {
-            CurrentNode = TargetNode;
-            TargetNode = nullptr;
-            CurrentPath = nullptr;
-        }
-    }
 }
 
 // Called to bind functionality to input
@@ -100,3 +85,101 @@ void AWorldMapPlayerCharacter::SetupPlayerInputComponent(UInputComponent* Player
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void AWorldMapPlayerCharacter::HandleTimelineProgress(float Value)
+{
+	float NormalizedX = 0.0f;
+
+	if (Timeline != nullptr)
+	{
+		const float Length = Timeline->GetTimelineLength();
+		if (Length > KINDA_SMALL_NUMBER)
+		{
+			NormalizedX = Timeline->GetPlaybackPosition() / Length;
+		}
+	}
+
+	if (LevelNodeRef == nullptr)
+	{
+		return;
+	}
+	
+	if (SplineRef)
+	{
+		const float SplineLength = SplineRef->GetSpline()->GetSplineLength();
+		const float DistanceAlongSpline = FMath::Clamp(NormalizedX * SplineLength, 0.0f, SplineLength);
+		const FVector NewLocation = SplineRef->GetSpline()->GetLocationAtDistanceAlongSpline(DistanceAlongSpline, ESplineCoordinateSpace::World);
+		SetActorLocation(NewLocation);
+	}
+}
+
+void AWorldMapPlayerCharacter::HandleTimelineFinished()
+{
+	if (LevelNodeRef == nullptr)
+	{
+		return;
+	}
+
+	bIsMoving = false;
+
+	// Find the neighbour node that is closest to the player's current location
+	const FVector CurrentLocation = GetActorLocation();
+	ALevelNode* ClosestNeighbour = nullptr;
+	float ClosestDistSq = TNumericLimits<float>::Max();
+		
+	TArray<ALevelNode*> Neighbours = LevelNodeRef->GetNeighbours();
+	for (ALevelNode* Neighbour : Neighbours)
+	{
+		if (Neighbour == nullptr)
+		{
+			continue;
+		}
+
+		const float DistSq = FVector::DistSquared(Neighbour->GetActorLocation(), CurrentLocation);
+		if (DistSq < ClosestDistSq)
+		{
+			ClosestDistSq = DistSq;
+			ClosestNeighbour = Neighbour;
+		}
+	}
+
+	// If we found a close neighbour, update the LevelNodeRef and snap to its actor location
+	const float MaxAcceptableDistance = 40000.0f; // squared distance threshold (~200 units)
+	if (ClosestNeighbour != nullptr && ClosestDistSq <= MaxAcceptableDistance)
+	{
+		LevelNodeRef = ClosestNeighbour;
+		// Snap to exact node location to avoid drifting due to spline interpolation
+		SetActorLocation(LevelNodeRef->GetActorLocation());
+		UE_LOG(LogTemp, Log, TEXT("AWorldMapPlayerCharacter::HandleTimelineFinished - Moved to new LevelNode: %s"), *LevelNodeRef->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AWorldMapPlayerCharacter::HandleTimelineFinished - Could not find a suitable neighbour to set as new LevelNodeRef."));
+	}
+}
+
+void AWorldMapPlayerCharacter::Move(EDirectionWorldMap InDirection)
+{
+	if (Timeline != nullptr)
+	{
+		switch (InDirection)
+		{
+			case EDirectionWorldMap::Forward:
+			{
+				bIsMoving = true;
+				Timeline->PlayFromStart();
+				break;
+			}
+			case EDirectionWorldMap::Backward:
+			{
+				bIsMoving = true;
+				Timeline->ReverseFromEnd();
+				break;
+			}
+			default:
+			{
+				// Should not happen
+				break;
+			}
+		}
+	}
+}

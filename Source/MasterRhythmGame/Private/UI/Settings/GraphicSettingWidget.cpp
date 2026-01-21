@@ -2,7 +2,7 @@
 
 
 #include "UI/Settings/GraphicSettingWidget.h"
-#include "Components/Button.h"
+#include "UI/ButtonWidget.h"
 #include "HUD/MainMenuHUD.h"
 #include "Controller/MainMenuController.h"
 #include "Controller/WorldMapController.h"
@@ -50,47 +50,17 @@ void UGraphicSettingWidget::NativeConstruct()
 		MainMenuHud = Cast<AMainMenuHUD>(PlayerController->GetHUD());
 	}
 
-	WindowModeDown->SetBackgroundColor(FLinearColor::Green);
-
+	// Bind button click events only
 	MainMenu->OnClicked.AddDynamic(this, &UGraphicSettingWidget::ReturnMainMenuClicked);
-	MainMenu->OnHovered.AddDynamic(this, &UGraphicSettingWidget::ReturnSettingMenuHovered);
-	MainMenu->OnUnhovered.AddDynamic(this, &UGraphicSettingWidget::ReturnMainMenuUnhovered);
-
 	WindowModeDown->OnClicked.AddDynamic(this, &UGraphicSettingWidget::WindowModeDownClicked);
-	WindowModeDown->OnHovered.AddDynamic(this, &UGraphicSettingWidget::WindowModeDownHovered);
-	WindowModeDown->OnUnhovered.AddDynamic(this, &UGraphicSettingWidget::WindowModeDownUnhovered);
-
 	WindowModeUp->OnClicked.AddDynamic(this, &UGraphicSettingWidget::WindowModeUpClicked);
-	WindowModeUp->OnHovered.AddDynamic(this, &UGraphicSettingWidget::WindowModeUpHovered);
-	WindowModeUp->OnUnhovered.AddDynamic(this, &UGraphicSettingWidget::WindowModeUpUnhovered);
-
 	ResolutionDown->OnClicked.AddDynamic(this, &UGraphicSettingWidget::ResolutionDownClicked);
-	ResolutionDown->OnHovered.AddDynamic(this, &UGraphicSettingWidget::ResolutionDownHovered);
-	ResolutionDown->OnUnhovered.AddDynamic(this, &UGraphicSettingWidget::ResolutionDownUnhovered);
-
 	ResolutionUp->OnClicked.AddDynamic(this, &UGraphicSettingWidget::ResolutionUpClicked);
-	ResolutionUp->OnHovered.AddDynamic(this, &UGraphicSettingWidget::ResolutionUpHovered);
-	ResolutionUp->OnUnhovered.AddDynamic(this, &UGraphicSettingWidget::ResolutionUpUnhovered);
-
 	GraphicDown->OnClicked.AddDynamic(this, &UGraphicSettingWidget::GraphicDownClicked);
-	GraphicDown->OnHovered.AddDynamic(this, &UGraphicSettingWidget::GraphicDownHovered);
-	GraphicDown->OnUnhovered.AddDynamic(this, &UGraphicSettingWidget::GraphicDownUnhovered);
-
-	GraphicUp->OnClicked.AddDynamic(this,&UGraphicSettingWidget::GraphicUpClicked);
-	GraphicUp->OnHovered.AddDynamic(this,&UGraphicSettingWidget::GraphicUpHovered);
-	GraphicUp->OnUnhovered.AddDynamic(this,&UGraphicSettingWidget::GraphicUpUnhovered);	
-
+	GraphicUp->OnClicked.AddDynamic(this, &UGraphicSettingWidget::GraphicUpClicked);
 	VSyncDown->OnClicked.AddDynamic(this, &UGraphicSettingWidget::VSyncDownClicked);
-	VSyncDown->OnHovered.AddDynamic(this, &UGraphicSettingWidget::VSyncDownHovered);
-	VSyncDown->OnUnhovered.AddDynamic(this, &UGraphicSettingWidget::VSyncDownUnhovered);
-
 	VSyncUp->OnClicked.AddDynamic(this, &UGraphicSettingWidget::VSyncUpClicked);
-	VSyncUp->OnHovered.AddDynamic(this, &UGraphicSettingWidget::VSyncUpHovered);
-	VSyncUp->OnUnhovered.AddDynamic(this, &UGraphicSettingWidget::VSyncUpUnhovered);
-
 	Apply->OnClicked.AddDynamic(this, &UGraphicSettingWidget::ApplyClicked);
-	Apply->OnHovered.AddDynamic(this, &UGraphicSettingWidget::ApplyHovered);
-	Apply->OnUnhovered.AddDynamic(this, &UGraphicSettingWidget::ApplyUnhovered);
 }
 
 void UGraphicSettingWidget::ReturnMainMenuClicked()
@@ -108,27 +78,6 @@ void UGraphicSettingWidget::ReturnMainMenuClicked()
 	{
 		WorldMapController->SetControllerState(EControllerStateWorldMap::SettingMenu);
 	}
-	ReturnMainMenuUnhovered();
-}
-
-void UGraphicSettingWidget::ReturnSettingMenuHovered()
-{
-	MainMenu->SetBackgroundColor(FLinearColor::Green);
-
-	WindowModeDown->SetBackgroundColor(FLinearColor::White);
-	WindowModeUp->SetBackgroundColor(FLinearColor::White);
-	ResolutionDown->SetBackgroundColor(FLinearColor::White);
-	ResolutionUp->SetBackgroundColor(FLinearColor::White);
-	GraphicDown->SetBackgroundColor(FLinearColor::White);
-	GraphicUp->SetBackgroundColor(FLinearColor::White);
-	VSyncDown->SetBackgroundColor(FLinearColor::White);
-	VSyncUp->SetBackgroundColor(FLinearColor::White);
-	Apply->SetBackgroundColor(FLinearColor::White);
-}
-
-void UGraphicSettingWidget::ReturnMainMenuUnhovered()
-{
-	MainMenu->SetBackgroundColor(FLinearColor::White);
 }
 
 void UGraphicSettingWidget::WindowModeDownClicked()
@@ -139,52 +88,12 @@ void UGraphicSettingWidget::WindowModeDownClicked()
 	WindowMode = static_cast<EWindowMode::Type>(ModeAsInt);
 }
 
-void UGraphicSettingWidget::WindowModeDownHovered()
-{
-	WindowModeDown->SetBackgroundColor(FLinearColor::Green);
-
-	MainMenu->SetBackgroundColor(FLinearColor::White);
-	WindowModeUp->SetBackgroundColor(FLinearColor::White);
-	ResolutionDown->SetBackgroundColor(FLinearColor::White);
-	ResolutionUp->SetBackgroundColor(FLinearColor::White);
-	GraphicDown->SetBackgroundColor(FLinearColor::White);
-	GraphicUp->SetBackgroundColor(FLinearColor::White);
-	VSyncDown->SetBackgroundColor(FLinearColor::White);
-	VSyncUp->SetBackgroundColor(FLinearColor::White);
-	Apply->SetBackgroundColor(FLinearColor::White);
-}
-
-void UGraphicSettingWidget::WindowModeDownUnhovered()
-{
-	WindowModeDown->SetBackgroundColor(FLinearColor::White);
-}
-
 void UGraphicSettingWidget::WindowModeUpClicked()
 {
 	int32 ModeAsInt = static_cast<int32>(WindowMode);
 	ModeAsInt++;
 	ModeAsInt = FMath::Clamp(ModeAsInt, 0, 2);
 	WindowMode = static_cast<EWindowMode::Type>(ModeAsInt);
-}
-
-void UGraphicSettingWidget::WindowModeUpHovered()
-{
-	WindowModeUp->SetBackgroundColor(FLinearColor::Green);
-
-	MainMenu->SetBackgroundColor(FLinearColor::White);
-	WindowModeDown->SetBackgroundColor(FLinearColor::White);
-	ResolutionDown->SetBackgroundColor(FLinearColor::White);
-	ResolutionUp->SetBackgroundColor(FLinearColor::White);
-	GraphicDown->SetBackgroundColor(FLinearColor::White);
-	GraphicUp->SetBackgroundColor(FLinearColor::White);
-	VSyncDown->SetBackgroundColor(FLinearColor::White);
-	VSyncUp->SetBackgroundColor(FLinearColor::White);
-	Apply->SetBackgroundColor(FLinearColor::White);
-}
-
-void UGraphicSettingWidget::WindowModeUpUnhovered()
-{
-	WindowModeUp->SetBackgroundColor(FLinearColor::White);
 }
 
 void UGraphicSettingWidget::ResolutionDownClicked()
@@ -195,26 +104,6 @@ void UGraphicSettingWidget::ResolutionDownClicked()
 	SwitchResolution(ResolutionIndex);
 }
 
-void UGraphicSettingWidget::ResolutionDownHovered()
-{
-	ResolutionDown->SetBackgroundColor(FLinearColor::Green);
-	
-	MainMenu->SetBackgroundColor(FLinearColor::White);
-	WindowModeDown->SetBackgroundColor(FLinearColor::White);
-	WindowModeUp->SetBackgroundColor(FLinearColor::White);
-	ResolutionUp->SetBackgroundColor(FLinearColor::White);
-	GraphicDown->SetBackgroundColor(FLinearColor::White);
-	GraphicUp->SetBackgroundColor(FLinearColor::White);
-	VSyncDown->SetBackgroundColor(FLinearColor::White);
-	VSyncUp->SetBackgroundColor(FLinearColor::White);
-	Apply->SetBackgroundColor(FLinearColor::White);
-}
-
-void UGraphicSettingWidget::ResolutionDownUnhovered()
-{
-	ResolutionDown->SetBackgroundColor(FLinearColor::White);
-}
-
 void UGraphicSettingWidget::ResolutionUpClicked()
 {
 	ResolutionIndex++;
@@ -223,50 +112,10 @@ void UGraphicSettingWidget::ResolutionUpClicked()
 	SwitchResolution(ResolutionIndex);
 }
 
-void UGraphicSettingWidget::ResolutionUpHovered()
-{
-	ResolutionUp->SetBackgroundColor(FLinearColor::Green);
-
-	MainMenu->SetBackgroundColor(FLinearColor::White);
-	WindowModeDown->SetBackgroundColor(FLinearColor::White);
-	WindowModeUp->SetBackgroundColor(FLinearColor::White);
-	ResolutionDown->SetBackgroundColor(FLinearColor::White);
-	GraphicDown->SetBackgroundColor(FLinearColor::White);
-	GraphicUp->SetBackgroundColor(FLinearColor::White);
-	VSyncDown->SetBackgroundColor(FLinearColor::White);
-	VSyncUp->SetBackgroundColor(FLinearColor::White);
-	Apply->SetBackgroundColor(FLinearColor::White);
-}
-
-void UGraphicSettingWidget::ResolutionUpUnhovered()
-{
-	ResolutionUp->SetBackgroundColor(FLinearColor::White);
-}
-
 void UGraphicSettingWidget::GraphicDownClicked()
 {
 	GraphicsIndex--;
 	GraphicsIndex = FMath::Clamp(GraphicsIndex, 0, 4);
-}
-
-void UGraphicSettingWidget::GraphicDownHovered()
-{
-	GraphicDown->SetBackgroundColor(FLinearColor::Green);
-
-	MainMenu->SetBackgroundColor(FLinearColor::White);
-	WindowModeDown->SetBackgroundColor(FLinearColor::White);
-	WindowModeUp->SetBackgroundColor(FLinearColor::White);
-	ResolutionDown->SetBackgroundColor(FLinearColor::White);
-	ResolutionUp->SetBackgroundColor(FLinearColor::White);
-	GraphicUp->SetBackgroundColor(FLinearColor::White);
-	VSyncDown->SetBackgroundColor(FLinearColor::White);
-	VSyncUp->SetBackgroundColor(FLinearColor::White);
-	Apply->SetBackgroundColor(FLinearColor::White);
-}
-
-void UGraphicSettingWidget::GraphicDownUnhovered()
-{
-	GraphicDown->SetBackgroundColor(FLinearColor::White);
 }
 
 void UGraphicSettingWidget::GraphicUpClicked()
@@ -275,74 +124,14 @@ void UGraphicSettingWidget::GraphicUpClicked()
 	GraphicsIndex = FMath::Clamp(GraphicsIndex, 0, 4);
 }
 
-void UGraphicSettingWidget::GraphicUpHovered()
-{
-	GraphicUp->SetBackgroundColor(FLinearColor::Green);
-
-	MainMenu->SetBackgroundColor(FLinearColor::White);
-	WindowModeDown->SetBackgroundColor(FLinearColor::White);
-	WindowModeUp->SetBackgroundColor(FLinearColor::White);
-	ResolutionDown->SetBackgroundColor(FLinearColor::White);
-	ResolutionUp->SetBackgroundColor(FLinearColor::White);
-	GraphicDown->SetBackgroundColor(FLinearColor::White);
-	VSyncDown->SetBackgroundColor(FLinearColor::White);
-	VSyncUp->SetBackgroundColor(FLinearColor::White);
-	Apply->SetBackgroundColor(FLinearColor::White);
-}
-
-void UGraphicSettingWidget::GraphicUpUnhovered()
-{
-	GraphicUp->SetBackgroundColor(FLinearColor::White);
-}
-
 void UGraphicSettingWidget::VSyncDownClicked()
 {
 	bVSync = false;
 }
 
-void UGraphicSettingWidget::VSyncDownHovered()
-{
-	VSyncDown->SetBackgroundColor(FLinearColor::Green);
-
-	MainMenu->SetBackgroundColor(FLinearColor::White);
-	WindowModeDown->SetBackgroundColor(FLinearColor::White);
-	WindowModeUp->SetBackgroundColor(FLinearColor::White);
-	ResolutionDown->SetBackgroundColor(FLinearColor::White);
-	ResolutionUp->SetBackgroundColor(FLinearColor::White);
-	GraphicDown->SetBackgroundColor(FLinearColor::White);
-	GraphicUp->SetBackgroundColor(FLinearColor::White);
-	VSyncUp->SetBackgroundColor(FLinearColor::White);
-	Apply->SetBackgroundColor(FLinearColor::White);
-}
-
-void UGraphicSettingWidget::VSyncDownUnhovered()
-{
-	VSyncDown->SetBackgroundColor(FLinearColor::White);
-}
-
 void UGraphicSettingWidget::VSyncUpClicked()
 {
 	bVSync = true;
-}
-
-void UGraphicSettingWidget::VSyncUpHovered()
-{
-	VSyncUp->SetBackgroundColor(FLinearColor::Green);
-
-	MainMenu->SetBackgroundColor(FLinearColor::White);
-	WindowModeDown->SetBackgroundColor(FLinearColor::White);
-	WindowModeUp->SetBackgroundColor(FLinearColor::White);
-	ResolutionDown->SetBackgroundColor(FLinearColor::White);
-	ResolutionUp->SetBackgroundColor(FLinearColor::White);
-	GraphicDown->SetBackgroundColor(FLinearColor::White);
-	GraphicUp->SetBackgroundColor(FLinearColor::White);
-	VSyncDown->SetBackgroundColor(FLinearColor::White);
-	Apply->SetBackgroundColor(FLinearColor::White);
-}
-
-void UGraphicSettingWidget::VSyncUpUnhovered()
-{
-	VSyncUp->SetBackgroundColor(FLinearColor::White);
 }
 
 void UGraphicSettingWidget::ApplyClicked()
@@ -356,26 +145,6 @@ void UGraphicSettingWidget::ApplyClicked()
 		UserSettings->SetScreenResolution(Resolution);
 		UserSettings->ApplySettings(true);
 	}
-}
-
-void UGraphicSettingWidget::ApplyHovered()
-{
-	Apply->SetBackgroundColor(FLinearColor::Green);
-
-	MainMenu->SetBackgroundColor(FLinearColor::White);
-	WindowModeDown->SetBackgroundColor(FLinearColor::White);
-	WindowModeUp->SetBackgroundColor(FLinearColor::White);
-	ResolutionDown->SetBackgroundColor(FLinearColor::White);
-	ResolutionUp->SetBackgroundColor(FLinearColor::White);
-	GraphicDown->SetBackgroundColor(FLinearColor::White);
-	GraphicUp->SetBackgroundColor(FLinearColor::White);
-	VSyncDown->SetBackgroundColor(FLinearColor::White);
-	VSyncUp->SetBackgroundColor(FLinearColor::White);
-}
-
-void UGraphicSettingWidget::ApplyUnhovered()
-{
-	Apply->SetBackgroundColor(FLinearColor::White);
 }
 
 void UGraphicSettingWidget::SwitchResolution(int32 InResolutionIndex)

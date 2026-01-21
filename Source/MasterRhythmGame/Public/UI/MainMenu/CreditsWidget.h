@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "CreditsWidget.generated.h"
 
-class UButton;
+class UButtonWidget;
 class AMainMenuHUD;
 /**
  * 
@@ -20,20 +20,14 @@ public:
 	UFUNCTION()
 	void ReturnMainMenuButtonClicked();
 
-	UButton* GetReturnMainMenuButton() const { return ReturnMainMenu; }
+	UButtonWidget* GetReturnMainMenuButton() const { return ReturnMainMenu; }
 
 private:
 	//Native Constructor
 	virtual void NativeConstruct() override;
 
-	UFUNCTION()
-	void MainMenuOnHovered();
-
-	UFUNCTION()
-	void MainMenuOnUnhovered();
-
 	UPROPERTY(meta = (BindWidget))
-	class UButton* ReturnMainMenu{ nullptr };
+	UButtonWidget* ReturnMainMenu{ nullptr };
 
 	UPROPERTY()
 	TObjectPtr<AMainMenuHUD> MainMenuHud { nullptr };

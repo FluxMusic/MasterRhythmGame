@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "DeathWidget.generated.h"
 
-class UButton;
+class UButtonWidget;
 /**
  * 
  */
@@ -19,50 +19,32 @@ public:
 	void RespawnButtonClicked();
 
 	UFUNCTION()
-	void RespawnButtonHovered();
-
-	UFUNCTION()
-	void RespawnButtonUnhovered();
-
-	UFUNCTION()
 	void MainMenuButtonClicked();
-
-	UFUNCTION()
-	void MainMenuButtonHovered();
-
-	UFUNCTION()
-	void MainMenuButtonUnhovered();
 
 	UFUNCTION()
 	void WorldMapButtonClicked();
 
-	UFUNCTION()
-	void WorldMapButtonHovered();
-
-	UFUNCTION()
-	void WorldMapButtonUnhovered();
-
 	// --- Respawn Button ---
-	UButton* GetRespawnButton() const { return Respawn; }
+	UButtonWidget* GetRespawnButton() const { return Respawn; }
 
 	// --- WorldMap Button ---
-	UButton* GetWorldMapButton() const { return WorldMap; }
+	UButtonWidget* GetWorldMapButton() const { return WorldMap; }
 
 	// --- MainMenu Button ---
-	UButton* GetMainMenuButton() const { return MainMenu; }
+	UButtonWidget* GetMainMenuButton() const { return MainMenu; }
 
 private:
 	//Native Constructor
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget = true))
-	UButton* Respawn { nullptr };
+	UButtonWidget* Respawn { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget = true))
-	UButton* WorldMap { nullptr };
+	UButtonWidget* WorldMap { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget = true))
-	UButton* MainMenu { nullptr };
+	UButtonWidget* MainMenu { nullptr };
 
 	const FName LevelName = FName(TEXT("WorldMap"));
 

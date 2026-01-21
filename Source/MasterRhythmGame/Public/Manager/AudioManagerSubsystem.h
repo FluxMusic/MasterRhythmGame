@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../CoreTypes.h"
 #include "Subsystems/WorldSubsystem.h"
 #include "TimerManager.h"
 #include "AudioManagerSubsystem.generated.h"
@@ -13,6 +14,7 @@ class ATestEnemyActor;
 class ANodeActor;
 class UQuartzSubsystem;
 class UQuartzClockHandle;
+class ULevelData;
 struct FMetaSoundOutput;
 
 /**
@@ -26,7 +28,7 @@ public:
     UAudioManagerSubsystem();
 
     UFUNCTION()
-    void InitSubsystem();
+    void InitSubsystem(ULevelData* Data);
 
     // --- Quartz control ---
     UFUNCTION(BlueprintCallable)
@@ -53,6 +55,20 @@ public:
 
 	// --- Part Name Fix accessors ---
 	FString GetPartNameFix() const { return PartNameFix; }
+
+    //Get Beat Seconds used for Input Latency Test
+    double GetBeatSeconds() const { return LastBeatAudioTimeSeconds; }
+    
+    //Gets the Time when the Output of the Metasound is read used for Latency Test
+    double GetMetaSoundOutputTimeSeconds() const { return LastBeatAudioTimeSeconds; }
+
+    double GetLatencyBetweenThreads() const { return LatencyBetweenThreads; }
+
+    //Get the Subsystem, used for Input Latency Test
+    UQuartzSubsystem* GetQuartzSubsystem() { return QuartzSubsystem; }
+
+    UFUNCTION(BlueprintCallable)
+    float GetAnimTime();
 
 private:
 
@@ -90,6 +106,18 @@ private:
     void StartPart3();
 
     UFUNCTION()
+    void StartPart4Intro();
+
+    UFUNCTION()
+	void StartPart4();
+
+    UFUNCTION()
+    void StartPart5Intro();
+
+    UFUNCTION()
+    void StartPart5();
+
+    UFUNCTION()
     void StartOutro();
 
     UFUNCTION()
@@ -107,12 +135,6 @@ private:
     UFUNCTION()
 	void UnmuteLeads();
 
-public:
-
-    // --- Note spawning ---
-    UPROPERTY(EditAnywhere, BlueprintReadOnly)
-    TSubclassOf<ANodeActor> NoteActorClass;
-
 private:
 
     UPROPERTY()
@@ -120,9 +142,6 @@ private:
 
     UPROPERTY()
     UQuartzClockHandle* ClockHandle;
-
-    UPROPERTY()
-    double Bpm { 120.f };
 
     UPROPERTY()
     int32 NumBarsDelay { 1 };
@@ -161,4 +180,33 @@ private:
 
     UPROPERTY()
     TObjectPtr<AGameHUD> GameHUD { nullptr }; 
+
+    UPROPERTY()
+    ENote RootNote { ENote::C };
+
+    UPROPERTY()
+    EPartFinish PartFinish { EPartFinish::Three };
+
+    //Animation Stuff
+
+    //Animation has a small startup, this is used to calculate that (should be 0.17f but somehow that doesn't work)
+    // const float AnimStartupTime { 0.17f };
+    const float AnimStartupTime { 0.f };
+    //The Length of the idle Animation
+    const float AnimLength { 1.f };
+    //The Amount of bars the anim loops over
+    const float LoopLength { 2.f };
+
+    //The explicit Time of the animation, used to sync the idle anim to the BPM
+    float AnimTime { 0.f };
+
+
+
+    //Test for Input Latency
+    double LastBeatAudioTimeSeconds { 0.0 };
+    
+    //The Time when the MetaSound Output is read
+    double MetaSoundOutputTimeSeconds { 0.0 };
+
+    double LatencyBetweenThreads { 0.0 };
 };

@@ -9,7 +9,7 @@
 class AWorldMapHUD;
 class UAudioSettingWidget;
 class UGraphicSettingWidget;
-class UButton;
+class UButtonWidget;
 class AMainMenuHUD;
 /**
  * 
@@ -29,32 +29,14 @@ public:
 	UFUNCTION()
 	void ReturnMainMenuClicked();
 
-	UFUNCTION()
-	void GraphicButtonHovered();
-
-	UFUNCTION()
-	void GraphicButtonUnhovered();
-
-	UFUNCTION()
-	void AudioButtonHovered();
-
-	UFUNCTION()
-	void AudioButtonUnhovered();
-
-	UFUNCTION()
-	void ReturnMainMenuButtonHovered();
-
-	UFUNCTION()
-	void ReturnMainMenuButtonUnhovered();
-
 	// --- Graphic Button ---
-	UButton* GetGraphicButton() const { return Graphic; }
+	UButtonWidget* GetGraphicButton() const { return Graphic; }
 
 	// --- Audio Button ---
-	UButton* GetAudioButton() const { return Audio; }
+	UButtonWidget* GetAudioButton() const { return Audio; }
 
 	// --- Main Menu Button ---
-	UButton* GetMainMenuButton() const { return MainMenu; }
+	UButtonWidget* GetMainMenuButton() const { return MainMenu; }
 
 	// --- Graphic Setting Widget ---
 	UGraphicSettingWidget* GetGraphicSettingWidget() const { return WBP_GraphicSettingWidget; }
@@ -67,19 +49,19 @@ private:
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* Graphic{ nullptr };
+	UButtonWidget* Graphic{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* Audio{ nullptr };
+	UButtonWidget* Audio{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* MainMenu{ nullptr };
+	UButtonWidget* MainMenu{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UGraphicSettingWidget* WBP_GraphicSettingWidget{ nullptr };
+	UGraphicSettingWidget* WBP_GraphicSettingWidget{ nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UAudioSettingWidget* WBP_AudioSettingWidget{ nullptr };
+	UAudioSettingWidget* WBP_AudioSettingWidget{ nullptr };
 
 	UPROPERTY()
 	TObjectPtr<AMainMenuHUD> MainMenuHud { nullptr };

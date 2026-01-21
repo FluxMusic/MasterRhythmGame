@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Quartz/AudioMixerClockHandle.h"
+#include "Data/LevelData.h"
 #include "TestEnemyActor.generated.h"
 
 class UTimelineComponent;
@@ -22,6 +22,15 @@ public:
 	// Sets default values for this actor's properties
 	ATestEnemyActor();
 
+	UFUNCTION()
+	void Init(ULevelData* LevelDataIn);
+
+	//SkeletalMesh is in BP, don't want to construct in C++
+	//TODO: Kay do it and place the logic from this BP event into Init, thank you <3
+	UFUNCTION(BlueprintNativeEvent)
+	void OnInit();
+	void OnInit_Implementation() {}
+
 	UFUNCTION(BlueprintCallable)
 	int32 CalcHealth1(int32 Value);
 
@@ -37,29 +46,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int32 CalcHealth5(int32 Value);
 
-	UFUNCTION(BlueprintCallable)
-	int32 CalcHealth6(int32 Value);
-
-	UFUNCTION(BlueprintCallable)
-	int32 CalcHealth7(int32 Value);
-
-	UFUNCTION(BlueprintCallable)
-	int32 CalcHealth8(int32 Value);
-
 	UFUNCTION()
 	void ApplyDamage(int32 DamageValue);
 
 	UFUNCTION()
-	void CreateAndStartQuartzClock(int32 InBPM);
+	void SetupHUD();
 
-	// Timeline helpers (setup a single-frame timeline to initialize UI one frame after BeginPlay)
-	void SetupHealthTimeline();
-
-	UFUNCTION()
-	void OnHealthTimelineTick(float Value);
-
-	UFUNCTION()
-	void OnHealthTimelineFinished();
+	// --- AudioComponent accessors ---
+	UAudioComponent* GetAudioComponent() const { return AudioComponent; }
 
 	// --- SplineRef accessors ---
 	USplineComponent* GetSplineRef() const { return SplineRef; }
@@ -85,17 +79,16 @@ public:
 	int32 GetHealth5() const { return HealthBar5; }
 	void SetHealth5(int32 InHealth) { HealthBar5 = InHealth; }
 
-	int32 GetHealth6() const { return HealthBar6; }
-	void SetHealth6(int32 InHealth) { HealthBar6 = InHealth; }
-
-	int32 GetHealth7() const { return HealthBar7; }
-	void SetHealth7(int32 InHealth) { HealthBar7 = InHealth; }
-
-	int32 GetHealth8() const { return HealthBar8; }
-	void SetHealth8(int32 InHealth) { HealthBar8 = InHealth; }
-
 	UFUNCTION()
 	void Attack(int32 InBPM);
+
+	//Anim Stuff - Handled in BP
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayAttackAnimation();
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayBlockAnimation();
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayHitAnimation();
 
 protected:
 	// Called when the game starts or when spawned
@@ -104,6 +97,11 @@ protected:
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ULevelData* LevelData;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
@@ -133,20 +131,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 HealthBar5 { 0 };
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar6 { 0 };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar7 { 0 };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	int32 HealthBar8 { 0 };
-
 	UPROPERTY()
 	TObjectPtr<USplineComponent> SplineRef { nullptr };
-
-	UPROPERTY()
-	TObjectPtr<UQuartzClockHandle> QuartzClockHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 BPM { 0 };
@@ -156,11 +142,4 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AGameHUD> GameHUD { nullptr };
-
-	UPROPERTY()
-	TObjectPtr<UTimelineComponent> HealthTimeline { nullptr };
-
-	// Keep a runtime-created curve so GC won't collect it
-	UPROPERTY()
-	TObjectPtr<UCurveFloat> HealthCurve { nullptr };
 };

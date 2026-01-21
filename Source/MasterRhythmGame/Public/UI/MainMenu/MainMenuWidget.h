@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "MainMenuWidget.generated.h"
 
-class UButton;
+class UButtonWidget;
 class AMainMenuHUD;
 /**
  * 
@@ -31,50 +31,20 @@ public:
 	UFUNCTION()
 	void EscapeButtonClicked();
 
-	UFUNCTION()
-	void NewGameHovered();
-
-	UFUNCTION()
-	void NewGameUnhovered();
-
-	UFUNCTION()
-	void LoadGameHovered();
-
-	UFUNCTION()
-	void LoadGameUnhovered();
-
-	UFUNCTION()
-	void CreditHovered();
-
-	UFUNCTION()
-	void CreditUnhovered();
-
-	UFUNCTION()
-	void SettingHovered();
-
-	UFUNCTION()
-	void SettingUnhovered();
-
-	UFUNCTION()
-	void EscapeHovered();
-
-	UFUNCTION()
-	void EscapeUnhovered();
-
 	// --- Credits Button ---
-	UButton* GetCreditsButton() const { return Credits; }
+	UButtonWidget* GetCreditsButton() const { return Credits; }
 
 	// --- Escape Button ---
-	UButton* GetEscapeButton() const { return Escape; }
+	UButtonWidget* GetEscapeButton() const { return Escape; }
 
 	// --- LoadGame Button ---
-	UButton* GetLoadGameButton() const { return LoadGame; }
+	UButtonWidget* GetLoadGameButton() const { return LoadGame; }
 
 	// --- NewGame Button ---
-	UButton* GetNewGameButton() const { return NewGame; }
+	UButtonWidget* GetNewGameButton() const { return NewGame; }
 
 	// --- Settings Button ---
-	UButton* GetSettingButton() const { return Setting; }
+	UButtonWidget* GetSettingButton() const { return Setting; }
 
 	// --- Level Name ---
 	FName GetLevelName() const { return LevelName; }
@@ -84,19 +54,19 @@ private:
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* Credits{ nullptr };
+	UButtonWidget* Credits { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* Escape{ nullptr };
+	UButtonWidget* Escape { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* LoadGame{ nullptr };
+	UButtonWidget* LoadGame { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* NewGame{ nullptr };
+	UButtonWidget* NewGame { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* Setting{ nullptr };
+	UButtonWidget* Setting { nullptr };
 
 	const FName LevelName = FName(TEXT("WorldMap"));
 

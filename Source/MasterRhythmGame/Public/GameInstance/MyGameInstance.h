@@ -23,9 +23,46 @@ public:
 	float GetSFXVolume() const { return SFXVolume; }
 	void SetSFXVolume(float Volume) { SFXVolume = Volume; }
 
+	UFUNCTION(BlueprintCallable)
+	bool GetLevelOneUnlocked() const { return bIsLevelOneUnlocked; }
+	UFUNCTION(BlueprintCallable)
+	void SetLevelOneUnlocked(bool bUnlocked) { bIsLevelOneUnlocked = bUnlocked; }
+
+	UFUNCTION(BlueprintCallable)
+	bool GetLevelTwoUnlocked() const { return bIsLevelTwoUnlocked; }
+	UFUNCTION(BlueprintCallable)
+	void SetLevelTwoUnlocked(bool bUnlocked) { bIsLevelTwoUnlocked = bUnlocked; }
+
+	UFUNCTION(BlueprintCallable)
+	bool GetLevelThreeUnlocked() const { return bIsLevelThreeUnlocked; }
+	UFUNCTION(BlueprintCallable)
+	void SetLevelThreeUnlocked(bool bUnlocked) { bIsLevelThreeUnlocked = bUnlocked; }
+
+	UFUNCTION(BlueprintCallable)
+	bool GetLevelFourUnlocked() const { return bIsLevelFourUnlocked; }
+	UFUNCTION(BlueprintCallable)
+	void SetLevelFourUnlocked(bool bUnlocked) { bIsLevelFourUnlocked = bUnlocked; }
+
+	UFUNCTION(BlueprintCallable)
+	bool GetLevelFiveUnlocked() const { return bIsLevelFiveUnlocked; }
+	UFUNCTION(BlueprintCallable)
+	void SetLevelFiveUnlocked(bool bUnlocked) { bIsLevelFiveUnlocked = bUnlocked; }
+
+	UFUNCTION(BlueprintCallable)
+	bool GetLevelSixUnlocked() const { return bIsLevelSixUnlocked; }
+	UFUNCTION(BlueprintCallable)
+	void SetLevelSixUnlocked(bool bUnlocked) { bIsLevelSixUnlocked = bUnlocked; }
+
 private:
 
 	float MasterVolume { 0.75f };
 	float MusicVolume { 0.55f };
 	float SFXVolume { 0.75f };
+
+	bool bIsLevelOneUnlocked   { true };
+	bool bIsLevelTwoUnlocked   { false };
+	bool bIsLevelThreeUnlocked { false };
+	bool bIsLevelFourUnlocked  { false };
+	bool bIsLevelFiveUnlocked  { false };
+	bool bIsLevelSixUnlocked   { false };
 };

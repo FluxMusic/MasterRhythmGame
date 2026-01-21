@@ -64,6 +64,9 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 			int32 Defended = OverlappingCharacter->GetDefended();
 			Defended++;
 			OverlappingCharacter->SetDefended(Defended);
+
+			//Play Player Block Anim
+			OverlappingCharacter->PlayBlockAnimation();
 			return;
 		}
 
@@ -89,6 +92,10 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 			// Per requirement: when MoveRight executed and enemy collides with the note, nothing happens.
 			// Mark collided so the enemy will not receive damage from this note when it finishes.
 			bCollidedWithEnemy = true;
+
+			//Play Enemy block Anim
+			OverlappingEnemy->PlayBlockAnimation();
+
 			return;
 		}
 
@@ -115,7 +122,7 @@ void ANodeActor::MoveLeft()
 
 	if (Timeline)
 	{
-		Timeline->PlayFromStart();
+		Timeline->ReverseFromEnd();
 	}
 }
 
@@ -130,12 +137,13 @@ void ANodeActor::MoveRight()
 
 	if (Timeline)
 	{
-		Timeline->ReverseFromEnd();
+		Timeline->PlayFromStart();
 	}
 }
 
 void ANodeActor::SetBarLength(double BPM)
 {
+	//TODO: Make this modular
 	BPM = BPM / 240.0f;
 	BPM /= 8;
 
@@ -242,7 +250,7 @@ void ANodeActor::HandleTimelineFinished()
 
 	if (GetWorld())
 	{
-		const float DelaySeconds = 0.1f;
+		const double DelaySeconds = LatencyOffsetMs / 1000.0;
 
 		// Ensure any previous timer is cleared, then set the new timer
 		GetWorld()->GetTimerManager().ClearTimer(DestroyTimerHandle);

@@ -3,82 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../CoreTypes.h"
 #include "MIDIDevice/Public/MIDIDeviceInputController.h"
 #include "GameFramework/PlayerController.h"
 #include "HUD/MainMenuHUD.h"
 #include "MainMenuController.generated.h"
-
-enum class ENote : uint8
-{
-	C      = 0,
-	CSharp = 1,
-	D      = 2,
-	DSharp = 3,
-	E      = 4,
-	F      = 5,
-	FSharp = 6,
-	G      = 7,
-	GSharp = 8,
-	A      = 9,
-	ASharp = 10,
-	B      = 11
-};
-
-enum class EMainMenuItem : uint8
-{
-	NewGame = 0,
-	LoadGame = 1,
-	Setting = 2,
-	Credits = 3,
-	Escape = 4
-};
-
-enum class ELoadGameMenuItem : uint8
-{
-	FirstLevel = 0,
-	SecondLevel = 1,
-	ThirdLevel = 2,
-	MainMenu = 3
-};
-
-enum class EMainSettingItem : uint8
-{
-	Graphic = 0,
-	Audio = 1,
-	MainMenu = 2
-};
-
-enum class EGraphicSettingItem : uint8
-{
-	WindowModeDown = 0,
-	WindowModeUp = 1,
-	ResolutionDown = 2,
-	ResolutionUp = 3,
-	GraphicDown = 4,
-	GraphicUp = 5,
-	VSyncDown = 6,
-	VSyncUp = 7,
-	Apply = 8,
-	Return = 9
-};
-
-enum class EAudioSettingItem : uint8
-{
-	MasterVolumeSlider = 0,
-	MusicVolumeSlider = 1,
-	SfxVolumeSlider = 2,
-	Return = 3
-};
-
-enum class EControllerState
-{
-	MainMenu,
-	CreditsMenu,
-	AudioMenu,
-	GraphicsMenu,
-	LoadMenu,
-	SettingMenu
-};
 
 /**
  * 

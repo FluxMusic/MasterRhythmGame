@@ -6,7 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "LoadMenuWidget.generated.h"
 
-class UButton;
+class UButtonWidget;
 class AMainMenuHUD;
 /**
  * 
@@ -29,57 +29,33 @@ public:
 	UFUNCTION()
 	void LoadThirdSaveButtonClicked();
 
-	UFUNCTION()
-	void ReturnMainMenuButtonHovered();
-
-	UFUNCTION()
-	void ReturnMainMenuButtonUnhovered();
-
-	UFUNCTION()
-	void LoadFirstSaveButtonHovered();
-
-	UFUNCTION()
-	void LoadFirstSaveButtonUnhovered();
-
-	UFUNCTION()
-	void LoadSecondSaveButtonHovered();
-
-	UFUNCTION()
-	void LoadSecondSaveButtonUnhovered();
-
-	UFUNCTION()
-	void LoadThirdSaveButtonHovered();
-
-	UFUNCTION()
-	void LoadThirdSaveButtonUnhovered();
-
 	// --- Load First Button ---
-	UButton* GetLoadFirstButton() const { return LoadFirstButton; }
+	UButtonWidget* GetLoadFirstButton() const { return LoadFirstButton; }
 
 	// --- Load Second Button ---
-	UButton* GetLoadSecondButton() const { return LoadSecondButton; }
+	UButtonWidget* GetLoadSecondButton() const { return LoadSecondButton; }
 
 	// --- Load Third Button ---
-	UButton* GetLoadThirdButton() const { return LoadThirdButton; }
+	UButtonWidget* GetLoadThirdButton() const { return LoadThirdButton; }
 
 	// --- Load MainMenu Button ---
-	UButton* GetReturnMainMenuButton() const { return ReturnMainMenuButton; }
+	UButtonWidget* GetReturnMainMenuButton() const { return ReturnMainMenuButton; }
 
 private:
 	//Native Constructor
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* LoadFirstButton {nullptr}; 
+	UButtonWidget* LoadFirstButton {nullptr}; 
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* LoadSecondButton { nullptr };
+	UButtonWidget* LoadSecondButton { nullptr };
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* LoadThirdButton { nullptr };
+	UButtonWidget* LoadThirdButton { nullptr };
 
 	UPROPERTY(meta = (BindWidget))
-	UButton* ReturnMainMenuButton { nullptr };
+	UButtonWidget* ReturnMainMenuButton { nullptr };
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<AMainMenuHUD> MainMenuHud { nullptr };

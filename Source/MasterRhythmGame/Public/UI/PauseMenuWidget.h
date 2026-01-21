@@ -8,7 +8,7 @@
 
 class AGameHUD;
 class AWorldMapHUD;
-class UButton;
+class UButtonWidget;
 /**
  * 
  */
@@ -35,81 +35,45 @@ public:
 	UFUNCTION()
 	void QuitButtonClicked();
 
-	UFUNCTION()
-	void ResumeButtonHovered();
-
-	UFUNCTION()
-	void ResumeButtonUnhovered();
-
-	UFUNCTION()
-	void SaveGameButtonHovered();
-
-	UFUNCTION()
-	void SaveGameButtonUnhovered();
-
-	UFUNCTION()
-	void LoadGameButtonHovered();
-
-	UFUNCTION()
-	void LoadGameButtonUnhovered();
-
-	UFUNCTION()
-	void SettingsButtonHovered();
-
-	UFUNCTION()
-	void SettingsButtonUnhovered();
-
-	UFUNCTION()
-	void MainMenuButtonHovered();
-
-	UFUNCTION()
-	void MainMenuButtonUnhovered();
-
-	UFUNCTION()
-	void QuitButtonHovered();
-
-	UFUNCTION()
-	void QuitButtonUnhovered();
-
 	// --- Resume Button ---
-	UButton* GetResumeButton() const { return ResumeButton; }
+	UButtonWidget* GetResumeButton() const { return ResumeButton; }
 
 	// --- Save Game Button ---
-	UButton* GetSaveGameButton() const { return SaveGameButton; }
+	UButtonWidget* GetSaveGameButton() const { return SaveGameButton; }
 
 	// --- Load Game Button ---
-	UButton* GetLoadGameButton() const { return LoadGameButton; }
+	UButtonWidget* GetLoadGameButton() const { return LoadGameButton; }
 
 	// --- Settings Button ---
-	UButton* GetSettingsButton() const { return SettingsButton; }
+	UButtonWidget* GetSettingsButton() const { return SettingsButton; }
 
 	// --- Main Menu Button ---
-	UButton* GetMainMenuButton() const { return MainMenuButton; }
+	UButtonWidget* GetMainMenuButton() const { return MainMenuButton; }
 
 	// --- Quit Button ---
-	UButton* GetQuitButton() const { return QuitButton; }
+	UButtonWidget* GetQuitButton() const { return QuitButton; }
 
 private:
 	//Native Constructor
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* ResumeButton { nullptr };
+	UButtonWidget* ResumeButton { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* SaveGameButton { nullptr };
+	UButtonWidget* SaveGameButton { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* LoadGameButton { nullptr };
+	UButtonWidget* LoadGameButton { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* SettingsButton { nullptr };
+	UButtonWidget* SettingsButton { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* MainMenuButton { nullptr };
+	UButtonWidget* MainMenuButton { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UButton* QuitButton { nullptr };
+	UButtonWidget* QuitButton { nullptr };
 
 	UPROPERTY()
 	TObjectPtr<AWorldMapHUD> WorldMapHud { nullptr };

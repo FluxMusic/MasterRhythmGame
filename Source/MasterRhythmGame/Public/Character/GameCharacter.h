@@ -28,21 +28,13 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	void CreateAndStartQuartzClock(float Bpm);
-
 	UFUNCTION()
 	void ApplyDamage(int32 DamageAmount);
 
 	int32 CalcHealth(int32 InHealth);
 
-	// Timeline helpers
-	void SetupHealthTimeline();
-
 	UFUNCTION()
-	void OnHealthTimelineTick(float Value);
-
-	UFUNCTION()
-	void OnHealthTimelineFinished();
+	void SetupHUD();
 
 	// --- Health accessors ---
 	int32 GetHealth() const { return Health; }
@@ -58,6 +50,22 @@ public:
 	// --- SplineRef accessors ---
 	USplineComponent* GetSplineRef() const { return SplineRef; }
 	void SetSplineRef(USplineComponent* InSpline) { SplineRef = InSpline; }
+
+	//Plays a Sound when the player presses a note
+	UFUNCTION()
+	void PlayNote(int32 Note);
+	
+	//Stops the Sound when the player releases a note
+	UFUNCTION()
+	void StopNote();
+
+	//Anim Stuff - Handled in BP
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayAttackAnimation();
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayBlockAnimation();
+	UFUNCTION(BlueprintImplementableEvent)
+	void PlayHitAnimation();
 
 protected:
 	// Called when the game starts or when spawned
@@ -87,11 +95,4 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AGameHUD> GameHUD { nullptr };
-
-	UPROPERTY()
-	TObjectPtr<UTimelineComponent> HealthTimeline { nullptr };
-
-	// Runtime-created curve used by the timeline (kept so GC doesn't collect it)
-	UPROPERTY()
-	TObjectPtr<UCurveFloat> HealthCurve { nullptr };
 };
