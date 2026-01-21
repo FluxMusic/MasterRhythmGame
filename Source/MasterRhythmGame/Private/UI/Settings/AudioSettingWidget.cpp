@@ -66,41 +66,38 @@ void UAudioSettingWidget::ReturnMenu()
 
 void UAudioSettingWidget::MasterVolumeSliderHovered()
 {
-	MasterVolumeSlider->SetSliderBarColor(FLinearColor::Green);
-
-	MusicVolumeSlider->SetSliderBarColor(FLinearColor::White);
-	SfxVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	FSliderStyle HoveredStyle = MasterVolumeSlider->GetWidgetStyle();
+	MasterVolumeSlider->SetWidgetStyle(HoveredStyle.SetHoveredBarImage(HoveredStyle.HoveredBarImage));
 }
 
 void UAudioSettingWidget::MusicVolumeSliderHovered()
 {
-	MusicVolumeSlider->SetSliderBarColor(FLinearColor::Green);
-
-	MasterVolumeSlider->SetSliderBarColor(FLinearColor::White);
-	SfxVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	FSliderStyle HoveredStyle = MusicVolumeSlider->GetWidgetStyle();
+	MusicVolumeSlider->SetWidgetStyle(HoveredStyle.SetHoveredBarImage(HoveredStyle.HoveredBarImage));
 }
 
 void UAudioSettingWidget::SfxVolumeSliderHovered()
 {
-	SfxVolumeSlider->SetSliderBarColor(FLinearColor::Green);
-
-	MasterVolumeSlider->SetSliderBarColor(FLinearColor::White);
-	MusicVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	FSliderStyle HoveredStyle = SfxVolumeSlider->GetWidgetStyle();
+	SfxVolumeSlider->SetWidgetStyle(HoveredStyle.SetHoveredBarImage(HoveredStyle.HoveredBarImage));
 }
 
 void UAudioSettingWidget::MasterVolumeSliderUnhovered()
 {
-	MasterVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	FSliderStyle NormalStyle = MasterVolumeSlider->GetWidgetStyle();
+	MasterVolumeSlider->SetWidgetStyle(NormalStyle.SetNormalBarImage(NormalStyle.NormalBarImage));
 }
 
 void UAudioSettingWidget::MusicVolumeSliderUnhovered()
 {
-	MusicVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	FSliderStyle NormalStyle = MusicVolumeSlider->GetWidgetStyle();
+	MusicVolumeSlider->SetWidgetStyle(NormalStyle.SetNormalBarImage(NormalStyle.NormalBarImage));
 }
 
 void UAudioSettingWidget::SfxVolumeSliderUnhovered()
 {
-	SfxVolumeSlider->SetSliderBarColor(FLinearColor::White);
+	FSliderStyle NormalStyle = SfxVolumeSlider->GetWidgetStyle();
+	SfxVolumeSlider->SetWidgetStyle(NormalStyle.SetNormalBarImage(NormalStyle.NormalBarImage));
 }
 
 void UAudioSettingWidget::NativeConstruct()
@@ -112,8 +109,6 @@ void UAudioSettingWidget::NativeConstruct()
 	SfxVolumeSlider->OnValueChanged.AddDynamic(this, &UAudioSettingWidget::OnValueChangedSfx);
 
 	MainMenu->OnClicked.AddDynamic(this, &UAudioSettingWidget::ReturnMenu);
-
-	MasterVolumeSlider->SetSliderBarColor(FLinearColor::Green);
 
 	if (auto GM = Cast<UMyGameInstance>(GetWorld()->GetGameInstance()))
 	{
