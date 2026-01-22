@@ -50,19 +50,11 @@ void AGameCharacter::BeginPlay()
 	if (PlayerController != nullptr)
 	{
 		// Find CameraActor in the level
-		TArray<AActor*> FoundCameras;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), FoundCameras);
+		ACameraActor* CameraActor = Cast<ACameraActor>(UGameplayStatics::GetActorOfClass(GetWorld(), ACameraActor::StaticClass()));
 
-		ACameraActor* LevelCamera = nullptr;
-		if (FoundCameras.Num() > 0)
+		if (CameraActor != nullptr)
 		{
-			// Use the first camera found
-			LevelCamera = Cast<ACameraActor>(FoundCameras[0]);
-		}
-
-		if (LevelCamera != nullptr)
-		{
-			PlayerController->SetViewTargetWithBlend(LevelCamera, 0.0f, VTBlend_Linear, 0.0f, false);
+			PlayerController->SetViewTargetWithBlend(CameraActor, 0.0f, VTBlend_Linear, 0.0f, false);
 		}
 		else
 		{
