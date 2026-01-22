@@ -8,7 +8,6 @@
 #include "Manager/AudioManagerSubsystem.h"
 #include "Components/AudioComponent.h"
 #include "HUD/GameHUD.h"
-#include "Components/TimelineComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SplineComponent.h"
@@ -50,28 +49,24 @@ void AGameCharacter::BeginPlay()
 
 	if (PlayerController != nullptr)
 	{
-		// Resolve TSoftObjectPtr<ACameraActor> to a live ACameraActor*
-		ACameraActor* ResolvedCamera = nullptr;
+		// Find CameraActor in the level
+		TArray<AActor*> FoundCameras;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACameraActor::StaticClass(), FoundCameras);
 
-		// If already loaded, Get() will return the pointer; otherwise attempt a synchronous load
-		if (CameraActor.IsValid())
+		ACameraActor* LevelCamera = nullptr;
+		if (FoundCameras.Num() > 0)
 		{
-			ResolvedCamera = CameraActor.Get();
-		}
-		else if (CameraActor.ToSoftObjectPath().IsValid())
-		{
-			// LoadSynchronous will load the asset if it's not already loaded and return the pointer.
-			ResolvedCamera = CameraActor.LoadSynchronous();
+			// Use the first camera found
+			LevelCamera = Cast<ACameraActor>(FoundCameras[0]);
 		}
 
-		if (ResolvedCamera != nullptr)
+		if (LevelCamera != nullptr)
 		{
-			// Use float literals and existing blend enum as before
-			PlayerController->SetViewTargetWithBlend(ResolvedCamera, 0.0f, VTBlend_Linear, 0.0f, false);
+			PlayerController->SetViewTargetWithBlend(LevelCamera, 0.0f, VTBlend_Linear, 0.0f, false);
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::BeginPlay - CameraActor soft reference could not be resolved."));
+			UE_LOG(LogTemp, Warning, TEXT("AGameCharacter::BeginPlay - No CameraActor found in level."));
 		}
 
 		GameHUD = Cast<AGameHUD>(PlayerController->GetHUD());
