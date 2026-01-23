@@ -2,6 +2,8 @@
 
 #include "Manager/EndlessRunnerManager.h"
 
+#include "Actor/LevelSegment.h"
+
 AEndlessRunnerManager::AEndlessRunnerManager()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -50,17 +52,10 @@ void AEndlessRunnerManager::AddSegmentType()
 void AEndlessRunnerManager::InitializeSegments()
 {
 
-	FVector SpawnPosition = GetActorLocation();
-	FVector DirectionVector = GetMovementVector().GetSafeNormal();
-
-	for (int32 i = 0; i < MaxActiveSegments; ++i)
-	{
-	}
 }
 
 void AEndlessRunnerManager::UpdateSegments(float DeltaTime)
 {
-	FVector MovementDelta = GetMovementVector() * MovementSpeed * DeltaTime;
 }
 
 FVector AEndlessRunnerManager::GetMovementVector() const
@@ -69,31 +64,31 @@ FVector AEndlessRunnerManager::GetMovementVector() const
 	{
 		case EMovementDirection::Forward:
 		{
-			return FVector(-1.0f, 0.0f, 0.0f);
+			return FVector::ForwardVector;
 		}
 		case EMovementDirection::Backward:
 		{
-			return FVector(1.0f, 0.0f, 0.0f);
+			return FVector::BackwardVector;
 		}
 		case EMovementDirection::Up:
 		{
-			return FVector(0.0f, 0.0f, -1.0f);
+			return FVector::UpVector;
 		}
 		case EMovementDirection::Down:
 		{
-			return FVector(0.0f, 0.0f, 1.0f);
+			return FVector::DownVector;
 		}
 		case EMovementDirection::Right:
 		{
-			return FVector(0.0f, -1.0f, 0.0f);
+			return FVector::RightVector;
 		}
 		case EMovementDirection::Left:
 		{
-			return FVector(0.0f, 1.0f, 0.0f);
+			return FVector::LeftVector;
 		}
 		default:
 		{
-			// Should not land here#
+			// Should not land here
 			return FVector::ZeroVector;
 		}
 	}

@@ -36,15 +36,27 @@ void ALevelSegment::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!bIsOutOfBounds)
+	{
+		UpdateMovement(FVector::BackwardVector);
+	}
+	else
+	{
+		if (bIsLoopable)
+		{
+			SegmentMesh->SetVisibility(false);
+		}
+		else
+		{
+			this->Destroy();
+		}
+	}
 }
 
 void ALevelSegment::UpdateMovement(FVector MovementDelta)
 {
-}
-
-bool ALevelSegment::IsOutOfBounds(FVector PlayerPosition, float Threshold) const
-{
-	return false;
+	FVector CurrentLocation = GetActorLocation();
+	SetActorLocation(CurrentLocation + MovementDelta);
 }
 
 void ALevelSegment::ResetToPosition(FVector NewPosition)

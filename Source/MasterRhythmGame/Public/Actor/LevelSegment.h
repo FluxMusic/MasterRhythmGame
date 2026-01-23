@@ -20,9 +20,6 @@ public:
 	// Update the segment position based on world movement
 	void UpdateMovement(FVector MovementDelta);
 
-	// Check if segment is out of bounds and can be recycled
-	bool IsOutOfBounds(FVector PlayerPosition, float Threshold) const;
-
 	// Reset segment to new spawn position
 	void ResetToPosition(FVector NewPosition);
 
@@ -38,11 +35,15 @@ public:
 	UFUNCTION()
 	void OnSegmentDeactivated();
 
+	// --- Is Out of Bounds ---
+	bool IsOutOfBounds() const { return bIsOutOfBounds; }
+	void SetOutOfBounds(bool bOutOfBounds) { bIsOutOfBounds = bOutOfBounds; }
+
 protected:
 	virtual void BeginPlay() override;
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Default")
+	UPROPERTY(VisibleAnywhere, Category = "Default")
 	TObjectPtr<USceneComponent> Root { nullptr };
 
 	UPROPERTY(EditAnywhere, Category = "Segment")
@@ -59,4 +60,7 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	bool bIsLoopable { false };
+
+	UPROPERTY()
+	bool bIsOutOfBounds { false };
 };

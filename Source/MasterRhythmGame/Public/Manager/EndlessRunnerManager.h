@@ -56,11 +56,14 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true), Category = "Setup")
 	TArray<ALevelSegment*> LevelSegmentPool { nullptr };
 
-	UPROPERTY(EditAnywhere, Category = "Setup")
-	int32 MaxActiveSegments { 5 };
+	UPROPERTY()
+	TObjectPtr<ALevelSegment> ActiveSegments { nullptr };
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
-	float DefaultSegmentLength { 2000.0f };
+	int32 MaxActiveSegments { 4 };
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	float DefaultSegmentLength { 2700.0f };
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	EMovementDirection MovementDirection { EMovementDirection::Forward };
