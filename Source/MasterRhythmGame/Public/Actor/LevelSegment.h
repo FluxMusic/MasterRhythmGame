@@ -17,12 +17,6 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	// Update the segment position based on world movement
-	void UpdateMovement(FVector MovementDelta);
-
-	// Reset segment to new spawn position
-	void ResetToPosition(FVector NewPosition);
-
 	// Get segment type for spawning logic
 	ESegmentType GetSegmentType() const { return SegmentType; }
 

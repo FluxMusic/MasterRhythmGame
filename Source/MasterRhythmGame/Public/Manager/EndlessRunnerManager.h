@@ -20,22 +20,12 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION()
-	void StartMovement();
-
-	UFUNCTION()
-	void StopMovement();
-
 	// Change movement direction
 	UFUNCTION()
 	void SetMovementDirection(EMovementDirection NewDirection);
 
 	UFUNCTION()
 	void SetMovementSpeed(float NewSpeed);
-
-	// Add a new segment type to the pool at runtime
-	UFUNCTION()
-	void AddSegmentType();
 
 protected:
 	virtual void BeginPlay() override;
@@ -54,10 +44,10 @@ private:
 	FVector GetNextSegmentSpawnPosition() const;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true), Category = "Setup")
-	TArray<ALevelSegment*> LevelSegmentPool { nullptr };
+	TArray<TSubclassOf<ALevelSegment>> LevelSegmentPool { nullptr };
 
 	UPROPERTY()
-	TObjectPtr<ALevelSegment> ActiveSegments { nullptr };
+	TArray<TObjectPtr<ALevelSegment>> ActiveSegments;
 
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	int32 MaxActiveSegments { 4 };
