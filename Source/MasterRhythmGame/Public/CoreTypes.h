@@ -207,3 +207,22 @@ enum class EPartFinish : uint8
 	Four,
 	Five
 };
+
+UENUM(BlueprintType)
+enum class EMovementDirection : uint8
+{
+	Forward  UMETA(DisplayName = "Forward"),
+	Backward UMETA(DisplayName = "Backward"),
+	Up       UMETA(DisplayName = "Up"),
+	Down     UMETA(DisplayName = "Down"),
+	Right    UMETA(DisplayName = "Right"),
+	Left     UMETA(DisplayName = "Left")
+};
+
+UENUM(BlueprintType)
+enum class ESegmentType : uint8
+{
+	Straight  UMETA(DisplayName = "Straight"),
+	Up        UMETA(DisplayName = "Up"),
+	Down	  UMETA(DisplayName = "Down")
+};
