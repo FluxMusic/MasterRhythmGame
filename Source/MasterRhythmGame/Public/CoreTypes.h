@@ -33,15 +33,15 @@ enum class ENote : uint8
 UENUM(BlueprintType)
 enum class EScale : uint8
 {
-	Major            UMETA(DisplayName="Major"),          //Ionian
-	Minor            UMETA(DisplayName="Minor"),          //Dorian
-	Phrygian         UMETA(DisplayName="Phrygian"),       //Phrygian
-	Lydian           UMETA(DisplayName="Lydian"),         //Lydian
-	Mixolydian       UMETA(DisplayName="Mixolydian"),     //Mixolydian
-	Aeolian          UMETA(DisplayName="Aeolian"),        //Aeolian
-	Locrian          UMETA(DisplayName="Locrian"),        //Locrian
-	HarmonicMinor    UMETA(DisplayName="Harmonic Minor"), //Harmonic Minor
-	MelodicMinor     UMETA(DisplayName="Melodic Minor"),  //Melodic Minor
+	Major            UMETA(DisplayName="Major (Ionian)"),  //Ionian
+	Minor            UMETA(DisplayName="Minor (Aeolian)"), //Aeolian
+	Phrygian         UMETA(DisplayName="Phrygian"),        //Phrygian
+	Lydian           UMETA(DisplayName="Lydian"),          //Lydian
+	Mixolydian       UMETA(DisplayName="Mixolydian"),      //Mixolydian
+	Dorian           UMETA(DisplayName="Dorian"),          //Dorian
+	Locrian          UMETA(DisplayName="Locrian"),         //Locrian
+	HarmonicMinor    UMETA(DisplayName="Harmonic Minor"),  //Harmonic Minor
+	MelodicMinor     UMETA(DisplayName="Melodic Minor"),   //Melodic Minor
 };
 
 USTRUCT(BlueprintType)
