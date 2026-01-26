@@ -33,15 +33,15 @@ enum class ENote : uint8
 UENUM(BlueprintType)
 enum class EScale : uint8
 {
-	Major            UMETA(DisplayName="Major"),          //Ionian
-	Minor            UMETA(DisplayName="Minor"),          //Dorian
-	Phrygian         UMETA(DisplayName="Phrygian"),       //Phrygian
-	Lydian           UMETA(DisplayName="Lydian"),         //Lydian
-	Mixolydian       UMETA(DisplayName="Mixolydian"),     //Mixolydian
-	Aeolian          UMETA(DisplayName="Aeolian"),        //Aeolian
-	Locrian          UMETA(DisplayName="Locrian"),        //Locrian
-	HarmonicMinor    UMETA(DisplayName="Harmonic Minor"), //Harmonic Minor
-	MelodicMinor     UMETA(DisplayName="Melodic Minor"),  //Melodic Minor
+	Major            UMETA(DisplayName="Major (Ionian)"),  //Ionian
+	Minor            UMETA(DisplayName="Minor (Aeolian)"), //Aeolian
+	Phrygian         UMETA(DisplayName="Phrygian"),        //Phrygian
+	Lydian           UMETA(DisplayName="Lydian"),          //Lydian
+	Mixolydian       UMETA(DisplayName="Mixolydian"),      //Mixolydian
+	Dorian           UMETA(DisplayName="Dorian"),          //Dorian
+	Locrian          UMETA(DisplayName="Locrian"),         //Locrian
+	HarmonicMinor    UMETA(DisplayName="Harmonic Minor"),  //Harmonic Minor
+	MelodicMinor     UMETA(DisplayName="Melodic Minor"),   //Melodic Minor
 };
 
 USTRUCT(BlueprintType)
@@ -206,4 +206,35 @@ enum class EPartFinish : uint8
 	Three,
 	Four,
 	Five
+};
+
+UENUM(BlueprintType)
+enum class EMovementDirection : uint8
+{
+	Forward  UMETA(DisplayName = "Forward"),
+	Backward UMETA(DisplayName = "Backward"),
+	Up       UMETA(DisplayName = "Up"),
+	Down     UMETA(DisplayName = "Down"),
+	Right    UMETA(DisplayName = "Right"),
+	Left     UMETA(DisplayName = "Left")
+};
+
+UENUM(BlueprintType)
+enum class ESegmentType : uint8
+{
+	Straight  UMETA(DisplayName = "Straight"),
+	Up        UMETA(DisplayName = "Up"),
+	Down	  UMETA(DisplayName = "Down")
+};
+
+UENUM()
+enum class EMapNames : uint8
+{
+	TestMap   UMETA(DisplayName = "TestMap"),
+	Swamp     UMETA(DisplayName = "Lvl_Swamp"),
+	Cyberpunk UMETA(DisplayName = "Lvl_Cyberpunk"),
+	Ice	      UMETA(DisplayName = "Lvl_Ice"),
+	Steampunk UMETA(DisplayName = "Lvl_Steampunk"),
+	Space     UMETA(DisplayName = "Lvl_Space"),
+	Volcano   UMETA(DisplayName = "Lvl_Volcano")
 };
