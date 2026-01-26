@@ -135,6 +135,30 @@ private:
     UFUNCTION()
 	void UnmuteLeads();
 
+    UFUNCTION()
+    void HandleSwampLevel();
+
+    UFUNCTION()
+    void HandleVolcanoLevel();
+
+    UFUNCTION()
+    void HandleSpaceLevel();
+
+    UFUNCTION()
+    void HandleIceLevel();
+
+    UFUNCTION()
+    void HandleCyberpunkLevel();
+
+    UFUNCTION()
+    void HandleSteampunkLevel();
+
+    UFUNCTION()
+    void HandleTestLevel();
+
+    UFUNCTION()
+    EMapNames GetMapTypeFromString(const FString& MapName);
+
 private:
 
     UPROPERTY()

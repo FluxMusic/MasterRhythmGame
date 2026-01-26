@@ -226,3 +226,15 @@ enum class ESegmentType : uint8
 	Up        UMETA(DisplayName = "Up"),
 	Down	  UMETA(DisplayName = "Down")
 };
+
+UENUM()
+enum class EMapNames : uint8
+{
+	TestMap   UMETA(DisplayName = "TestMap"),
+	Swamp     UMETA(DisplayName = "Lvl_Swamp"),
+	Cyberpunk UMETA(DisplayName = "Lvl_Cyberpunk"),
+	Ice	      UMETA(DisplayName = "Lvl_Ice"),
+	Steampunk UMETA(DisplayName = "Lvl_Steampunk"),
+	Space     UMETA(DisplayName = "Lvl_Space"),
+	Volcano   UMETA(DisplayName = "Lvl_Volcano")
+};
