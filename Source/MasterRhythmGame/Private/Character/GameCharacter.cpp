@@ -140,7 +140,8 @@ int32 AGameCharacter::CalcHealth(int32 InHealth)
 	{
 		GameHUD->GetMainGameInstance()->SetHealthPlayer(Health);
 	}
-	return Health;
+	//return Health;
+	return 100;
 }
 
 void AGameCharacter::SetupHUD()
