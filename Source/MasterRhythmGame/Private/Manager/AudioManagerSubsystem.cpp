@@ -391,48 +391,255 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 
 void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const FMetaSoundOutput& Output)
 {
-	FString WorldName = GetWorld()->GetMapName();
-
-	switch (GetMapTypeFromString(WorldName))
+	// Immediately select the next part based on the reported name.
+	if (PartNameFix.Equals(TEXT("IntroEnd")))
 	{
-		case EMapNames::Swamp:
+		StartPart1Intro();
+	}
+	else if (PartNameFix.Equals(TEXT("Part1IntroEnd")))
+	{
+		StartPart1();
+		bEnemyCanAttack = true;
+		bPlayAgain = true;
+		
+		// Mark that Part1Intro has finished so percentage updates are allowed
+		bPart1IntroEnded = true;
+
+		UnmuteLeads();
+	}
+	else if (PartNameFix.Equals(TEXT("Part1End")))
+	{
+		// Check if loop needed -> Check if Enemy no life
+		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
 		{
-			HandleSwampLevel();
-			break;
+			bEnemyCanAttack = false;
+			bPlayerCanAttack = false;
+			StartPart1();
+			bPlayAgain = true;
+
+			MuteLeads();
 		}
-		case EMapNames::TestMap:
+		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && bPlayAgain)
 		{
-			HandleTestLevel();
-			break;
+			StartPart1();
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			MuteLeads();
 		}
-		case EMapNames::Cyberpunk:
+		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
 		{
-			HandleCyberpunkLevel();
-			break;
+			StartPart1();
+			bEnemyCanAttack = true;
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			UnmuteLeads();
 		}
-		case EMapNames::Ice:
-		{	
-			HandleIceLevel();
-			break;
-		}
-		case EMapNames::Steampunk:
+		else
 		{
-			HandleSteampunkLevel();
-			break;
+			StartPart2Intro();
 		}
-		case EMapNames::Space:
+	}
+	else if (PartNameFix.Equals(TEXT("Part2IntroEnd")))
+	{
+		StartPart2();
+		bEnemyCanAttack = true;
+		bPlayAgain = true;
+
+		UnmuteLeads();
+	}
+	else if (PartNameFix.Equals(TEXT("Part2End")))
+	{
+		// Check if loop needed -> Check if Enemy no life
+		if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (bEnemyCanAttack))
 		{
-			HandleSpaceLevel();
-			break;
+			bEnemyCanAttack = false;
+			bPlayerCanAttack = false;
+			StartPart2();
+			bPlayAgain = true;
+
+			MuteLeads();
 		}
-		case EMapNames::Volcano:
+		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && bPlayAgain)
 		{
-			HandleVolcanoLevel();
-			break;
+			StartPart2();
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			MuteLeads();
 		}
-		default:
+		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
 		{
-			break;
+			StartPart2();
+			bEnemyCanAttack = true;
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			UnmuteLeads();
+		}
+		else
+		{
+			StartPart3Intro();
+		}
+	}
+	else if (PartNameFix.Equals(TEXT("Part3IntroEnd")))
+	{
+		StartPart3();
+		bEnemyCanAttack = true;
+		bPlayAgain = true;
+
+		UnmuteLeads();
+	}
+	else if (PartNameFix.Equals(TEXT("Part3End")))
+	{
+		// Check if loop needed -> Check if Enemy no life
+		if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (bEnemyCanAttack))
+		{
+			bEnemyCanAttack = false;
+			bPlayerCanAttack = false;
+			StartPart3();
+			bPlayAgain = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && bPlayAgain)
+		{
+			StartPart3();
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
+		{
+			StartPart3();
+			bEnemyCanAttack = true;
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			UnmuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth3() <= 0) && PartFinish == EPartFinish::Three)
+		{
+			StartOutro();
+		}
+		else
+		{
+			StartPart4Intro();
+		}
+	}
+	else if (PartNameFix.Equals("Part4IntroEnd"))
+	{
+		StartPart4();
+		bEnemyCanAttack = true;
+		bPlayAgain = true;
+
+		UnmuteLeads();
+	}
+	else if (PartNameFix.Equals("Part4End"))
+	{
+		// Check if loop needed -> Check if Enemy no life
+		if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (bEnemyCanAttack))
+		{
+			bEnemyCanAttack = false;
+			bPlayerCanAttack = false;
+			StartPart4();
+			bPlayAgain = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && bPlayAgain)
+		{
+			StartPart4();
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
+		{
+			StartPart4();
+			bEnemyCanAttack = true;
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			UnmuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth4()) <= 0 && PartFinish == EPartFinish::Four)
+		{
+			StartOutro();
+		}
+		else
+		{
+			StartPart5Intro();
+		}
+	}
+	else if (PartNameFix.Equals("Part5IntroEnd"))
+	{
+		StartPart5();
+		bEnemyCanAttack = true;
+		bPlayAgain = true;
+
+		UnmuteLeads();
+	}
+	else if (PartNameFix.Equals("Part5End"))
+	{
+		// Check if loop needed -> Check if Enemy no life
+		if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (bEnemyCanAttack))
+		{
+			bEnemyCanAttack = false;
+			bPlayerCanAttack = false;
+			StartPart5();
+			bPlayAgain = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (!bEnemyCanAttack) && bPlayAgain)
+		{
+			StartPart5();
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			MuteLeads();
+		}
+		else if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
+		{
+			StartPart5();
+			bEnemyCanAttack = true;
+			bPlayAgain = false;
+			bPlayerCanAttack = true;
+
+			UnmuteLeads();
+		}
+		else if (Enemy != nullptr && Enemy->GetHealth5() <= 0 && PartFinish == EPartFinish::Five)
+		{
+			StartOutro();
+		}
+	}
+	else if (PartNameFix.Equals(TEXT("OutroEnd")))
+	{
+		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
+		StopClock();
+		// TODO: Do sth else
+		GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
+		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+		PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
+		// Toggle pause state
+		bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
+		UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
+
+		if (bCurrentlyPaused == false)
+		{
+			if (GameHUD != nullptr)
+			{
+				GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+			}
+			// Show mouse cursor and switch to GameAndUI input so widgets receive focus
+			PlayerController->bShowMouseCursor = true;
+			FInputModeGameAndUI InputMode;
+			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+			PlayerController->SetInputMode(InputMode);
 		}
 	}
 }
@@ -453,1551 +660,4 @@ void UAudioManagerSubsystem::UnmuteLeads()
 		ActiveAudioComponent->SetTriggerParameter("UnmuteLeads");
 		UE_LOG(LogTemp, Warning, TEXT("UnmuteLeads triggered"));
 	}
-}
-
-void UAudioManagerSubsystem::HandleSwampLevel()
-{
-	// Immediately select the next part based on the reported name.
-	if (PartNameFix.Equals(TEXT("IntroEnd")))
-	{
-		StartPart1Intro();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1IntroEnd")))
-	{
-		StartPart1();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		// Mark that Part1Intro has finished so percentage updates are allowed
-		bPart1IntroEnded = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart1();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart1();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart1();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			UGameplayStatics::UnloadStreamLevel(this, TEXT("Lvl_Swamp_Begin"), FLatentActionInfo(), false);
-			UGameplayStatics::LoadStreamLevel(this, TEXT("Lvl_Swamp_Endless"), true, false, FLatentActionInfo());
-			StartPart2Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part2IntroEnd")))
-	{
-		StartPart2();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part2End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart2();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart2();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart2();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			StartPart3Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part3IntroEnd")))
-	{
-		StartPart3();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part3End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart3();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart3();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart3();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() <= 0))
-		{
-			StartOutro();
-		}
-		else if (PartNameFix.Equals(TEXT("OutroEnd")))
-		{
-			UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
-			StopClock();
-			// TODO: Do sth else
-			GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-			AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-			PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-			// Toggle pause state
-			bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-			UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
-
-			if (bCurrentlyPaused == false)
-			{
-				if (GameHUD != nullptr)
-				{
-					GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-				}
-				// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-				PlayerController->bShowMouseCursor = true;
-				FInputModeGameAndUI InputMode;
-				InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-				PlayerController->SetInputMode(InputMode);
-			}
-		}
-	}
-}
-
-void UAudioManagerSubsystem::HandleVolcanoLevel()
-{
-	// Immediately select the next part based on the reported name.
-	if (PartNameFix.Equals(TEXT("IntroEnd")))
-	{
-		StartPart1Intro();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1IntroEnd")))
-	{
-		StartPart1();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		// Mark that Part1Intro has finished so percentage updates are allowed
-		bPart1IntroEnded = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart1();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart1();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart1();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			StartPart2Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part2IntroEnd")))
-	{
-		StartPart2();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part2End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart2();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart2();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart2();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			StartPart3Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part3IntroEnd")))
-	{
-		StartPart3();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part3End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart3();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart3();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart3();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() <= 0) && PartFinish == EPartFinish::Three)
-		{
-			StartOutro();
-		}
-		else
-		{
-			StartPart4Intro();
-		}
-	}
-	else if (PartNameFix.Equals("Part4IntroEnd"))
-	{
-		StartPart4();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals("Part4End"))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart4();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart4();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart4();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4()) <= 0 && PartFinish == EPartFinish::Four)
-		{
-			StartOutro();
-		}
-		else
-		{
-			StartPart5Intro();
-		}
-	}
-	else if (PartNameFix.Equals("Part5IntroEnd"))
-	{
-		StartPart5();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals("Part5End"))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart5();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart5();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart5();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if (Enemy != nullptr && Enemy->GetHealth5() <= 0 && PartFinish == EPartFinish::Five)
-		{
-			StartOutro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("OutroEnd")))
-	{
-		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
-		StopClock();
-		// TODO: Do sth else
-		GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-		PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-		// Toggle pause state
-		bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-		UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
-
-		if (bCurrentlyPaused == false)
-		{
-			if (GameHUD != nullptr)
-			{
-				GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-			}
-			// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-			PlayerController->bShowMouseCursor = true;
-			FInputModeGameAndUI InputMode;
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			PlayerController->SetInputMode(InputMode);
-		}
-	}
-}
-
-void UAudioManagerSubsystem::HandleSpaceLevel()
-{
-	// Immediately select the next part based on the reported name.
-	if (PartNameFix.Equals(TEXT("IntroEnd")))
-	{
-		StartPart1Intro();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1IntroEnd")))
-	{
-		StartPart1();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		// Mark that Part1Intro has finished so percentage updates are allowed
-		bPart1IntroEnded = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart1();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart1();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart1();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			StartPart2Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part2IntroEnd")))
-	{
-		StartPart2();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part2End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart2();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart2();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart2();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			StartPart3Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part3IntroEnd")))
-	{
-		StartPart3();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part3End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart3();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart3();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart3();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() <= 0) && PartFinish == EPartFinish::Three)
-		{
-			StartOutro();
-		}
-		else
-		{
-			StartPart4Intro();
-		}
-	}
-	else if (PartNameFix.Equals("Part4IntroEnd"))
-	{
-		StartPart4();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals("Part4End"))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart4();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart4();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart4();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4()) <= 0 && PartFinish == EPartFinish::Four)
-		{
-			StartOutro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("OutroEnd")))
-	{
-		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
-		StopClock();
-		// TODO: Do sth else
-		GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-		PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-		// Toggle pause state
-		bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-		UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
-
-		if (bCurrentlyPaused == false)
-		{
-			if (GameHUD != nullptr)
-			{
-				GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-			}
-			// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-			PlayerController->bShowMouseCursor = true;
-			FInputModeGameAndUI InputMode;
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			PlayerController->SetInputMode(InputMode);
-		}
-	}
-}
-
-void UAudioManagerSubsystem::HandleIceLevel()
-{
-	// Immediately select the next part based on the reported name.
-	if (PartNameFix.Equals(TEXT("IntroEnd")))
-	{
-		StartPart1Intro();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1IntroEnd")))
-	{
-		StartPart1();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		// Mark that Part1Intro has finished so percentage updates are allowed
-		bPart1IntroEnded = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart1();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart1();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart1();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			StartPart2Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part2IntroEnd")))
-	{
-		StartPart2();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part2End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart2();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart2();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart2();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			StartPart3Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part3IntroEnd")))
-	{
-		StartPart3();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part3End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart3();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart3();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart3();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() <= 0) && PartFinish == EPartFinish::Three)
-		{
-			StartOutro();
-		}
-		else
-		{
-			StartPart4Intro();
-		}
-	}
-	else if (PartNameFix.Equals("Part4IntroEnd"))
-	{
-		StartPart4();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals("Part4End"))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart4();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart4();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart4();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4()) <= 0 && PartFinish == EPartFinish::Four)
-		{
-			StartOutro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("OutroEnd")))
-	{
-		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
-		StopClock();
-		// TODO: Do sth else
-		GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-		PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-		// Toggle pause state
-		bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-		UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
-
-		if (bCurrentlyPaused == false)
-		{
-			if (GameHUD != nullptr)
-			{
-				GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-			}
-			// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-			PlayerController->bShowMouseCursor = true;
-			FInputModeGameAndUI InputMode;
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			PlayerController->SetInputMode(InputMode);
-		}
-	}
-}
-
-void UAudioManagerSubsystem::HandleCyberpunkLevel()
-{
-	// Immediately select the next part based on the reported name.
-	if (PartNameFix.Equals(TEXT("IntroEnd")))
-	{
-		StartPart1Intro();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1IntroEnd")))
-	{
-		StartPart1();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		// Mark that Part1Intro has finished so percentage updates are allowed
-		bPart1IntroEnded = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart1();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart1();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart1();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			StartPart2Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part2IntroEnd")))
-	{
-		StartPart2();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part2End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart2();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart2();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart2();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			StartPart3Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part3IntroEnd")))
-	{
-		StartPart3();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part3End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart3();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart3();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart3();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() <= 0) && PartFinish == EPartFinish::Three)
-		{
-			StartOutro();
-		}
-		else
-		{
-			StartPart4Intro();
-		}
-	}
-	else if (PartNameFix.Equals("Part4IntroEnd"))
-	{
-		StartPart4();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals("Part4End"))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart4();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart4();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart4();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4()) <= 0 && PartFinish == EPartFinish::Four)
-		{
-			StartOutro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("OutroEnd")))
-	{
-		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
-		StopClock();
-		// TODO: Do sth else
-		GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-		PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-		// Toggle pause state
-		bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-		UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
-
-		if (bCurrentlyPaused == false)
-		{
-			if (GameHUD != nullptr)
-			{
-				GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-			}
-			// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-			PlayerController->bShowMouseCursor = true;
-			FInputModeGameAndUI InputMode;
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			PlayerController->SetInputMode(InputMode);
-		}
-	}
-}
-
-void UAudioManagerSubsystem::HandleSteampunkLevel()
-{
-	// Immediately select the next part based on the reported name.
-	if (PartNameFix.Equals(TEXT("IntroEnd")))
-	{
-		StartPart1Intro();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1IntroEnd")))
-	{
-		StartPart1();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		// Mark that Part1Intro has finished so percentage updates are allowed
-		bPart1IntroEnded = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart1();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart1();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart1();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			StartPart2Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part2IntroEnd")))
-	{
-		StartPart2();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part2End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart2();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart2();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart2();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			StartPart3Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part3IntroEnd")))
-	{
-		StartPart3();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part3End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart3();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart3();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart3();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() <= 0) && PartFinish == EPartFinish::Three)
-		{
-			StartOutro();
-		}
-		else
-		{
-			StartPart4Intro();
-		}
-	}
-	else if (PartNameFix.Equals("Part4IntroEnd"))
-	{
-		StartPart4();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals("Part4End"))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart4();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart4();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart4();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4()) <= 0 && PartFinish == EPartFinish::Four)
-		{
-			StartOutro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("OutroEnd")))
-	{
-		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
-		StopClock();
-		// TODO: Do sth else
-		GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-		PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-		// Toggle pause state
-		bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-		UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
-
-		if (bCurrentlyPaused == false)
-		{
-			if (GameHUD != nullptr)
-			{
-				GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-			}
-			// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-			PlayerController->bShowMouseCursor = true;
-			FInputModeGameAndUI InputMode;
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			PlayerController->SetInputMode(InputMode);
-		}
-	}
-}
-
-void UAudioManagerSubsystem::HandleTestLevel()
-{
-	// Immediately select the next part based on the reported name.
-	if (PartNameFix.Equals(TEXT("IntroEnd")))
-	{
-		StartPart1Intro();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1IntroEnd")))
-	{
-		StartPart1();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		// Mark that Part1Intro has finished so percentage updates are allowed
-		bPart1IntroEnded = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part1End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart1();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart1();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart1();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			StartPart2Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part2IntroEnd")))
-	{
-		StartPart2();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part2End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart2();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart2();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart2();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else
-		{
-			StartPart3Intro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("Part3IntroEnd")))
-	{
-		StartPart3();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals(TEXT("Part3End")))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart3();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart3();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart3();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() <= 0) && PartFinish == EPartFinish::Three)
-		{
-			StartOutro();
-		}
-		else
-		{
-			StartPart4Intro();
-		}
-	}
-	else if (PartNameFix.Equals("Part4IntroEnd"))
-	{
-		StartPart4();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals("Part4End"))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart4();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart4();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart4();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth4()) <= 0 && PartFinish == EPartFinish::Four)
-		{
-			StartOutro();
-		}
-		else
-		{
-			StartPart5Intro();
-		}
-	}
-	else if (PartNameFix.Equals("Part5IntroEnd"))
-	{
-		StartPart5();
-		bEnemyCanAttack = true;
-		bPlayAgain = true;
-
-		UnmuteLeads();
-	}
-	else if (PartNameFix.Equals("Part5End"))
-	{
-		// Check if loop needed -> Check if Enemy no life
-		if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (bEnemyCanAttack))
-		{
-			bEnemyCanAttack = false;
-			bPlayerCanAttack = false;
-			StartPart5();
-			bPlayAgain = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (!bEnemyCanAttack) && bPlayAgain)
-		{
-			StartPart5();
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			MuteLeads();
-		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (!bEnemyCanAttack) && !bPlayAgain)
-		{
-			StartPart5();
-			bEnemyCanAttack = true;
-			bPlayAgain = false;
-			bPlayerCanAttack = true;
-
-			UnmuteLeads();
-		}
-		else if (Enemy != nullptr && Enemy->GetHealth5() <= 0 && PartFinish == EPartFinish::Five)
-		{
-			StartOutro();
-		}
-	}
-	else if (PartNameFix.Equals(TEXT("OutroEnd")))
-	{
-		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
-		StopClock();
-		// TODO: Do sth else
-		GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-		PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-		// Toggle pause state
-		bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-		UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
-
-		if (bCurrentlyPaused == false)
-		{
-			if (GameHUD != nullptr)
-			{
-				GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-			}
-			// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-			PlayerController->bShowMouseCursor = true;
-			FInputModeGameAndUI InputMode;
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			PlayerController->SetInputMode(InputMode);
-		}
-	}
-}
-
-EMapNames UAudioManagerSubsystem::GetMapTypeFromString(const FString& MapName)
-{
-	if (MapName.Contains(TEXT("Lvl_Swamp")))
-	{
-		return EMapNames::Swamp;
-	}
-	else if (MapName.Contains(TEXT("Lvl_Cyberpunk")))
-	{
-		return EMapNames::Cyberpunk;
-	}
-	else if (MapName.Contains(TEXT("Lvl_Ice")))
-	{
-		return EMapNames::Ice;
-	}
-	else if (MapName.Contains(TEXT("Lvl_Steampunk")))
-	{
-		return EMapNames::Steampunk;
-	}
-	else if (MapName.Contains(TEXT("Lvl_Space")))
-	{
-		return EMapNames::Space;
-	}
-	else if (MapName.Contains(TEXT("Lvl_Volcano")))
-	{
-		return EMapNames::Volcano;
-	}
-	else if (MapName.Contains(TEXT("TestMap")))
-	{
-		return  EMapNames::TestMap;
-	}
-	
-	// Default fallback
-	UE_LOG(LogTemp, Warning, TEXT("Unknown map name: %s"), *MapName);
-	return EMapNames::TestMap;
 }

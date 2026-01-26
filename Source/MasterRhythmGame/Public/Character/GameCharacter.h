@@ -76,6 +76,9 @@ private:
 	TObjectPtr<UAudioComponent> AudioComponent { nullptr };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	TSoftObjectPtr<ACameraActor> CameraActor { nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	UQuartzClockHandle* QuartzClockHandle { nullptr };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
