@@ -159,7 +159,6 @@ private:
     UFUNCTION()
     EMapNames GetMapTypeFromString(const FString& MapName);
 
-
 private:
 
     UPROPERTY()
