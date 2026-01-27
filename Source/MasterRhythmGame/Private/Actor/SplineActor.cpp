@@ -201,8 +201,7 @@ void ASplineActor::BeginPlay()
 
 		if (AGameController* Controller = Cast<AGameController>(UGameplayStatics::GetPlayerController(GetWorld(), 0)))
 		{
-			Controller->SetRootNote(LevelData->RootNote);
-			Controller->SetScale(LevelData->Scale);
+			Controller->InitData(LevelData);
 		}
 		
 		UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();

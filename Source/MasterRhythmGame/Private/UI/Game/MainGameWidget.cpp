@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Game/MainGameWidget.h"
+#include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/Widget.h"
 #include "Math/UnrealMathUtility.h"
@@ -228,6 +229,68 @@ void UMainGameWidget::SetHealthEnemy5(int32 InHealth)
 	LifeBarEnemyFive->SetVisibility(ESlateVisibility::Visible);
 	const float Percent = static_cast<float>(InHealth) / static_cast<float>(MaxEnemyHealth5);
 	LifeBarEnemyFive->SetPercent(FMath::Clamp(Percent, 0.0f, 1.0f));
+}
+
+void UMainGameWidget::SetInstrumentsImage(EInstrument Instrument)
+{
+	if (Instruments)
+	{
+		switch (Instrument)
+		{
+		case EInstrument::Piano:
+			{
+				if (PianoTexture)
+				{
+					Instruments->SetBrushFromTexture(PianoTexture);
+				}
+				break;
+			}
+		case EInstrument::Violin:
+			{
+				if (ViolinTexture)
+				{
+					Instruments->SetBrushFromTexture(ViolinTexture);
+				}
+				break;
+			}
+		case EInstrument::Saxophone:
+			{
+				if (SaxophoneTexture)
+				{
+					Instruments->SetBrushFromTexture(SaxophoneTexture);
+				}
+				break;
+			}
+		case EInstrument::Guitar:
+			{
+				if (GuitarTexture)
+				{
+					Instruments->SetBrushFromTexture(GuitarTexture);
+				}
+				break;
+			}
+		case EInstrument::Synth:
+			{
+				if (SynthTexture)
+				{
+					Instruments->SetBrushFromTexture(SynthTexture);
+				}
+				break;
+			}
+		
+		default:
+			{
+				UE_LOG(LogTemp, Error, TEXT("UMainGameWidget::SetInstrumentsImage: Multiple or no Instruments selected!"));
+				UE_LOG(LogTemp, Error, TEXT("Piano: %i, Violin: %i, Saxophone: %i, Guitar: %i, Synth: %i"), 
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Piano),
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Violin),
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Saxophone),
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Guitar),
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Synth));
+				break;
+			}
+		}
+	}
 }
 
 void UMainGameWidget::NativeConstruct()

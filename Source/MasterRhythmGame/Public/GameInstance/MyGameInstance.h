@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../CoreTypes.h"
 #include "Engine/GameInstance.h"
 #include "MyGameInstance.generated.h"
 
@@ -53,6 +54,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetLevelSixUnlocked(bool bUnlocked) { bIsLevelSixUnlocked = bUnlocked; }
 
+	UFUNCTION(BlueprintCallable)
+	void SetInstrumentUnlocked(const EInstrument& Instrument, bool bUnlocked);
+	UFUNCTION(BlueprintCallable)
+	EInstrument GetUnlockedInstruments();
+
 private:
 
 	float MasterVolume { 0.75f };
@@ -65,4 +71,9 @@ private:
 	bool bIsLevelFourUnlocked  { false };
 	bool bIsLevelFiveUnlocked  { false };
 	bool bIsLevelSixUnlocked   { false };
+
+	//Testing Purposes
+	//TODO: Set Instrument to piano (always unlocked)
+	UPROPERTY()
+	EInstrument UnlockedInstruments { EInstrument::All };
 };

@@ -3,6 +3,7 @@
 #include "Actor/NodeActor.h"
 #include "Character/GameCharacter.h"
 #include "Components/TimelineComponent.h"
+#include "Controller/GameController.h"
 #include "Components/SplineComponent.h"
 #include "Curves/CurveFloat.h"
 #include "UObject/ConstructorHelpers.h"
@@ -238,12 +239,15 @@ void ANodeActor::HandleTimelineFinished()
 	{
 		if (!bCollidedWithEnemy && AudioManager != nullptr && !AudioManager->GetEnemyCanAttack())
 		{
+			AGameController* GameController = Cast<AGameController>(UGameplayStatics::GetPlayerController(this, 0));
 			AActor* Found = UGameplayStatics::GetActorOfClass(GetWorld(), ATestEnemyActor::StaticClass());
 			ATestEnemyActor* Enemy = Cast<ATestEnemyActor>(Found);
-			if (Enemy != nullptr)
+			if (Enemy != nullptr && GameController)
 			{
+				float DamageFactor = GameController->GetInstrumentDamageFactor(Instrument);
+				int32 Damage = static_cast<int32>(static_cast<float>(DamageToEnemy) * DamageFactor);
 				UE_LOG(LogTemp, Log, TEXT("ANodeActor::HandleTimelineFinished - Applying %d damage to enemy."), DamageToEnemy);
-				Enemy->ApplyDamage(DamageToEnemy);
+				Enemy->ApplyDamage(Damage);
 			}
 		}
 	}

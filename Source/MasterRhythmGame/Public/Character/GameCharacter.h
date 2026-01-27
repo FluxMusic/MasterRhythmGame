@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../CoreTypes.h"
 #include "GameFramework/Character.h"
 #include "UObject/SoftObjectPtr.h"
 #include "Quartz/AudioMixerClockHandle.h"
@@ -53,11 +54,11 @@ public:
 
 	//Plays a Sound when the player presses a note
 	UFUNCTION()
-	void PlayNote(int32 Note);
+	void PlayNote(int32 Note, EInstrument Instrument);
 	
 	//Stops the Sound when the player releases a note
 	UFUNCTION()
-	void StopNote();
+	void StopNote(EInstrument Instrument);
 
 	//Anim Stuff - Handled in BP
 	UFUNCTION(BlueprintImplementableEvent)

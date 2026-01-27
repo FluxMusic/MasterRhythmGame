@@ -78,7 +78,23 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	int32 NumNotesMelody5 { 1 };
 	
-	//TODO: Add an Enum what Instrument the Enemy is weak to
+	/**
+	 * The damage factor each instrument's damage is multiplied by
+	 */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float PianoDamageFactor     { 1.f };
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float ViolinDamageFactor    { 1.f };
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float SaxophoneDamageFactor { 1.f };
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float GuitarDamageFactor    { 1.f };
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float SynthDamageFactor     { 1.f };
 
 	//Player Class
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)

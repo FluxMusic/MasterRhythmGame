@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../CoreTypes.h"
 #include "GameFramework/Actor.h"
 #include "NodeActor.generated.h"
 
@@ -47,6 +48,9 @@ public:
 	// --- Timeline ---
 	TObjectPtr<UTimelineComponent> GetTimeline() const { return Timeline; }
 
+	EInstrument GetInstrument() const { return Instrument; }
+	void SetInstrument(EInstrument InstrumentIn) { Instrument = InstrumentIn; }
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -82,6 +86,9 @@ protected:
 	// Movement direction: true = moving left (can hit player), false = moving right (can hit enemy)
 	UPROPERTY()
 	bool bMovingLeft { false };
+
+	UPROPERTY()
+	EInstrument Instrument { EInstrument::Piano };
 
 	// Damage values (configurable in editor)
 	UPROPERTY(EditAnywhere, Category = "Damage")

@@ -150,7 +150,7 @@ void AGameCharacter::SetupHUD()
 	}
 }
 
-void AGameCharacter::PlayNote(int32 Note)
+void AGameCharacter::PlayNote(int32 Note, EInstrument Instrument)
 {
 	if (AudioComponent && AudioComponent->GetSound())
 	{
@@ -158,13 +158,53 @@ void AGameCharacter::PlayNote(int32 Note)
 		{
 			AudioComponent->Play();
 		}
-		AudioComponent->SetTriggerParameter("MIDINoteOn");
-		AudioComponent->SetIntParameter("Note", Note);
+
+		AudioComponent->SetIntParameter("MidiNote", Note);
+
+		switch (Instrument)
+		{
+		case EInstrument::Piano:
+			{
+				AudioComponent->SetTriggerParameter("PianoMIDINoteOn");
+				break;
+			}
+		case EInstrument::Violin:
+			{
+				AudioComponent->SetTriggerParameter("ViolinMIDINoteOn");
+				break;
+			}
+		case EInstrument::Saxophone:
+			{
+				AudioComponent->SetTriggerParameter("SaxophoneMIDINoteOn");
+				break;
+			}
+		case EInstrument::Guitar:
+			{
+				AudioComponent->SetTriggerParameter("GuitarMIDINoteOn");
+				break;
+			}
+		case EInstrument::Synth:
+			{
+				AudioComponent->SetTriggerParameter("SynthMIDINoteOn");
+				break;
+			}
+		
+		default:
+			{
+				UE_LOG(LogTemp, Error, TEXT("AGameCharacter::PlayNote: Multiple or no Instruments selected!"));
+				UE_LOG(LogTemp, Error, TEXT("Piano: %i, Violin: %i, Saxophone: %i, Guitar: %i, Synth: %i"), 
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Piano),
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Violin),
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Saxophone),
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Guitar),
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Synth));
+			}
+		}
 	}
 	
 }
 
-void AGameCharacter::StopNote()
+void AGameCharacter::StopNote(EInstrument Instrument)
 {
 	if (AudioComponent && AudioComponent->GetSound())
 	{
@@ -172,7 +212,46 @@ void AGameCharacter::StopNote()
 		{
 			AudioComponent->Play();
 		}
-		AudioComponent->SetTriggerParameter("MIDINoteOff");
+		
+		switch (Instrument)
+		{
+		case EInstrument::Piano:
+			{
+				AudioComponent->SetTriggerParameter("PianoMIDINoteOff");
+				break;
+			}
+		case EInstrument::Violin:
+			{
+				AudioComponent->SetTriggerParameter("ViolinMIDINoteOff");
+				break;
+			}
+		case EInstrument::Saxophone:
+			{
+				AudioComponent->SetTriggerParameter("SaxophoneMIDINoteOff");
+				break;
+			}
+		case EInstrument::Guitar:
+			{
+				AudioComponent->SetTriggerParameter("GuitarMIDINoteOff");
+				break;
+			}
+		case EInstrument::Synth:
+			{
+				AudioComponent->SetTriggerParameter("SynthMIDINoteOff");
+				break;
+			}
+		
+		default:
+			{
+				UE_LOG(LogTemp, Error, TEXT("AGameCharacter::StopNote: Multiple or no Instruments selected!"));
+				UE_LOG(LogTemp, Error, TEXT("Piano: %i, Violin: %i, Saxophone: %i, Guitar: %i, Synth: %i"), 
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Piano),
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Violin),
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Saxophone),
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Guitar),
+					InstrumentFlags::HasFlag(Instrument, EInstrument::Synth));
+			}
+		}
 	}
 	
 }

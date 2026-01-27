@@ -54,6 +54,33 @@ struct FScaleDegrees
 };
 
 UENUM(BlueprintType)
+enum class EInstrument : uint8
+{
+	None      = 0      UMETA(DisplayName="None"), // Only used for Instrument Weaknesses
+
+	Piano     = 1 << 0 UMETA(DisplayName="Piano"), //Default, always unlocked
+	Violin    = 1 << 1 UMETA(DisplayName="Violin"),
+	Saxophone = 1 << 2 UMETA(DisplayName="Saxophone"),
+	Guitar    = 1 << 3 UMETA(DisplayName="Guitar"),
+	Synth     = 1 << 4 UMETA(DisplayName="Synth"),
+
+	All       = Piano | Violin | Saxophone | Guitar | Synth
+};
+ENUM_CLASS_FLAGS(EInstrument);
+
+namespace InstrumentFlags
+{
+	FORCEINLINE bool HasFlag(const EInstrument& Enum, const EInstrument& Flag)
+	{
+		return (Enum & Flag) == Flag;
+	}
+	FORCEINLINE void SetFlag(EInstrument& Enum, const EInstrument& Flag)
+	{
+		Enum |= Flag;
+	}
+}
+
+UENUM(BlueprintType)
 enum class EWorldMapItem : uint8
 {
 	LevelOne = 0,

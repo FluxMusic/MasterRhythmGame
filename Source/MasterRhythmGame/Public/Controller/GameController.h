@@ -31,9 +31,9 @@ public:
 
 	void SetControllerState(EControllerStateGame NewState) { ControllerState = NewState; }
 
-	void SetRootNote(ENote RootNoteIn) { RootNote = RootNoteIn; }
+	void InitData(class ULevelData* LevelData);
 
-	void SetScale(EScale ScaleIn) { Scale = ScaleIn; }
+	float GetInstrumentDamageFactor(EInstrument Instrument);
 
 protected:
 	virtual void BeginPlay() override;
@@ -144,6 +144,9 @@ protected:
 	UFUNCTION()
 	void HandlePause();
 
+	UFUNCTION()
+	bool SwitchInstrument(int32 Note);
+
 	void MovePlayer(ENote Note);
 
 	void GameControl(ENote Note);
@@ -185,6 +188,21 @@ private:
 	EScale Scale { EScale::Major };
 
 	int32 NotePlayed { -1 };
+
+	/**
+	 * The damage factor each instrument's damage is multiplied by
+	 */
+	float PianoDamageFactor     { 1.f };
+	float ViolinDamageFactor    { 1.f };
+	float SaxophoneDamageFactor { 1.f };
+	float GuitarDamageFactor    { 1.f };
+	float SynthDamageFactor     { 1.f };
+
+	EInstrument SelectedInstrument { EInstrument::Piano };
+
+	//Buffers the Instrument when playing so that even when you switch instruments during a note
+	//the note off command is always tied to the played note
+	EInstrument InstrumentBuffer { EInstrument::None };
 
 	UPROPERTY()
 	TObjectPtr<AGameHUD> GameHud { nullptr };

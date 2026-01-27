@@ -10,10 +10,12 @@
 #include "Components/Slider.h"
 #include "Components/SplineComponent.h"
 #include "Controller/MainMenuController.h"
+#include "Data/LevelData.h"
 #include "HUD/GameHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "EnhancedInputComponent.h"
+#include "GameInstance/MyGameInstance.h"
 #include "Actor/NodeActor.h"
 #include "Actor/SplineActor.h"
 #include "Components/TimelineComponent.h"
@@ -25,6 +27,59 @@ AGameController::AGameController()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+}
+
+void AGameController::InitData(ULevelData* LevelData)
+{
+	RootNote = LevelData->RootNote;
+	Scale = LevelData->Scale;
+	
+	PianoDamageFactor = LevelData->PianoDamageFactor;
+    ViolinDamageFactor = LevelData->ViolinDamageFactor;
+    SaxophoneDamageFactor = LevelData->SaxophoneDamageFactor;
+    GuitarDamageFactor = LevelData->GuitarDamageFactor;
+    SynthDamageFactor = LevelData->SynthDamageFactor;
+}
+
+float AGameController::GetInstrumentDamageFactor(EInstrument Instrument)
+{
+	switch (Instrument)
+	{
+	case EInstrument::Piano:
+		{
+			return PianoDamageFactor;
+		}
+	case EInstrument::Violin:
+		{
+			return ViolinDamageFactor;
+		}
+	case EInstrument::Saxophone:
+		{
+			return SaxophoneDamageFactor;
+		}
+	case EInstrument::Guitar:
+		{
+			return GuitarDamageFactor;
+		}
+	case EInstrument::Synth:
+		{
+			return SynthDamageFactor;
+		}
+	
+	default:
+		{
+			UE_LOG(LogTemp, Error, TEXT("AGameController::GetInstrumentDamageFactor: Multiple or no Instruments selected!"));
+			UE_LOG(LogTemp, Error, TEXT("Piano: %i, Violin: %i, Saxophone: %i, Guitar: %i, Synth: %i"), 
+				InstrumentFlags::HasFlag(Instrument, EInstrument::Piano),
+				InstrumentFlags::HasFlag(Instrument, EInstrument::Violin),
+				InstrumentFlags::HasFlag(Instrument, EInstrument::Saxophone),
+				InstrumentFlags::HasFlag(Instrument, EInstrument::Guitar),
+				InstrumentFlags::HasFlag(Instrument, EInstrument::Synth));
+		}
+	}
+
+	// If there is an error, simply do not multiply damage
+	return 1.f;
 }
 
 void AGameController::BeginPlay()
@@ -186,6 +241,13 @@ void AGameController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceControl
 		UE_LOG(LogTemp, Warning, TEXT("Full Latency: %f ms"), Latency + LatencyBetweenThreads);
 	}
 
+	//Pause Game when player presses the lowest note on the keyboard
+	if (Note == 0)
+	{
+		HandlePause();
+		return;
+	}
+	
 
 	NotePlayed = Note;
 
@@ -198,6 +260,13 @@ void AGameController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceControl
 	{
 		case EControllerStateGame::Game:
 		{
+			//If player could switch instrument, he shouldn't be able to move
+			if (SwitchInstrument(Note))
+			{
+				return;
+			}
+			
+
 			//Remap incoming MIDI Note to allow different musical scales
 			//Maps the incoming scale onto the enharmonic scale with C as root note
 			//Meaning: If the scale is A minor and the player presses A, it comes out as C etc.
@@ -243,7 +312,8 @@ void AGameController::HandleNoteOff(UMIDIDeviceInputController* MIDIDeviceContro
 {
 	if (GameCharacter)
 	{
-		GameCharacter->StopNote();
+		GameCharacter->StopNote(InstrumentBuffer);
+		InstrumentBuffer = EInstrument::None;
 	}
 	
 }
@@ -421,10 +491,12 @@ void AGameController::HandleAttack(ENote Note)
 				auto SpawnLocationPlayer = ActorLocation + SceneLocation;
 				auto NoteActor = GetWorld()->SpawnActor<ANodeActor>(NodeActor, SpawnLocationPlayer, GameCharacter->GetActorRotation());
 				//Play some Feedback Sound
-				GameCharacter->PlayNote(NotePlayed);
+				GameCharacter->PlayNote(NotePlayed, SelectedInstrument);
+				InstrumentBuffer = SelectedInstrument;
 
 				if (NoteActor != nullptr && Enemy != nullptr)
 				{
+					NoteActor->SetInstrument(SelectedInstrument);
 					NoteActor->GetTimeline()->SetPlayRate(.25f);
 					NoteActor->SetSplineRef(GameCharacter->GetSplineRef());
 					NoteActor->MoveRight();
@@ -442,7 +514,7 @@ void AGameController::HandleNoteRelease()
 {
 	if (GameCharacter)
 	{
-		GameCharacter->StopNote();
+		GameCharacter->StopNote(InstrumentBuffer);
 	}
 	
 }
@@ -468,6 +540,79 @@ void AGameController::HandlePause()
 		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 		SetInputMode(InputMode);
 	}
+}
+
+bool AGameController::SwitchInstrument(int32 Note)
+{
+	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(this));
+
+	bool bSwitchedInstrument = false;
+
+	switch (Note)
+	{
+	//D0 switches to Keyboard
+	case 2:
+		{
+			SelectedInstrument = EInstrument::Piano;
+			bSwitchedInstrument = true;
+			break;
+		}
+	//E0 switches to Violin if unlocked
+	case 4:
+		{
+			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Violin))
+			{
+				SelectedInstrument = EInstrument::Violin;
+				bSwitchedInstrument = true;
+				break;
+			}
+			break;
+		}
+	//F0 switches to Saxophone if unlocked
+	case 5:
+		{
+			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Saxophone))
+			{
+				SelectedInstrument = EInstrument::Saxophone;
+				bSwitchedInstrument = true;
+				break;
+			}
+			break;
+		}
+	//G0 switches to Guitar if unlocked
+	case 7:
+		{
+			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Guitar))
+			{
+				SelectedInstrument = EInstrument::Guitar;
+				bSwitchedInstrument = true;
+				break;
+			}
+			break;
+		}
+	//A0 switches to Synth if unlocked
+	case 9:
+		{
+			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Synth))
+			{
+				SelectedInstrument = EInstrument::Synth;
+				bSwitchedInstrument = true;
+				break;
+			}
+			break;
+		}
+	
+	default:
+		bSwitchedInstrument = false;
+		break;
+	}
+
+	if (GameHud && GameHud->GetMainGameInstance())
+	{
+		GameHud->GetMainGameInstance()->SetInstrumentsImage(SelectedInstrument);
+	}
+
+	return bSwitchedInstrument;
 }
 
 void AGameController::MovePlayer(ENote Note)

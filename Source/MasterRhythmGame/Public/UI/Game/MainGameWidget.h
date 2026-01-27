@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../../CoreTypes.h"
 #include "Blueprint/UserWidget.h"
 #include "UI/Game/KeyboardWidget.h"
 #include "MainGameWidget.generated.h"
@@ -11,6 +12,7 @@ class AGameCharacter;
 class ATestEnemyActor;
 class UProgressBar;
 class UTextBlock;
+class UImage;
 /**
  * 
  */
@@ -67,11 +69,29 @@ public:
 	// --- CompletionPercent ---
 	UTextBlock* GetCompletionPercent() const { return CompletionPercent; }
 
+	UImage* GetInstrumentsImage() const { return Instruments; }
+	void SetInstrumentsImage(EInstrument Instrument);
+
 	UKeyboardWidget* GetKeyboardWidget() const { return KeyboardWidget; }
+
+public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TObjectPtr<class UTexture2D> PianoTexture 	  { nullptr };
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TObjectPtr<class UTexture2D> ViolinTexture 	  { nullptr };
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TObjectPtr<class UTexture2D> SaxophoneTexture { nullptr };
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TObjectPtr<class UTexture2D> GuitarTexture    { nullptr };
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
+	TObjectPtr<class UTexture2D> SynthTexture     { nullptr };
+
 
 private:
 	//Native Constructor
 	virtual void NativeConstruct() override;
+
+private:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UProgressBar* LifeBarPlayer { nullptr };
@@ -93,6 +113,9 @@ private:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* CompletionPercent { nullptr };
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	UImage* Instruments { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UKeyboardWidget* KeyboardWidget { nullptr };
