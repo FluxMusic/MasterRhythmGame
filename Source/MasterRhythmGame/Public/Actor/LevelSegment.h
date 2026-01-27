@@ -41,9 +41,6 @@ private:
 	TObjectPtr<USceneComponent> Root { nullptr };
 
 	UPROPERTY(EditAnywhere, Category = "Segment")
-	TObjectPtr<UStaticMeshComponent> SegmentMesh { nullptr };
-
-	UPROPERTY(EditAnywhere, Category = "Segment")
 	ESegmentType SegmentType { ESegmentType::Straight };
 
 	UPROPERTY(EditAnywhere, Category = "Segment")

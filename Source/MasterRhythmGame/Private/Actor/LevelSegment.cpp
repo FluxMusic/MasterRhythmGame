@@ -11,9 +11,6 @@ ALevelSegment::ALevelSegment()
 
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	SetRootComponent(Root);
-
-	SegmentMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BaseSegment"));
-	SegmentMesh->SetupAttachment(Root);
 }
 
 void ALevelSegment::OnSegmentActivated()
