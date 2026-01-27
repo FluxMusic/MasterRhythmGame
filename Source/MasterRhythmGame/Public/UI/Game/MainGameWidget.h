@@ -48,6 +48,9 @@ public:
 	UFUNCTION()
 	void SetMaxHealthEnemy5(int32 InMaxHealth);
 
+	UFUNCTION()
+	void SetCompletionPercent(float InPercent);
+
 	// --- LifeBarPlayer ---
 	UProgressBar* GetLifeBarPlayer() const { return LifeBarPlayer; }
 
@@ -65,9 +68,9 @@ public:
 	
 	// --- LifeBarEnemyFive ---
 	UProgressBar* GetLifeBarEnemy5() const { return LifeBarEnemyFive; }
-	
-	// --- CompletionPercent ---
-	UTextBlock* GetCompletionPercent() const { return CompletionPercent; }
+
+	// --- CompletionBar ---
+	UProgressBar* GetCompletionBar() const { return CompletionBar; }
 
 	UImage* GetInstrumentsImage() const { return Instruments; }
 	void SetInstrumentsImage(EInstrument Instrument);
@@ -112,13 +115,13 @@ private:
 	class UProgressBar* LifeBarEnemyFive { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-	class UTextBlock* CompletionPercent { nullptr };
-
-	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UImage* Instruments { nullptr };
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	UKeyboardWidget* KeyboardWidget { nullptr };
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UProgressBar* CompletionBar { nullptr };
 
 	//TODO: Kombotext
 

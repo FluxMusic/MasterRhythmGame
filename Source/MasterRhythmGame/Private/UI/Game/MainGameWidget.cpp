@@ -293,6 +293,14 @@ void UMainGameWidget::SetInstrumentsImage(EInstrument Instrument)
 	}
 }
 
+void UMainGameWidget::SetCompletionPercent(float InPercent)
+{
+	if (CompletionBar != nullptr)
+	{
+		CompletionBar->SetPercent(FMath::Clamp(InPercent, 0.0f, 1.0f));
+	}
+}
+
 void UMainGameWidget::NativeConstruct()
 {
 	Super::NativeConstruct();

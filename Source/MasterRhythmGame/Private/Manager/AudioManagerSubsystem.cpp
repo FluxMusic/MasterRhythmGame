@@ -164,38 +164,29 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPercent(FName OutputName, co
 		}
 	}
 
-	// If Part1IntroEnd has not happened yet, always show "0%"
 	if (!bPart1IntroEnded)
 	{
 		if (GameHUD != nullptr)
 		{
-			if (UTextBlock* CompletionPercent = GameHUD->GetMainGameInstance()->GetCompletionPercent())
+			if (UMainGameWidget* MainGameWidget = GameHUD->GetMainGameInstance())
 			{
-				CompletionPercent->SetText(FText::FromString(TEXT("0%")));
+				MainGameWidget->SetCompletionPercent(0.0f);
 			}
 		}
 		return;
 	}
 
-	// Try to extract a float value from the MetaSound output
 	float Value = 0.0f;
 	if (Output.Get<float>(Value))
 	{
-		// If the MetaSound outputs a normalized value [0..1], convert to percent
 		const bool bNormalized = (Value >= 0.0f && Value <= 1.0f);
-		const float DisplayValue = bNormalized ? Value * 100.0f : Value;
-
-		// Round to nearest integer so no decimal places are shown
-		const int32 IntPercent = FMath::RoundToInt(DisplayValue);
-
-		// Only show the percentage number and percent sign (e.g. "42%")
-		const FString Msg = FString::Printf(TEXT("%d%%"), IntPercent);
+		const float NormalizedValue = bNormalized ? Value : (Value / 100.0f);
 
 		if (GameHUD != nullptr)
 		{
-			if (UTextBlock* CompletionPercent = GameHUD->GetMainGameInstance()->GetCompletionPercent())
+			if (UMainGameWidget* MainGameWidget = GameHUD->GetMainGameInstance())
 			{
-				CompletionPercent->SetText(FText::FromString(Msg));
+				MainGameWidget->SetCompletionPercent(NormalizedValue);
 			}
 		}
 	}
