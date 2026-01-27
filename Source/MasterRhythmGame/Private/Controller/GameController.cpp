@@ -175,6 +175,8 @@ void AGameController::SetupInputComponent()
 		EnhancedInputComponent->BindAction(FSharp2Action, ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
 		EnhancedInputComponent->BindAction(G2Action,      ETriggerEvent::Started, this, &AGameController::HandleNoteRelease);
 
+		EnhancedInputComponent->BindAction(SwapInstrumentsAction, ETriggerEvent::Started, this, &AGameController::SwitchInstrumentKeyboard);
+
 		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AGameController::HandlePause);
 	}
 }
@@ -613,6 +615,101 @@ bool AGameController::SwitchInstrument(int32 Note)
 	}
 
 	return bSwitchedInstrument;
+}
+
+void AGameController::SwitchInstrumentKeyboard()
+{
+	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(this));
+
+	switch (SelectedInstrument)
+	{
+	case EInstrument::Piano:
+		{
+			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Violin))
+			{
+				SelectedInstrument = EInstrument::Violin;
+			}
+			else if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Saxophone))
+			{
+				SelectedInstrument = EInstrument::Saxophone;
+			}
+			else if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Guitar))
+			{
+				SelectedInstrument = EInstrument::Guitar;
+			}
+			else if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Synth))
+			{
+				SelectedInstrument = EInstrument::Synth;
+			}
+			
+			break;
+		}
+	case EInstrument::Violin:
+		{
+			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Saxophone))
+			{
+				SelectedInstrument = EInstrument::Saxophone;
+			}
+			else if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Guitar))
+			{
+				SelectedInstrument = EInstrument::Guitar;
+			}
+			else if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Synth))
+			{
+				SelectedInstrument = EInstrument::Synth;
+			}
+			else
+			{
+				SelectedInstrument = EInstrument::Piano;
+			}
+			
+			break;
+		}
+	case EInstrument::Saxophone:
+		{
+			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Guitar))
+			{
+				SelectedInstrument = EInstrument::Guitar;
+			}
+			else if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Synth))
+			{
+				SelectedInstrument = EInstrument::Synth;
+			}
+			else
+			{
+				SelectedInstrument = EInstrument::Piano;
+			}
+
+			break;
+		}
+	case EInstrument::Guitar:
+		{
+			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Synth))
+			{
+				SelectedInstrument = EInstrument::Synth;
+			}
+			else
+			{
+				SelectedInstrument = EInstrument::Piano;
+			}
+
+			break;
+		}
+	case EInstrument::Synth:
+		{
+			SelectedInstrument = EInstrument::Piano;
+
+			break;
+		}
+	
+	default:
+		break;
+	}
+
+	if (GameHud && GameHud->GetMainGameInstance())
+	{
+		GameHud->GetMainGameInstance()->SetInstrumentsImage(SelectedInstrument);
+	}
 }
 
 void AGameController::MovePlayer(ENote Note)

@@ -147,6 +147,10 @@ protected:
 	UFUNCTION()
 	bool SwitchInstrument(int32 Note);
 
+	//Called to cycle through instruments with spacebar
+	UFUNCTION()
+	void SwitchInstrumentKeyboard();
+
 	void MovePlayer(ENote Note);
 
 	void GameControl(ENote Note);
@@ -312,6 +316,9 @@ private:
 
 	UPROPERTY(EditAnywhere, DisplayName = "G2 Action", Category = "InputAction")
 	UInputAction* G2Action { nullptr };
+
+	UPROPERTY(EditAnywhere, DisplayName = "Swap Instruments Action", Category = "InputAction")
+	UInputAction* SwapInstrumentsAction { nullptr };
 	
 	UPROPERTY(EditAnywhere, DisplayName = "Pause Action", Category = "InputAction")
 	UInputAction* PauseAction { nullptr };
