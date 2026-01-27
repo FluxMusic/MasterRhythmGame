@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "../CoreTypes.h"
 #include "Engine/GameInstance.h"
+#include "Kismet/GameplayStatics.h"
 #include "MyGameInstance.generated.h"
 
 /**
@@ -23,6 +24,12 @@ public:
 
 	float GetSFXVolume() const { return SFXVolume; }
 	void SetSFXVolume(float Volume) { SFXVolume = Volume; }
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void LoadLevel(FName LevelName);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+	void UnloadLevel(FName LevelName);
 
 	UFUNCTION(BlueprintCallable)
 	bool GetLevelOneUnlocked() const { return bIsLevelOneUnlocked; }
@@ -56,8 +63,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetInstrumentUnlocked(const EInstrument& Instrument, bool bUnlocked);
+	
 	UFUNCTION(BlueprintCallable)
 	EInstrument GetUnlockedInstruments();
+
+	static inline UMyGameInstance* Get() { return Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GWorld)); }
 
 private:
 

@@ -14,9 +14,9 @@
 #include "Enemy/TestEnemyActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
-#include "Components/TextBlock.h"
 #include "Controller/GameController.h"
 #include "Data/LevelData.h"
+#include "GameInstance/MyGameInstance.h"
 #include "HUD/GameHUD.h"
 
 UAudioManagerSubsystem::UAudioManagerSubsystem()
@@ -495,8 +495,11 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 		}
 		else
 		{
-			UGameplayStatics::UnloadStreamLevel(this, TEXT("Lvl_Swamp_Begin"), FLatentActionInfo(), false);
-			UGameplayStatics::LoadStreamLevel(this, TEXT("Lvl_Swamp_Endless"), true, false, FLatentActionInfo());
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("Lvl_Swamp_Begin"));
+				Gi->LoadLevel(TEXT("Lvl_Swamp_Endless"));
+			}
 			StartPart2Intro();
 		}
 	}
@@ -539,8 +542,11 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 		}
 		else
 		{
-			UGameplayStatics::UnloadStreamLevel(this, TEXT("Lvl_Swamp_Endless"), FLatentActionInfo(), false);
-			UGameplayStatics::LoadStreamLevel(this, TEXT("Lvl_Swamp_End"), true, false, FLatentActionInfo());
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("Lvl_Swamp_Endless"));
+				Gi->LoadLevel(TEXT("Lvl_Swamp_End"));
+			}
 			StartPart3Intro();
 		}
 	}
