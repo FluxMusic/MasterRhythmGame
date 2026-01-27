@@ -539,6 +539,8 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 		}
 		else
 		{
+			UGameplayStatics::UnloadStreamLevel(this, TEXT("Lvl_Swamp_Endless"), FLatentActionInfo(), false);
+			UGameplayStatics::LoadStreamLevel(this, TEXT("Lvl_Swamp_End"), true, false, FLatentActionInfo());
 			StartPart3Intro();
 		}
 	}
