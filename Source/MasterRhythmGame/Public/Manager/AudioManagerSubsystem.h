@@ -203,7 +203,7 @@ private:
     bool bPart1IntroEnded { false };
 
     UPROPERTY()
-    TObjectPtr<AGameHUD> GameHUD { nullptr }; 
+    TObjectPtr<AGameHUD> GameHUD { nullptr };
 
     UPROPERTY()
     ENote RootNote { ENote::C };

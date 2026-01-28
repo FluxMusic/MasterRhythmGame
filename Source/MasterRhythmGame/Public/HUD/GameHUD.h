@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "UI/PauseMenuWidget.h"
+#include "UI/Game/BlackscreenWidget.h"
 #include "UI/Game/DeathWidget.h"
 #include "UI/Game/MainGameWidget.h"
 #include "UI/Settings/AudioSettingWidget.h"
@@ -70,43 +71,57 @@ public:
 	UDeathWidget* GetDeathWidgetInstance() const { return DeathWidgetInstance; }
 	void SetDeathWidgetInstance(UDeathWidget* InInstance) { DeathWidgetInstance = InInstance; }
 
+	// --- Blackscreen Class ---
+	TSubclassOf<UBlackscreenWidget> GetBlackscreenClass() const { return BlackscreenClass; }
+	void SetBlackscreenClass(TSubclassOf<UBlackscreenWidget> InClass) { BlackscreenClass = InClass; }
+
+	// --- Blackscreen Instance ---
+	UBlackscreenWidget* GetBlackscreenInstance() const { return BlackscreenInstance; }
+	void SetBlackscreenInstance(UBlackscreenWidget* InInstance) { BlackscreenInstance = InInstance; }
+
 protected:
 	virtual void BeginPlay() override;
 
 private:
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UPauseMenuWidget> PauseMenuWidgetClass;
+	TSubclassOf<UPauseMenuWidget> PauseMenuWidgetClass { nullptr };
 
 	UPROPERTY()
 	TObjectPtr<UPauseMenuWidget> PauseMenuInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UMainMenuSettingWidget> MainMenuSettingWidgetClass;
+	TSubclassOf<UMainMenuSettingWidget> MainMenuSettingWidgetClass { nullptr };
 
 	UPROPERTY()
 	TObjectPtr<UMainMenuSettingWidget> MainMenuSettingInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UGraphicSettingWidget> GraphicSettingClass;
+	TSubclassOf<UGraphicSettingWidget> GraphicSettingClass { nullptr };
 
 	UPROPERTY()
 	TObjectPtr<UGraphicSettingWidget> GraphicSettingInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UAudioSettingWidget> AudioSettingClass;
+	TSubclassOf<UAudioSettingWidget> AudioSettingClass { nullptr };
 
 	UPROPERTY()
 	TObjectPtr<UAudioSettingWidget> AudioSettingInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UMainGameWidget> MainGameClass;
+	TSubclassOf<UMainGameWidget> MainGameClass { nullptr };
 
 	UPROPERTY()
 	TObjectPtr<UMainGameWidget> MainGameInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UDeathWidget> DeathWidgetClass;
+	TSubclassOf<UDeathWidget> DeathWidgetClass { nullptr };
 
 	UPROPERTY()
 	TObjectPtr<UDeathWidget> DeathWidgetInstance { nullptr };
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UBlackscreenWidget> BlackscreenClass { nullptr };
+
+	UPROPERTY()
+	TObjectPtr<UBlackscreenWidget> BlackscreenInstance { nullptr };
 };

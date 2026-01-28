@@ -498,6 +498,11 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 			if (UMyGameInstance* Gi = UMyGameInstance::Get())
 			{
 				Gi->UnloadLevel(TEXT("Lvl_Swamp_Begin"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
 				Gi->LoadLevel(TEXT("Lvl_Swamp_Endless"));
 			}
 			StartPart2Intro();
@@ -545,6 +550,10 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 			if (UMyGameInstance* Gi = UMyGameInstance::Get())
 			{
 				Gi->UnloadLevel(TEXT("Lvl_Swamp_Endless"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
 				Gi->LoadLevel(TEXT("Lvl_Swamp_End"));
 			}
 			StartPart3Intro();

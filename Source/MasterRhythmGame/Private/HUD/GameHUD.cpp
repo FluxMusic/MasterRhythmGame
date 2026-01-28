@@ -66,4 +66,13 @@ void AGameHUD::BeginPlay()
 			DeathWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+	if (BlackscreenClass)
+	{
+		BlackscreenInstance = CreateWidget<UBlackscreenWidget>(GetWorld(), BlackscreenClass);
+		if (BlackscreenInstance != nullptr)
+		{
+			BlackscreenInstance->AddToViewport();
+			BlackscreenInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
 }
