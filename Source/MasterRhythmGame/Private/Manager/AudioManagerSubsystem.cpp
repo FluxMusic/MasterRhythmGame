@@ -497,13 +497,13 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 		{
 			if (UMyGameInstance* Gi = UMyGameInstance::Get())
 			{
-				Gi->UnloadLevel(TEXT("Lvl_Swamp_Begin"));
+				Gi->UnloadLevel(TEXT("MAP_Swamp_Begin"));
 				if (GameHUD != nullptr)
 				{
 					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
 					GameHUD->GetBlackscreenInstance()->FadeOut();
 				}
-				Gi->LoadLevel(TEXT("Lvl_Swamp_Endless"));
+				Gi->LoadLevel(TEXT("MAP_Swamp_Endless"));
 			}
 			StartPart2Intro();
 		}
@@ -549,12 +549,12 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 		{
 			if (UMyGameInstance* Gi = UMyGameInstance::Get())
 			{
-				Gi->UnloadLevel(TEXT("Lvl_Swamp_Endless"));
+				Gi->UnloadLevel(TEXT("MAP_Swamp_Endless"));
 				if (GameHUD != nullptr)
 				{
 					GameHUD->GetBlackscreenInstance()->FadeOut();
 				}
-				Gi->LoadLevel(TEXT("Lvl_Swamp_End"));
+				Gi->LoadLevel(TEXT("MAP_Swamp_End"));
 			}
 			StartPart3Intro();
 		}
@@ -1976,27 +1976,27 @@ void UAudioManagerSubsystem::HandleTestLevel()
 
 EMapNames UAudioManagerSubsystem::GetMapTypeFromString(const FString& MapName)
 {
-	if (MapName.Contains(TEXT("Lvl_Swamp")))
+	if (MapName.Contains(TEXT("MAP_Swamp")))
 	{
 		return EMapNames::Swamp;
 	}
-	else if (MapName.Contains(TEXT("Lvl_Cyberpunk")))
+	else if (MapName.Contains(TEXT("MAP_Cyberpunk")))
 	{
 		return EMapNames::Cyberpunk;
 	}
-	else if (MapName.Contains(TEXT("Lvl_Ice")))
+	else if (MapName.Contains(TEXT("MAP_Ice")))
 	{
 		return EMapNames::Ice;
 	}
-	else if (MapName.Contains(TEXT("Lvl_Steampunk")))
+	else if (MapName.Contains(TEXT("MAP_Steampunk")))
 	{
 		return EMapNames::Steampunk;
 	}
-	else if (MapName.Contains(TEXT("Lvl_Space")))
+	else if (MapName.Contains(TEXT("MAP_Space")))
 	{
 		return EMapNames::Space;
 	}
-	else if (MapName.Contains(TEXT("Lvl_Volcano")))
+	else if (MapName.Contains(TEXT("MAP_Volcano")))
 	{
 		return EMapNames::Volcano;
 	}
