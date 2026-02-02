@@ -33,6 +33,10 @@
 		{
 			"Name": "Harmonix",
 			"Enabled": true
+		},
+		{
+			"Name": "AudioModulation",
+			"Enabled": true
 		}
 	]
 }
