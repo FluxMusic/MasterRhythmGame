@@ -67,7 +67,7 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 			OverlappingCharacter->SetDefended(Defended);
 
 			//Play Player Block Anim
-			OverlappingCharacter->PlayBlockAnimation();
+			OverlappingCharacter->OnBlock();
 			return;
 		}
 
@@ -95,7 +95,7 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 			bCollidedWithEnemy = true;
 
 			//Play Enemy block Anim
-			OverlappingEnemy->PlayBlockAnimation();
+			OverlappingEnemy->OnBlock();
 
 			return;
 		}

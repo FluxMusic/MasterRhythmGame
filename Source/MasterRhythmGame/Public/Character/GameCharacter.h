@@ -62,11 +62,11 @@ public:
 
 	//Anim Stuff - Handled in BP
 	UFUNCTION(BlueprintImplementableEvent)
-	void PlayAttackAnimation();
+	void OnAttack();
 	UFUNCTION(BlueprintImplementableEvent)
-	void PlayBlockAnimation();
+	void OnBlock();
 	UFUNCTION(BlueprintImplementableEvent)
-	void PlayHitAnimation();
+	void OnHit();
 
 protected:
 	// Called when the game starts or when spawned

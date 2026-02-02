@@ -133,7 +133,7 @@ void ATestEnemyActor::ApplyDamage(int32 DamageValue)
 
 
 		//Play Hit Anim
-		PlayHitAnimation();
+		OnHit();
 	}
 }
 
@@ -151,7 +151,7 @@ void ATestEnemyActor::Attack(int32 InBPM)
 		Note->MoveLeft();
 
 		//Play Attack Anim
-		PlayAttackAnimation();
+		OnAttack();
 	}
 }
 

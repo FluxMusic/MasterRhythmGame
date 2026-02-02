@@ -484,7 +484,7 @@ void AGameController::HandleAttack(ENote Note)
 			GameCharacter->SetDefended(Defended);
 
 			//Play Player Attack Anim
-			GameCharacter->PlayAttackAnimation();
+			GameCharacter->OnAttack();
 			
 			if (GameCharacter->GetSplineRef()->IsVisible())
 			{
