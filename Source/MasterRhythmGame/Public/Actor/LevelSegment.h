@@ -35,7 +35,4 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Segment")
 	float SegmentLength { 2700.0f };
-
-	UPROPERTY()
-	bool bIsActive { false };
 };
