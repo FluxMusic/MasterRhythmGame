@@ -23,16 +23,6 @@ public:
 	// Get segment length for precise positioning
 	float GetSegmentLength() const { return SegmentLength; }
 
-	UFUNCTION()
-	void OnSegmentActivated();
-
-	UFUNCTION()
-	void OnSegmentDeactivated();
-
-	// --- Is Out of Bounds ---
-	bool IsOutOfBounds() const { return bIsOutOfBounds; }
-	void SetOutOfBounds(bool bOutOfBounds) { bIsOutOfBounds = bOutOfBounds; }
-
 protected:
 	virtual void BeginPlay() override;
 
@@ -48,10 +38,4 @@ private:
 
 	UPROPERTY()
 	bool bIsActive { false };
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	bool bIsLoopable { false };
-
-	UPROPERTY()
-	bool bIsOutOfBounds { false };
 };

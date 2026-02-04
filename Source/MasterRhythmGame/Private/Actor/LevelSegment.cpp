@@ -13,14 +13,6 @@ ALevelSegment::ALevelSegment()
 	SetRootComponent(Root);
 }
 
-void ALevelSegment::OnSegmentActivated()
-{
-}
-
-void ALevelSegment::OnSegmentDeactivated()
-{
-}
-
 // Called when the game starts or when spawned
 void ALevelSegment::BeginPlay()
 {

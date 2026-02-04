@@ -74,7 +74,6 @@ void AEndlessRunnerManager::InitializeSegments()
 		if (NewSegment)
 		{
 			ActiveSegments.Add(NewSegment);
-			NewSegment->OnSegmentActivated();
 			UE_LOG(LogTemp, Log, TEXT("AEndlessRunnerManager::InitializeSegments - Spawned segment at position: %s"), *SpawnPosition.ToString());
 		}
 		else
@@ -128,8 +127,6 @@ void AEndlessRunnerManager::UpdateSegments(float DeltaTime)
 				
 				// Move this segment to the end
 				Segment->SetActorLocation(LastSegmentPosition);
-				Segment->OnSegmentDeactivated();
-				Segment->OnSegmentActivated();
 
 				UE_LOG(LogTemp, Log, TEXT("AEndlessRunnerManager::UpdateSegments - Recycled segment from %s to %s"), 
 					*CurrentLocation.ToString(), *LastSegmentPosition.ToString());
