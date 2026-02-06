@@ -43,7 +43,7 @@ public:
 
 	// --- Defended accessors ---
 	int32 GetDefended() const { return Defended; }
-	void SetDefended(int32 InDefended) { Defended = FMath::Clamp(InDefended, 0, 10); }
+	void SetDefended(int32 InDefended);
 
 	// --- SceneComponent accessors ---
 	USceneComponent* GetSceneComponent() const { return SceneComponent; }

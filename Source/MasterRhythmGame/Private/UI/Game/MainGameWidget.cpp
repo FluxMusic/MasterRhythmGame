@@ -316,6 +316,15 @@ void UMainGameWidget::UpdateScore(int32 TotalScore, float ComboMultiplier)
 	}
 }
 
+void UMainGameWidget::UpdateNoteAmount(int32 InNoteAmount)
+{
+	if (NoteAmount)
+	{
+		FString NoteString = FString::Printf(TEXT("x%d"), InNoteAmount);
+		NoteAmount->SetText(FText::FromString(NoteString));
+	}
+}
+
 void UMainGameWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
