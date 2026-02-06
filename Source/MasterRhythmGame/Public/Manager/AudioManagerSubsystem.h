@@ -70,6 +70,28 @@ public:
     UFUNCTION(BlueprintCallable)
     float GetAnimTime();
 
+    // --- Score System ---
+    UFUNCTION(BlueprintCallable)
+    int32 GetCurrentScore() const { return CurrentScore; }
+
+    UFUNCTION(BlueprintCallable)
+    float GetCurrentComboMultiplier() const { return CurrentComboMultiplier; }
+
+    UFUNCTION(BlueprintCallable)
+    int32 GetCurrentComboCount() const { return CurrentComboCount; }
+
+    UFUNCTION(BlueprintCallable)
+    int32 GetBaseScorePerNote() const { return BaseScorePerNote; }
+
+    UFUNCTION()
+    void AddScore(int32 BasePoints);
+
+    UFUNCTION()
+    void ResetCombo();
+
+    UFUNCTION()
+    void SetScoringEnabled(bool bEnabled);
+
 private:
 
     UFUNCTION()
@@ -210,6 +232,31 @@ private:
 
     UPROPERTY()
     EPartFinish PartFinish { EPartFinish::Three };
+
+    // Score System
+    UPROPERTY()
+    int32 CurrentScore { 0 };
+
+    UPROPERTY()
+    float CurrentComboMultiplier { 0.1f };
+
+    UPROPERTY()
+    int32 CurrentComboCount { 0 };
+
+    UPROPERTY()
+    bool bScoringEnabled { true };
+
+    UPROPERTY()
+    int32 BaseScorePerNote { 50 };
+
+    UPROPERTY()
+    float ComboMultiplierMin { 0.1f };
+
+    UPROPERTY()
+    float ComboMultiplierMax { 5.0f };
+
+    UPROPERTY()
+    float ComboMultiplierIncrement { 0.1f };
 
     //Animation Stuff
 

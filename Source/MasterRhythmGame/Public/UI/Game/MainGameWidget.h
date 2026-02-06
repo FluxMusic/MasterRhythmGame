@@ -51,6 +51,9 @@ public:
 	UFUNCTION()
 	void SetCompletionPercent(float InPercent);
 
+	UFUNCTION()
+	void UpdateScore(int32 TotalScore, float ComboMultiplier, int32 ComboCount);
+
 	// --- LifeBarPlayer ---
 	UProgressBar* GetLifeBarPlayer() const { return LifeBarPlayer; }
 
@@ -123,7 +126,11 @@ private:
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UProgressBar* CompletionBar { nullptr };
 
-	//TODO: Kombotext
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UTextBlock* ScoreText { nullptr };
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UTextBlock* ComboText { nullptr };
 
 	UPROPERTY()
 	TObjectPtr<ATestEnemyActor> Enemy { nullptr };
