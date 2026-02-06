@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
 #include "UI/PauseMenuWidget.h"
+#include "UI/MainMenu/SaveMenuWidget.h"
+#include "UI/MainMenu/LoadMenuWidget.h"
 #include "UI/Settings/AudioSettingWidget.h"
 #include "UI/Settings/GraphicSettingWidget.h"
 #include "UI/Settings/MainMenuSettingWidget.h"
@@ -27,6 +29,22 @@ public:
 	// --- Pause Menu Instance ---
 	UPauseMenuWidget* GetPauseMenuInstance() const { return PauseMenuInstance; }
 	void SetPauseMenuInstance(UPauseMenuWidget* InInstance) { PauseMenuInstance = InInstance; }
+
+	// --- Save Menu Widget Class ---
+	TSubclassOf<USaveMenuWidget> GetSaveMenuWidgetClass() const { return SaveMenuWidgetClass; }
+	void SetSaveMenuWidgetClass(TSubclassOf<USaveMenuWidget> InClass) { SaveMenuWidgetClass = InClass; }
+
+	// --- Save Menu Instance ---
+	USaveMenuWidget* GetSaveMenuInstance() const { return SaveMenuInstance; }
+	void SetSaveMenuInstance(USaveMenuWidget* InInstance) { SaveMenuInstance = InInstance; }
+
+	// --- Load Menu Widget Class ---
+	TSubclassOf<ULoadMenuWidget> GetLoadMenuWidgetClass() const { return LoadMenuWidgetClass; }
+	void SetLoadMenuWidgetClass(TSubclassOf<ULoadMenuWidget> InClass) { LoadMenuWidgetClass = InClass; }
+
+	// --- Load Menu Instance ---
+	ULoadMenuWidget* GetLoadMenuInstance() const { return LoadMenuInstance; }
+	void SetLoadMenuInstance(ULoadMenuWidget* InInstance) { LoadMenuInstance = InInstance; }
 
 	// --- Main Menu Settings Widget Class ---
 	TSubclassOf<UMainMenuSettingWidget> GetMainMenuSettingWidgetClass() const { return MainMenuSettingWidgetClass; }
@@ -61,6 +79,18 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UPauseMenuWidget> PauseMenuInstance { nullptr };
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<USaveMenuWidget> SaveMenuWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<USaveMenuWidget> SaveMenuInstance { nullptr };
+
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<ULoadMenuWidget> LoadMenuWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<ULoadMenuWidget> LoadMenuInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UMainMenuSettingWidget> MainMenuSettingWidgetClass;

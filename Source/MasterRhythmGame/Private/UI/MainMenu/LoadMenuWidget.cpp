@@ -4,6 +4,8 @@
 #include "UI/MainMenu/LoadMenuWidget.h"
 #include "UI/ButtonWidget.h"
 #include "Controller/MainMenuController.h"
+#include "GameInstance/MyGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
 void ULoadMenuWidget::ReturnMainMenuButtonClicked()
@@ -22,23 +24,71 @@ void ULoadMenuWidget::ReturnMainMenuButtonClicked()
 
 void ULoadMenuWidget::LoadFirstSaveButtonClicked()
 {
-	UKismetSystemLibrary::PrintString(this, FString(TEXT("TODO")), true, true, FLinearColor::Blue, 10.0);
-
-	//TODO: 
+	LoadSaveSlot(TEXT("SaveSlot1"));
 }
 
 void ULoadMenuWidget::LoadSecondSaveButtonClicked()
 {
-	UKismetSystemLibrary::PrintString(this, FString(TEXT("TODO")), true, true, FLinearColor::Blue, 10.0);
-
-	//TODO:
+	LoadSaveSlot(TEXT("SaveSlot2"));
 }
 
 void ULoadMenuWidget::LoadThirdSaveButtonClicked()
 {
-	UKismetSystemLibrary::PrintString(this, FString(TEXT("TODO")), true, true, FLinearColor::Blue, 10.0);
+	LoadSaveSlot(TEXT("SaveSlot3"));
+}
 
-	//TODO:
+void ULoadMenuWidget::LoadSaveSlot(const FString& SlotName)
+{
+	UMyGameInstance* GameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		if (GameInstance->DoesSaveGameExist(SlotName))
+		{
+			bool bSuccess = GameInstance->LoadGameFromSlot(SlotName);
+			
+			if (bSuccess)
+			{
+				UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("Loaded %s Successfully!"), *SlotName), true, true, FLinearColor::Green, 5.0f);
+				
+				// Load to world map after loading save
+				UGameplayStatics::OpenLevel(GetWorld(), TEXT("WorldMap"));
+			}
+			else
+			{
+				UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("Failed to load %s!"), *SlotName), true, true, FLinearColor::Red, 5.0f);
+			}
+		}
+		else
+		{
+			UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("No save found in %s!"), *SlotName), true, true, FLinearColor::Yellow, 5.0f);
+		}
+	}
+}
+
+void ULoadMenuWidget::UpdateSaveSlotVisibility()
+{
+	UMyGameInstance* GameInstance = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+	if (GameInstance)
+	{
+		// Check each save slot and update button visibility
+		if (LoadFirstButton != nullptr)
+		{
+			bool bSlot1Exists = GameInstance->DoesSaveGameExist(TEXT("SaveSlot1"));
+			LoadFirstButton->SetVisibility(bSlot1Exists ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+		}
+
+		if (LoadSecondButton != nullptr)
+		{
+			bool bSlot2Exists = GameInstance->DoesSaveGameExist(TEXT("SaveSlot2"));
+			LoadSecondButton->SetVisibility(bSlot2Exists ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+		}
+
+		if (LoadThirdButton != nullptr)
+		{
+			bool bSlot3Exists = GameInstance->DoesSaveGameExist(TEXT("SaveSlot3"));
+			LoadThirdButton->SetVisibility(bSlot3Exists ? ESlateVisibility::Visible : ESlateVisibility::Collapsed);
+		}
+	}
 }
 
 void ULoadMenuWidget::NativeConstruct()
@@ -57,4 +107,28 @@ void ULoadMenuWidget::NativeConstruct()
 	LoadFirstButton->OnClicked.AddDynamic(this, &ULoadMenuWidget::LoadFirstSaveButtonClicked);
 	LoadSecondButton->OnClicked.AddDynamic(this, &ULoadMenuWidget::LoadSecondSaveButtonClicked);
 	LoadThirdButton->OnClicked.AddDynamic(this, &ULoadMenuWidget::LoadThirdSaveButtonClicked);
+
+	// Update visibility based on existing save slots
+	UpdateSaveSlotVisibility();
+}
+
+void ULoadMenuWidget::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+}
+
+void ULoadMenuWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+{
+	Super::NativeTick(MyGeometry, InDeltaTime);
+}
+
+void ULoadMenuWidget::SetVisibility(ESlateVisibility InVisibility)
+{
+	Super::SetVisibility(InVisibility);
+	
+	// Update save slot visibility whenever the widget becomes visible
+	if (InVisibility == ESlateVisibility::Visible || InVisibility == ESlateVisibility::SelfHitTestInvisible)
+	{
+		UpdateSaveSlotVisibility();
+	}
 }

@@ -41,9 +41,23 @@ public:
 	// --- Load MainMenu Button ---
 	UButtonWidget* GetReturnMainMenuButton() const { return ReturnMainMenuButton; }
 
+	// Update visibility of save slot buttons based on save game existence
+	UFUNCTION(BlueprintCallable)
+	void UpdateSaveSlotVisibility();
+
+protected:
+	virtual void NativeOnInitialized() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
+public:
+	virtual void SetVisibility(ESlateVisibility InVisibility) override;
+
 private:
 	//Native Constructor
 	virtual void NativeConstruct() override;
+
+	// Helper function to load a specific save slot
+	void LoadSaveSlot(const FString& SlotName);
 
 	UPROPERTY(meta = (BindWidget))
 	UButtonWidget* LoadFirstButton {nullptr}; 

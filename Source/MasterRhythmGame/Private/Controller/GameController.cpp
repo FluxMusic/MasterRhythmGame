@@ -9,7 +9,6 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/Slider.h"
 #include "Components/SplineComponent.h"
-#include "Controller/MainMenuController.h"
 #include "Data/LevelData.h"
 #include "HUD/GameHUD.h"
 #include "Kismet/GameplayStatics.h"
@@ -26,7 +25,9 @@
 AGameController::AGameController()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = true; 
+
+	bShowMouseCursor = false;
 }
 
 void AGameController::InitData(ULevelData* LevelData)

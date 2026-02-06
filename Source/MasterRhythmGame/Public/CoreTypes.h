@@ -99,7 +99,9 @@ enum class EControllerStateWorldMap : uint8
 	PauseMenu,
 	AudioMenu,
 	GraphicsMenu,
-	SettingMenu
+	SettingMenu,
+	SaveMenu,
+	LoadMenu
 };
 
 UENUM(BlueprintType)
@@ -184,7 +186,9 @@ enum class EControllerStateGame : uint8
 	GraphicsMenu,
 	AudioMenu,
 	DeathMenu,
-	SuccessMenu
+	SuccessMenu,
+	SaveMenu,
+	LoadMenu
 };
 
 UENUM(BlueprintType)

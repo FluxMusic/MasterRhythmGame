@@ -30,6 +30,24 @@ void AGameHUD::BeginPlay()
 			PauseMenuInstance->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+	if (SaveMenuWidgetClass)
+	{
+		SaveMenuInstance = CreateWidget<USaveMenuWidget>(GetWorld(), SaveMenuWidgetClass);
+		if (SaveMenuInstance != nullptr)
+		{
+			SaveMenuInstance->AddToViewport();
+			SaveMenuInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
+	if (LoadMenuWidgetClass)
+	{
+		LoadMenuInstance = CreateWidget<ULoadMenuWidget>(GetWorld(), LoadMenuWidgetClass);
+		if (LoadMenuInstance != nullptr)
+		{
+			LoadMenuInstance->AddToViewport();
+			LoadMenuInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
 	if (MainMenuSettingWidgetClass)
 	{
 		MainMenuSettingInstance = CreateWidget<UMainMenuSettingWidget>(GetWorld(), MainMenuSettingWidgetClass);

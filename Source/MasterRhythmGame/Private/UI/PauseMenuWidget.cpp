@@ -3,10 +3,11 @@
 
 #include "UI/PauseMenuWidget.h"
 #include "UI/ButtonWidget.h"
-#include "Components/Button.h"
 #include "Controller/WorldMapController.h"
 #include "Controller/GameController.h"
+#include "GameInstance/MyGameInstance.h"
 #include "HUD/GameHUD.h"
+#include "HUD/WorldMapHUD.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -29,7 +30,7 @@ void UPauseMenuWidget::ResumeButtonClicked()
 			UGameplayStatics::SetGamePaused(GetWorld(), false);
 		}
 	}
-	else if (CurrentLevel == "TestMap")
+	else
 	{
 		AGameController* PlayerController = Cast<AGameController>(GetOwningPlayer());
 
@@ -44,19 +45,75 @@ void UPauseMenuWidget::ResumeButtonClicked()
 		}
 		if (GameHUD != nullptr)
 		{
-			//GameHUD->Get()->SetVisibility(ESlateVisibility::Visible);
+			GameHUD->GetMainGameInstance()->SetVisibility(ESlateVisibility::Visible);
 		}
 	}
 }
 
 void UPauseMenuWidget::SaveGameButtonClicked()
 {
-	UKismetSystemLibrary::PrintString(this, FString(TEXT("TODO")), true, true, FLinearColor::Blue, 10.0);
+	SetVisibility(ESlateVisibility::Hidden);
+	FString CurrentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
+
+	if (CurrentLevel == "WorldMap")
+	{
+		AWorldMapController* PlayerController = Cast<AWorldMapController>(GetOwningPlayer());
+		if (PlayerController != nullptr)
+		{
+			WorldMapHud = Cast<AWorldMapHUD>(PlayerController->GetHUD());
+			PlayerController->SetControllerState(EControllerStateWorldMap::SaveMenu);
+		}
+		if (WorldMapHud != nullptr && WorldMapHud->GetSaveMenuInstance() != nullptr)
+		{
+			WorldMapHud->GetSaveMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
+	else
+	{
+		AGameController* PlayerController = Cast<AGameController>(GetOwningPlayer());
+		if (PlayerController != nullptr)
+		{
+			GameHUD = Cast<AGameHUD>(PlayerController->GetHUD());
+			PlayerController->SetControllerState(EControllerStateGame::SaveMenu);
+		}
+		if (GameHUD != nullptr && GameHUD->GetSaveMenuInstance() != nullptr)
+		{
+			GameHUD->GetSaveMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
 }
 
 void UPauseMenuWidget::LoadGameButtonClicked()
 {
-	UKismetSystemLibrary::PrintString(this, FString(TEXT("TODO")), true, true, FLinearColor::Blue, 10.0);
+	SetVisibility(ESlateVisibility::Hidden);
+	FString CurrentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
+
+	if (CurrentLevel == "WorldMap")
+	{
+		AWorldMapController* PlayerController = Cast<AWorldMapController>(GetOwningPlayer());
+		if (PlayerController != nullptr)
+		{
+			WorldMapHud = Cast<AWorldMapHUD>(PlayerController->GetHUD());
+			PlayerController->SetControllerState(EControllerStateWorldMap::LoadMenu);
+		}
+		if (WorldMapHud != nullptr && WorldMapHud->GetLoadMenuInstance() != nullptr)
+		{
+			WorldMapHud->GetLoadMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
+	else
+	{
+		AGameController* PlayerController = Cast<AGameController>(GetOwningPlayer());
+		if (PlayerController != nullptr)
+		{
+			GameHUD = Cast<AGameHUD>(PlayerController->GetHUD());
+			PlayerController->SetControllerState(EControllerStateGame::LoadMenu);
+		}
+		if (GameHUD != nullptr && GameHUD->GetLoadMenuInstance() != nullptr)
+		{
+			GameHUD->GetLoadMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
 }
 
 void UPauseMenuWidget::SettingsButtonClicked()
