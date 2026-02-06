@@ -59,7 +59,7 @@ public:
 	FData GetSplineLeft() const { return SplineLeft; }
 
 	// --- Level Name ---
-	FName GetLevelName() const { return LevelName; }
+	TSoftObjectPtr<UWorld> GetLevelToLoad() const { return LevelToLoad; }
 
 	UFUNCTION(BlueprintCallable)
 	void SetIsUnlockedForward(bool bInUnlocked) { SplineForward.bIsUnlocked; }
@@ -97,7 +97,7 @@ private:
 	FData SplineLeft;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
-	FName LevelName;
+	TSoftObjectPtr<UWorld> LevelToLoad { nullptr };
 
 	UPROPERTY(EditAnywhere)
 	ELevels Level;

@@ -256,7 +256,7 @@ void AWorldMapController::HandlePause()
 
 void AWorldMapController::HandleOpenLevel()
 {
-	UGameplayStatics::OpenLevel(this, PlayerCharacter->GetLevelNodeRef()->GetLevelName());
+	UGameplayStatics::OpenLevelBySoftObjectPtr(this, PlayerCharacter->GetLevelNodeRef()->GetLevelToLoad());
 }
 
 void AWorldMapController::WorldMapControl(ENote Note)
@@ -332,7 +332,7 @@ void AWorldMapController::WorldMapControl(ENote Note)
 			}
 			case ENote::B:
 			{
-				UGameplayStatics::OpenLevel(this, PlayerCharacter->GetLevelNodeRef()->GetLevelName());
+				UGameplayStatics::OpenLevelBySoftObjectPtr(this, PlayerCharacter->GetLevelNodeRef()->GetLevelToLoad());
 				break;
 			}
 			default:
