@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "MainMenuSettingWidget.generated.h"
 
+class AGameHUD;
 class AWorldMapHUD;
 class UAudioSettingWidget;
 class UGraphicSettingWidget;
@@ -68,4 +69,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AWorldMapHUD> WorldMapHud { nullptr };
+
+	UPROPERTY()
+	TObjectPtr<AGameHUD> GameHud { nullptr };
 };

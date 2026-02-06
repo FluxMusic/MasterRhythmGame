@@ -1,10 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UI/Settings/MainMenuSettingWidget.h"
+
+#include "Controller/GameController.h"
 #include "UI/ButtonWidget.h"
 #include "HUD/MainMenuHUD.h"
 #include "Controller/MainMenuController.h"
 #include "Controller/WorldMapController.h"
+#include "HUD/GameHUD.h"
 
 void UMainMenuSettingWidget::NativeConstruct()
 {
@@ -22,6 +25,13 @@ void UMainMenuSettingWidget::NativeConstruct()
 	if (WorldMapPlayerController != nullptr)
 	{
 		WorldMapHud = Cast<AWorldMapHUD>(WorldMapPlayerController->GetHUD());
+	}
+
+	AGameController* GameController = Cast<AGameController>(GetOwningPlayer());
+
+	if (GameController != nullptr)
+	{
+		GameHud = Cast<AGameHUD>(GameController->GetHUD());
 	}
 
 	WBP_AudioSettingWidget->SetVisibility(ESlateVisibility::Hidden);
@@ -61,6 +71,15 @@ void UMainMenuSettingWidget::ReturnMainMenuClicked()
 		if (WorldMapPlayerController != nullptr)
 		{
 			WorldMapPlayerController->SetControllerState(EControllerStateWorldMap::PauseMenu);
+		}
+	}
+	if (GameHud != nullptr)
+	{
+		GameHud->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+		AGameController* PlayerController = Cast<AGameController>(GetOwningPlayer());
+		if (PlayerController != nullptr)
+		{
+			PlayerController->SetControllerState(EControllerStateGame::PauseMenu);
 		}
 	}
 }

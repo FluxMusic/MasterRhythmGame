@@ -135,18 +135,18 @@ void UPauseMenuWidget::SettingsButtonClicked()
 			WorldMapHud->GetMainMenuSettingInstance()->SetVisibility(ESlateVisibility::Visible);
 		}
 	}
-	else if (CurrentLevel == "TestMap")
+	else
 	{
 		AGameController* PlayerController = Cast<AGameController>(GetOwningPlayer());
 
 		if (PlayerController != nullptr)
 		{
 			GameHUD = Cast<AGameHUD>(PlayerController->GetHUD());
-			//PlayerController->SetControllerState(EControllerStateWorldMap::Game);
+			PlayerController->SetControllerState(EControllerStateGame::SettingMenu);
 		}
 		if (GameHUD != nullptr)
 		{
-			//GameHUD->Get()->SetVisibility(ESlateVisibility::Visible);
+			GameHUD->GetMainMenuSettingInstance()->SetVisibility(ESlateVisibility::Visible);
 		}
 	}
 }
