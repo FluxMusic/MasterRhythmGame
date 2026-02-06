@@ -214,6 +214,11 @@ private:
     UPROPERTY()
     FString PartNameFix;
 
+    FString PartPlayed;
+
+    UPROPERTY()
+    bool bPartAlreadyPlayed { false };
+
     UPROPERTY()
     bool bPlayAgain { false };
 
@@ -238,7 +243,7 @@ private:
     int32 CurrentScore { 0 };
 
     UPROPERTY()
-    float CurrentComboMultiplier { 0.1f };
+    float CurrentComboMultiplier { 1.0f };
 
     UPROPERTY()
     int32 CurrentComboCount { 0 };
@@ -250,7 +255,7 @@ private:
     int32 BaseScorePerNote { 50 };
 
     UPROPERTY()
-    float ComboMultiplierMin { 0.1f };
+    float ComboMultiplierMin { 1.0f };
 
     UPROPERTY()
     float ComboMultiplierMax { 5.0f };

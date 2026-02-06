@@ -396,6 +396,25 @@ void UAudioManagerSubsystem::WatchOutputPartFinishedPart(FName OutputName, const
 {
 	FString WorldName = GetWorld()->GetMapName();
 
+	if (PartNameFix != PartPlayed)
+	{
+		PartPlayed = PartNameFix;
+		bPartAlreadyPlayed = false;
+	}
+	else
+	{
+		bPartAlreadyPlayed = true;
+	}
+
+	if (bPartAlreadyPlayed)
+	{
+		SetScoringEnabled(false);
+	}
+	else
+	{
+		SetScoringEnabled(true);
+	}
+
 	switch (GetMapTypeFromString(WorldName))
 	{
 		case EMapNames::Swamp:
@@ -476,7 +495,7 @@ void UAudioManagerSubsystem::AddScore(int32 BasePoints)
 	// Update UI
 	if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
 	{
-		GameHUD->GetMainGameInstance()->UpdateScore(CurrentScore, CurrentComboMultiplier, CurrentComboCount);
+		GameHUD->GetMainGameInstance()->UpdateScore(CurrentScore, CurrentComboMultiplier);
 	}
 
 	UE_LOG(LogTemp, Log, TEXT("Score Added: %d (Base: %d x Multiplier: %.2f) | Total Score: %d | Combo: %d"), 
@@ -491,10 +510,10 @@ void UAudioManagerSubsystem::ResetCombo()
 	// Update UI
 	if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
 	{
-		GameHUD->GetMainGameInstance()->UpdateScore(CurrentScore, CurrentComboMultiplier, CurrentComboCount);
+		GameHUD->GetMainGameInstance()->UpdateScore(CurrentScore, CurrentComboMultiplier);
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Combo Reset! Multiplier back to %.2f"), CurrentComboMultiplier);
+	UE_LOG(LogTemp, Warning, TEXT("Combo Reset! Multiplier back to 1.0"));
 }
 
 void UAudioManagerSubsystem::SetScoringEnabled(bool bEnabled)
@@ -531,8 +550,6 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 	}
 	else if (PartNameFix.Equals(TEXT("Part1End")))
 	{
-		SetScoringEnabled(true);
-
 		// Check if loop needed -> Check if Enemy no life
 		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
 		{
@@ -573,9 +590,6 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 				Gi->LoadLevel(TEXT("MAP_Swamp_Endless"));
 			}
 			
-			// Re-enable scoring for next part
-			SetScoringEnabled(true);
-			
 			StartPart2Intro();
 		}
 	}
@@ -596,9 +610,6 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 			bPlayerCanAttack = false;
 			StartPart2();
 			bPlayAgain = true;
-			
-			// Disable scoring during repeat
-			SetScoringEnabled(false);
 
 			MuteLeads();
 		}
@@ -650,9 +661,6 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 			bPlayerCanAttack = false;
 			StartPart3();
 			bPlayAgain = true;
-
-			// Disable scoring during repeat
-			SetScoringEnabled(false);
 
 			MuteLeads();
 		}

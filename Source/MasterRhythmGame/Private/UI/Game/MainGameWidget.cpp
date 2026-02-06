@@ -302,7 +302,7 @@ void UMainGameWidget::SetCompletionPercent(float InPercent)
 	}
 }
 
-void UMainGameWidget::UpdateScore(int32 TotalScore, float ComboMultiplier, int32 ComboCount)
+void UMainGameWidget::UpdateScore(int32 TotalScore, float ComboMultiplier)
 {
 	if (ScoreText != nullptr)
 	{
@@ -311,7 +311,7 @@ void UMainGameWidget::UpdateScore(int32 TotalScore, float ComboMultiplier, int32
 
 	if (ComboText != nullptr)
 	{
-		FString ComboString = FString::Printf(TEXT("x%.1f (%d)"), ComboMultiplier, ComboCount);
+		FString ComboString = FString::Printf(TEXT("x%.1f"), ComboMultiplier);
 		ComboText->SetText(FText::FromString(ComboString));
 	}
 }
@@ -328,6 +328,6 @@ void UMainGameWidget::NativeConstruct()
 	
 	if (ComboText != nullptr)
 	{
-		ComboText->SetText(FText::FromString(TEXT("x0.1 (0)")));
+		ComboText->SetText(FText::FromString(TEXT("x1.0")));
 	}
 }

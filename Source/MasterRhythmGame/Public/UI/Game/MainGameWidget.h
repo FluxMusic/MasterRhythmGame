@@ -52,7 +52,7 @@ public:
 	void SetCompletionPercent(float InPercent);
 
 	UFUNCTION()
-	void UpdateScore(int32 TotalScore, float ComboMultiplier, int32 ComboCount);
+	void UpdateScore(int32 TotalScore, float ComboMultiplier);
 
 	// --- LifeBarPlayer ---
 	UProgressBar* GetLifeBarPlayer() const { return LifeBarPlayer; }
