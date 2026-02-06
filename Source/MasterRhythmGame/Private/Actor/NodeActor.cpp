@@ -6,7 +6,6 @@
 #include "Controller/GameController.h"
 #include "Components/SplineComponent.h"
 #include "Curves/CurveFloat.h"
-#include "UObject/ConstructorHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "Enemy/TestEnemyActor.h"
 #include "Kismet/GameplayStatics.h"
@@ -50,7 +49,7 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 	AGameCharacter* OverlappingCharacter = Cast<AGameCharacter>(OtherActor);
 	if (OverlappingCharacter != nullptr)
 	{
-		// If the node is moving left, it targets the player side.
+		// If the note is moving left, it targets the player side.
 		if (bMovingLeft)
 		{
 			// If player is attacking, treat as a collision that prevents damage but do not increment defended.
@@ -60,7 +59,15 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 				return;
 			}
 
-			// Player collided with a left-moving node => increment defended and prevent damage.
+			// Player successfully defended against left-moving note
+			// Award score points for successful defense using configured base score
+			if (AudioManager != nullptr)
+			{
+				int32 BaseScore = AudioManager->GetBaseScorePerNote();
+				AudioManager->AddScore(BaseScore);
+			}
+
+			// Player collided with a left-moving note => increment defended and prevent damage.
 			bCollidedWithPlayer = true;
 			int32 Defended = OverlappingCharacter->GetDefended();
 			Defended++;
@@ -71,7 +78,7 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 			return;
 		}
 
-		// If node is moving right (targets enemy), a player overlap should not cause player damage.
+		// If note is moving right (targets enemy), player collected it but no score
 		// Mark as collided to ensure player won't be damaged by this note later.
 		bCollidedWithPlayer = true;
 	}
@@ -80,7 +87,7 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 	ATestEnemyActor* OverlappingEnemy = Cast<ATestEnemyActor>(OtherActor);
 	if (OverlappingEnemy != nullptr)
 	{
-		// If the node is moving right, it targets the enemy side.
+		// If the note is moving right, it targets the enemy side.
 		if (!bMovingLeft)
 		{
 			// If enemy is attacking, just mark collided to prevent damage.
@@ -100,8 +107,8 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 			return;
 		}
 
-		// If node is moving left (targets player), preserve original behavior for enemy overlaps:
-		// if enemy overlaps with a left-moving node, mark and destroy.
+		// If note is moving left (targets player), preserve original behavior for enemy overlaps:
+		// if enemy overlaps with a left-moving note, mark and destroy.
 		if (AudioManager != nullptr && AudioManager->GetEnemyCanAttack())
 		{
 			bCollidedWithEnemy = true;
@@ -223,6 +230,12 @@ void ANodeActor::HandleTimelineFinished()
 	{
 		if (!bCollidedWithPlayer && AudioManager != nullptr && !AudioManager->GetPlayerCanAttack())
 		{
+			// Player was hit by note - reset combo
+			if (AudioManager)
+			{
+				AudioManager->ResetCombo();
+			}
+
 			// find the player character and apply damage
 			if (AGameCharacter* PlayerActor = Cast<AGameCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameCharacter::StaticClass())))
 			{

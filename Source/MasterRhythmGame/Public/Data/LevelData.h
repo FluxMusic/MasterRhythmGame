@@ -96,6 +96,19 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float SynthDamageFactor     { 1.f };
 
+	//Score System
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int32 BaseScorePerNote { 50 };
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float ComboMultiplierMin { 0.1f };
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float ComboMultiplierMax { 5.0f };
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float ComboMultiplierIncrement { 0.1f };
+
 	//Player Class
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<AActor> PlayerClass { nullptr };

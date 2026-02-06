@@ -42,6 +42,18 @@ void UAudioManagerSubsystem::InitSubsystem(ULevelData* LevelData)
 	{
 		RootNote = LevelData->RootNote;
 		PartFinish = LevelData->NumSegments;
+		
+		// Initialize score system from LevelData
+		BaseScorePerNote = LevelData->BaseScorePerNote;
+		ComboMultiplierMin = LevelData->ComboMultiplierMin;
+		ComboMultiplierMax = LevelData->ComboMultiplierMax;
+		ComboMultiplierIncrement = LevelData->ComboMultiplierIncrement;
+		
+		// Reset score for new level
+		CurrentScore = 0;
+		CurrentComboMultiplier = ComboMultiplierMin;
+		CurrentComboCount = 0;
+		bScoringEnabled = true;
 	}
 	
 }
@@ -446,6 +458,59 @@ void UAudioManagerSubsystem::UnmuteLeads()
 	}
 }
 
+void UAudioManagerSubsystem::AddScore(int32 BasePoints)
+{
+	if (!bScoringEnabled)
+	{
+		return;
+	}
+
+	// Calculate score with combo multiplier
+	int32 PointsToAdd = FMath::RoundToInt(BasePoints * CurrentComboMultiplier);
+	CurrentScore += PointsToAdd;
+	CurrentComboCount++;
+
+	// Increase combo multiplier
+	CurrentComboMultiplier = FMath::Min(CurrentComboMultiplier + ComboMultiplierIncrement, ComboMultiplierMax);
+
+	// Update UI
+	if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
+	{
+		GameHUD->GetMainGameInstance()->UpdateScore(CurrentScore, CurrentComboMultiplier, CurrentComboCount);
+	}
+
+	UE_LOG(LogTemp, Log, TEXT("Score Added: %d (Base: %d x Multiplier: %.2f) | Total Score: %d | Combo: %d"), 
+		PointsToAdd, BasePoints, CurrentComboMultiplier, CurrentScore, CurrentComboCount);
+}
+
+void UAudioManagerSubsystem::ResetCombo()
+{
+	CurrentComboMultiplier = ComboMultiplierMin;
+	CurrentComboCount = 0;
+
+	// Update UI
+	if (GameHUD != nullptr && GameHUD->GetMainGameInstance() != nullptr)
+	{
+		GameHUD->GetMainGameInstance()->UpdateScore(CurrentScore, CurrentComboMultiplier, CurrentComboCount);
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Combo Reset! Multiplier back to %.2f"), CurrentComboMultiplier);
+}
+
+void UAudioManagerSubsystem::SetScoringEnabled(bool bEnabled)
+{
+	bScoringEnabled = bEnabled;
+	
+	if (!bEnabled)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Scoring Disabled (Part Repeat)"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Log, TEXT("Scoring Enabled"));
+	}
+}
+
 void UAudioManagerSubsystem::HandleSwampLevel()
 {
 	// Immediately select the next part based on the reported name.
@@ -466,6 +531,8 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 	}
 	else if (PartNameFix.Equals(TEXT("Part1End")))
 	{
+		SetScoringEnabled(true);
+
 		// Check if loop needed -> Check if Enemy no life
 		if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
 		{
@@ -505,6 +572,10 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 				}
 				Gi->LoadLevel(TEXT("MAP_Swamp_Endless"));
 			}
+			
+			// Re-enable scoring for next part
+			SetScoringEnabled(true);
+			
 			StartPart2Intro();
 		}
 	}
@@ -525,6 +596,9 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 			bPlayerCanAttack = false;
 			StartPart2();
 			bPlayAgain = true;
+			
+			// Disable scoring during repeat
+			SetScoringEnabled(false);
 
 			MuteLeads();
 		}
@@ -576,6 +650,9 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 			bPlayerCanAttack = false;
 			StartPart3();
 			bPlayAgain = true;
+
+			// Disable scoring during repeat
+			SetScoringEnabled(false);
 
 			MuteLeads();
 		}

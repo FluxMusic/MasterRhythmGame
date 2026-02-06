@@ -5,6 +5,7 @@
 #include "Components/ProgressBar.h"
 #include "Components/Widget.h"
 #include "Math/UnrealMathUtility.h"
+#include "Components/TextBlock.h"
 
 void UMainGameWidget::SetMaxHealthPlayer(int32 InMaxHealth)
 {
@@ -301,7 +302,32 @@ void UMainGameWidget::SetCompletionPercent(float InPercent)
 	}
 }
 
+void UMainGameWidget::UpdateScore(int32 TotalScore, float ComboMultiplier, int32 ComboCount)
+{
+	if (ScoreText != nullptr)
+	{
+		ScoreText->SetText(FText::AsNumber(TotalScore));
+	}
+
+	if (ComboText != nullptr)
+	{
+		FString ComboString = FString::Printf(TEXT("x%.1f (%d)"), ComboMultiplier, ComboCount);
+		ComboText->SetText(FText::FromString(ComboString));
+	}
+}
+
 void UMainGameWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
+	
+	// Initialize score display
+	if (ScoreText != nullptr)
+	{
+		ScoreText->SetText(FText::FromString(TEXT("0")));
+	}
+	
+	if (ComboText != nullptr)
+	{
+		ComboText->SetText(FText::FromString(TEXT("x0.1 (0)")));
+	}
 }
