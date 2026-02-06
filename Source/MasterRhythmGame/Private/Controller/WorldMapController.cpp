@@ -10,6 +10,7 @@
 #include "Components/Button.h"
 #include "Components/Slider.h"
 #include "Controller/MainMenuController.h"
+#include "GameInstance/MyGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/ButtonWidget.h"
 #include "WorldMap/LevelNode.h"
@@ -256,7 +257,7 @@ void AWorldMapController::HandlePause()
 
 void AWorldMapController::HandleOpenLevel()
 {
-	UGameplayStatics::OpenLevel(this, PlayerCharacter->GetLevelNodeRef()->GetLevelName());
+	UGameplayStatics::OpenLevelBySoftObjectPtr(this, PlayerCharacter->GetLevelNodeRef()->GetLevelToLoad());
 }
 
 void AWorldMapController::WorldMapControl(ENote Note)
@@ -332,7 +333,12 @@ void AWorldMapController::WorldMapControl(ENote Note)
 			}
 			case ENote::B:
 			{
-				UGameplayStatics::OpenLevel(this, PlayerCharacter->GetLevelNodeRef()->GetLevelName());
+				if (UMyGameInstance* GI = UMyGameInstance::Get())
+				{
+					GI->SetCurrentLevel(PlayerCharacter->GetLevelNodeRef()->GetLevelNodeLevel());
+				}
+				
+				UGameplayStatics::OpenLevelBySoftObjectPtr(this, PlayerCharacter->GetLevelNodeRef()->GetLevelToLoad());
 				break;
 			}
 			default:

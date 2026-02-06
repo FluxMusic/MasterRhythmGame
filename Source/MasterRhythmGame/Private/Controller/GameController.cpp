@@ -302,6 +302,11 @@ void AGameController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceControl
 			DeathMenuControl(NoteEnum);
 			break;
 		}
+		case EControllerStateGame::SuccessMenu:
+		{
+			SuccessMenuControl(NoteEnum);
+			break;
+		}
 		default:
 		{
 			// Should not land here
@@ -1341,6 +1346,95 @@ void AGameController::DeathMenuSwitchButton(EDeathState InDeathState)
 			{
 				GameHud->GetDeathWidgetInstance()->GetWorldMapButton()->GetButton()->SetKeyboardFocus();
 				GameHud->GetDeathWidgetInstance()->GetWorldMapButton()->HandleButtonHovered();
+				break;
+			}
+			default:
+			{
+				// Should not land here
+				break;
+			}
+		}
+	}
+}
+
+void AGameController::SuccessMenuControl(ENote Note)
+{
+	switch (Note)
+	{
+		case ENote::C:
+		{
+			SuccessMenuIndex++;
+			SuccessMenuIndex = FMath::Clamp(SuccessMenuIndex, 0, 2);
+			UE_LOG(LogTemp, Log, TEXT("SuccessMenuIndex: %d"), SuccessMenuIndex);
+			break;
+		}
+		case ENote::D:
+		{
+			SuccessMenuIndex--;
+			SuccessMenuIndex = FMath::Clamp(SuccessMenuIndex, 0, 2);
+			UE_LOG(LogTemp, Log, TEXT("SuccessMenuIndex: %d"), SuccessMenuIndex);
+			break;
+		}
+		case ENote::B:
+		{
+			if (GameHud != nullptr)
+			{
+				if (GameHud->GetSuccessWidgetInstance()->GetRetryButton()->HasKeyboardFocus())
+				{
+					SuccessMenuIndex = 0;
+					GameHud->GetSuccessWidgetInstance()->RetryButtonClicked();
+					break;
+				}
+				if (GameHud->GetSuccessWidgetInstance()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					SuccessMenuIndex = 0;
+					GameHud->GetSuccessWidgetInstance()->MainMenuButtonClicked();
+					break;
+				}
+				if (GameHud->GetSuccessWidgetInstance()->GetWorldMapButton()->HasKeyboardFocus())
+				{
+					SuccessMenuIndex = 0;
+					GameHud->GetSuccessWidgetInstance()->WorldMapButtonClicked();
+					break;
+				}
+			}
+		}
+		default:
+		{
+			// Should not land here
+			break;
+		}
+	}
+	// map index -> enum
+	SuccessMenuSwitchButton(static_cast<ESuccessState>(SuccessMenuIndex));
+}
+
+void AGameController::SuccessMenuSwitchButton(ESuccessState InSuccessState)
+{
+	if (GameHud != nullptr)
+	{
+		GameHud->GetSuccessWidgetInstance()->GetRetryButton()->HandleButtonUnhovered();
+		GameHud->GetSuccessWidgetInstance()->GetMainMenuButton()->HandleButtonUnhovered();
+		GameHud->GetSuccessWidgetInstance()->GetWorldMapButton()->HandleButtonUnhovered();
+
+		switch (InSuccessState)
+		{
+			case ESuccessState::Retry:
+			{
+				GameHud->GetSuccessWidgetInstance()->GetRetryButton()->GetButton()->SetKeyboardFocus();
+				GameHud->GetSuccessWidgetInstance()->GetRetryButton()->HandleButtonHovered();
+				break;
+			}
+			case ESuccessState::MainMenu:
+			{
+				GameHud->GetSuccessWidgetInstance()->GetMainMenuButton()->GetButton()->SetKeyboardFocus();
+				GameHud->GetSuccessWidgetInstance()->GetMainMenuButton()->HandleButtonHovered();
+				break;
+			}
+			case ESuccessState::WorldMap:
+			{
+				GameHud->GetSuccessWidgetInstance()->GetWorldMapButton()->GetButton()->SetKeyboardFocus();
+				GameHud->GetSuccessWidgetInstance()->GetWorldMapButton()->HandleButtonHovered();
 				break;
 			}
 			default:

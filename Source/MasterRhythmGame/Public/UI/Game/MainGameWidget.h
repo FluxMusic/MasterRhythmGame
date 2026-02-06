@@ -54,6 +54,9 @@ public:
 	UFUNCTION()
 	void UpdateScore(int32 TotalScore, float ComboMultiplier);
 
+	UFUNCTION()
+	void UpdateNoteAmount(int32 InNoteAmount);
+
 	// --- LifeBarPlayer ---
 	UProgressBar* GetLifeBarPlayer() const { return LifeBarPlayer; }
 
@@ -131,6 +134,9 @@ private:
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	class UTextBlock* ComboText { nullptr };
+
+	UPROPERTY(EditAnywhere, meta = (BindWidget))
+	class UTextBlock* NoteAmount { nullptr };
 
 	UPROPERTY()
 	TObjectPtr<ATestEnemyActor> Enemy { nullptr };

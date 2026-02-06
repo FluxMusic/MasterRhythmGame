@@ -66,6 +66,15 @@ void AGameHUD::BeginPlay()
 			DeathWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+	if (SuccessWidgetClass)
+	{
+		SuccessWidgetInstance = CreateWidget<USuccessWidget>(GetWorld(), SuccessWidgetClass);
+		if (SuccessWidgetInstance != nullptr)
+		{
+			SuccessWidgetInstance->AddToViewport();
+			SuccessWidgetInstance->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
 	if (BlackscreenClass)
 	{
 		BlackscreenInstance = CreateWidget<UBlackscreenWidget>(GetWorld(), BlackscreenClass);

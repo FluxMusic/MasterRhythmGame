@@ -149,6 +149,17 @@ void AGameCharacter::SetupHUD()
 	}
 }
 
+void AGameCharacter::SetDefended(int32 InDefended)
+{
+	Defended = FMath::Clamp(InDefended, 0, 10);
+
+	if (GameHUD && GameHUD->GetMainGameInstance())
+	{
+		GameHUD->GetMainGameInstance()->UpdateNoteAmount(Defended);
+	}
+	
+}
+
 void AGameCharacter::PlayNote(int32 Note, EInstrument Instrument)
 {
 	if (AudioComponent && AudioComponent->GetSound())
