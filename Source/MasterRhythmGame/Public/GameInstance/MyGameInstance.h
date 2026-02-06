@@ -67,6 +67,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	EInstrument GetUnlockedInstruments();
 
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentLevel(ELevels Level) { CurrentLevel = Level; }
+	UFUNCTION(BlueprintCallable)
+	ELevels GetCurrentLevel() { return CurrentLevel; }
+
 	static inline UMyGameInstance* Get() { return Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(GWorld)); }
 
 private:
@@ -82,8 +87,10 @@ private:
 	bool bIsLevelFiveUnlocked  { false };
 	bool bIsLevelSixUnlocked   { false };
 
-	//Testing Purposes
-	//TODO: Set Instrument to piano (always unlocked)
 	UPROPERTY()
-	EInstrument UnlockedInstruments { EInstrument::All };
+	EInstrument UnlockedInstruments { EInstrument::Piano };
+
+	//The Level To return to on the world map when loading into it
+	UPROPERTY()
+	ELevels CurrentLevel { ELevels::LevelOne };
 };

@@ -183,13 +183,22 @@ enum class EControllerStateGame : uint8
 	SettingMenu,
 	GraphicsMenu,
 	AudioMenu,
-	DeathMenu
+	DeathMenu,
+	SuccessMenu
 };
 
 UENUM(BlueprintType)
 enum class EDeathState : uint8
 {
 	Respawn,
+	WorldMap,
+	MainMenu
+};
+
+UENUM(BlueprintType)
+enum class ESuccessState : uint8
+{
+	Retry,
 	WorldMap,
 	MainMenu
 };

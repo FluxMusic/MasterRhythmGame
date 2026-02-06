@@ -176,6 +176,10 @@ protected:
 	void DeathMenuControl(ENote Note);
 
 	void DeathMenuSwitchButton(EDeathState InDeathState);
+	
+	void SuccessMenuControl(ENote Note);
+
+	void SuccessMenuSwitchButton(ESuccessState InSuccessState);
 
 private:
 	float FrameToSeconds();
@@ -228,6 +232,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, DisplayName = "DeathMenuIndex", Category = "Components")
 	int32 DeathMenuIndex { 0 };
+
+	UPROPERTY(VisibleAnywhere, DisplayName = "SuccessMenuIndex", Category = "Components")
+	int32 SuccessMenuIndex { 0 };
 
 	EControllerStateGame ControllerState { EControllerStateGame::Game };
 

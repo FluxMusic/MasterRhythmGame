@@ -10,6 +10,7 @@
 #include "Components/Button.h"
 #include "Components/Slider.h"
 #include "Controller/MainMenuController.h"
+#include "GameInstance/MyGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/ButtonWidget.h"
 #include "WorldMap/LevelNode.h"
@@ -332,6 +333,11 @@ void AWorldMapController::WorldMapControl(ENote Note)
 			}
 			case ENote::B:
 			{
+				if (UMyGameInstance* GI = UMyGameInstance::Get())
+				{
+					GI->SetCurrentLevel(PlayerCharacter->GetLevelNodeRef()->GetLevelNodeLevel());
+				}
+				
 				UGameplayStatics::OpenLevelBySoftObjectPtr(this, PlayerCharacter->GetLevelNodeRef()->GetLevelToLoad());
 				break;
 			}

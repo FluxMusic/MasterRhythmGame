@@ -7,6 +7,7 @@
 #include "UI/PauseMenuWidget.h"
 #include "UI/Game/BlackscreenWidget.h"
 #include "UI/Game/DeathWidget.h"
+#include "UI/Game/SuccessWidget.h"
 #include "UI/Game/MainGameWidget.h"
 #include "UI/Settings/AudioSettingWidget.h"
 #include "UI/Settings/GraphicSettingWidget.h"
@@ -70,6 +71,14 @@ public:
 	// --- Death Widget Instance ---
 	UDeathWidget* GetDeathWidgetInstance() const { return DeathWidgetInstance; }
 	void SetDeathWidgetInstance(UDeathWidget* InInstance) { DeathWidgetInstance = InInstance; }
+	
+	// --- Success Widget Class ---
+	TSubclassOf<USuccessWidget> GetSuccessWidgetClass() const { return SuccessWidgetClass; }
+	void SetSuccessWidgetClass(TSubclassOf<USuccessWidget> InClass) { SuccessWidgetClass = InClass; }
+
+	// --- Success Widget Instance ---
+	USuccessWidget* GetSuccessWidgetInstance() const { return SuccessWidgetInstance; }
+	void SetSuccessWidgetInstance(USuccessWidget* InInstance) { SuccessWidgetInstance = InInstance; }
 
 	// --- Blackscreen Class ---
 	TSubclassOf<UBlackscreenWidget> GetBlackscreenClass() const { return BlackscreenClass; }
@@ -118,6 +127,12 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UDeathWidget> DeathWidgetInstance { nullptr };
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<USuccessWidget> SuccessWidgetClass { nullptr };
+
+	UPROPERTY()
+	TObjectPtr<USuccessWidget> SuccessWidgetInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UBlackscreenWidget> BlackscreenClass { nullptr };

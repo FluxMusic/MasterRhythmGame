@@ -62,6 +62,9 @@ public:
 	TSoftObjectPtr<UWorld> GetLevelToLoad() const { return LevelToLoad; }
 
 	UFUNCTION(BlueprintCallable)
+	ELevels GetLevelNodeLevel() const { return Level; }
+
+	UFUNCTION(BlueprintCallable)
 	void SetIsUnlockedForward(bool bInUnlocked) { SplineForward.bIsUnlocked; }
 
 	UFUNCTION(BlueprintCallable)

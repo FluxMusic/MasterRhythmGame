@@ -296,7 +296,8 @@ void UAudioManagerSubsystem::StartMusic()
 {
 	if (ActiveAudioComponent)
 	{
-		ActiveAudioComponent->SetTriggerParameter("PlayIntro");
+		// ActiveAudioComponent->SetTriggerParameter("PlayIntro");
+		ActiveAudioComponent->SetTriggerParameter("PlayOutro");
 	}
 }
 
@@ -685,31 +686,21 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 		{
 			StartOutro();
 		}
-		else if (PartNameFix.Equals(TEXT("OutroEnd")))
-		{
-			UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
-			StopClock();
-			// TODO: Do sth else
-			GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-			AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-			PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-			// Toggle pause state
-			bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-			UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
-
-			if (bCurrentlyPaused == false)
-			{
-				if (GameHUD != nullptr)
-				{
-					GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-				}
-				// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-				PlayerController->bShowMouseCursor = true;
-				FInputModeGameAndUI InputMode;
-				InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-				PlayerController->SetInputMode(InputMode);
-			}
-		}
+	}
+	else if (PartNameFix.Equals(TEXT("OutroEnd")))
+	{
+		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
+		StopClock();
+		//Show Success Menu
+		GameHUD->GetSuccessWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
+		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+		PlayerController->SetControllerState(EControllerStateGame::SuccessMenu);
+		
+		// Show mouse cursor and switch to GameAndUI input so widgets receive focus
+		PlayerController->bShowMouseCursor = true;
+		FInputModeGameAndUI InputMode;
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		PlayerController->SetInputMode(InputMode);
 	}
 }
 
