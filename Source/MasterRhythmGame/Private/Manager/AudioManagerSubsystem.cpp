@@ -752,6 +752,17 @@ void UAudioManagerSubsystem::HandleVolcanoLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Vulcano_Segment_1"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Vulcano_Segment_2"));
+			}
+
 			StartPart2Intro();
 		}
 	}
@@ -794,6 +805,17 @@ void UAudioManagerSubsystem::HandleVolcanoLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Vulcano_Segment_2"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Vulcano_Segment_3"));
+			}
+
 			StartPart3Intro();
 		}
 	}
@@ -834,12 +856,19 @@ void UAudioManagerSubsystem::HandleVolcanoLevel()
 
 			UnmuteLeads();
 		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() <= 0) && PartFinish == EPartFinish::Three)
-		{
-			StartOutro();
-		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Vulcano_Segment_3"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Vulcano_Segment_4"));
+			}
+
 			StartPart4Intro();
 		}
 	}
@@ -886,6 +915,17 @@ void UAudioManagerSubsystem::HandleVolcanoLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Vulcano_Segment_4"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Vulcano_Segment_5"));
+			}
+
 			StartPart5Intro();
 		}
 	}
