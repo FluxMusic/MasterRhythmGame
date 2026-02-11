@@ -6,14 +6,12 @@
 #include "MetasoundOutput.h"
 #include "Components/AudioComponent.h"
 #include "Sound/QuartzQuantizationUtilities.h"
-#include "AudioParameterControllerInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "MetaSoundOutputSubsystem.h"
 #include "Actor/SplineActor.h"
 #include "Components/SplineComponent.h"
 #include "Enemy/TestEnemyActor.h"
 #include "Kismet/GameplayStatics.h"
-#include "TimerManager.h"
 #include "Controller/GameController.h"
 #include "Data/LevelData.h"
 #include "GameInstance/MyGameInstance.h"
@@ -1047,6 +1045,17 @@ void UAudioManagerSubsystem::HandleSpaceLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Galaxy_Segment_1"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Galaxy_Segment_2"));
+			}
+
 			StartPart2Intro();
 		}
 	}
@@ -1089,6 +1098,17 @@ void UAudioManagerSubsystem::HandleSpaceLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Galaxy_Segment_2"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Galaxy_Segment_3_Endless"));
+			}
+
 			StartPart3Intro();
 		}
 	}
@@ -1135,6 +1155,17 @@ void UAudioManagerSubsystem::HandleSpaceLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Galaxy_Segment_3_Endless"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Galaxy_Segment_4"));
+			}
+
 			StartPart4Intro();
 		}
 	}
@@ -1256,6 +1287,17 @@ void UAudioManagerSubsystem::HandleIceLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Ice_1"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Ice_2"));
+			}
+
 			StartPart2Intro();
 		}
 	}
@@ -1298,6 +1340,17 @@ void UAudioManagerSubsystem::HandleIceLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Ice_2"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Ice_3"));
+			}
+
 			StartPart3Intro();
 		}
 	}
@@ -1344,6 +1397,17 @@ void UAudioManagerSubsystem::HandleIceLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Ice_3"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Ice_4"));
+			}
+
 			StartPart4Intro();
 		}
 	}
