@@ -13,11 +13,18 @@ ALevelSegment::ALevelSegment()
 	SetRootComponent(Root);
 }
 
+void ALevelSegment::Rotate()
+{
+	float RotationDirection = bRotateClockwise ? -1.0f : 1.0f;
+	FRotator NewRotation = GetActorRotation();
+	NewRotation.Yaw += RotationSpeed * RotationDirection;
+	SetActorRotation(NewRotation);
+}
+
 // Called when the game starts or when spawned
 void ALevelSegment::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -25,4 +32,11 @@ void ALevelSegment::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (bCanRotate)
+	{
+		float RotationDirection = bRotateClockwise ? -1.0f : 1.0f;
+		FRotator NewRotation = GetActorRotation();
+		NewRotation.Yaw += RotationSpeed * RotationDirection * DeltaTime;
+		SetActorRotation(NewRotation);
+	}
 }

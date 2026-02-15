@@ -19,7 +19,10 @@ void AEndlessRunnerManager::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	UpdateSegments(DeltaTime);
+	if (!bMovementStopped)
+	{
+		UpdateSegments(DeltaTime);
+	}
 }
 
 void AEndlessRunnerManager::SetMovementDirection(EMovementDirection NewDirection)
@@ -57,7 +60,7 @@ void AEndlessRunnerManager::InitializeSegments()
 		}
 
 		// Calculate spawn position based on direction and default segment length
-		FVector SpawnPosition = DirectionVector * DefaultSegmentLength * i;
+		FVector SpawnPosition = (DirectionVector * DefaultSegmentLength * i) + SpawnLocationOffset;
 		
 		// Spawn the segment
 		FActorSpawnParameters SpawnParams;
@@ -67,12 +70,14 @@ void AEndlessRunnerManager::InitializeSegments()
 		ALevelSegment* NewSegment = GetWorld()->SpawnActor<ALevelSegment>(
 			LevelSegmentPool[i],
 			SpawnPosition,
-			FRotator::ZeroRotator,
+			SpawnRotation,
 			SpawnParams
 		);
 
 		if (NewSegment)
 		{
+			NewSegment->SetActorScale3D(SpawnScale);
+			NewSegment->SetRunnerManager(this);
 			ActiveSegments.Add(NewSegment);
 			UE_LOG(LogTemp, Log, TEXT("AEndlessRunnerManager::InitializeSegments - Spawned segment at position: %s"), *SpawnPosition.ToString());
 		}
@@ -114,6 +119,19 @@ void AEndlessRunnerManager::UpdateSegments(float DeltaTime)
 			FVector CurrentLocation = Segment->GetActorLocation();
 			FVector NewLocation = CurrentLocation + MovementDelta;
 			Segment->SetActorLocation(NewLocation);
+
+			// Check if segment should stop at target location
+			if (Segment->ShouldStopAtTargetLocation() && !Segment->HasReachedTarget())
+			{
+				float Distance = FVector::Dist(NewLocation, Segment->GetTargetLocation());
+				if (Distance <= Segment->GetTargetLocationTolerance())
+				{
+					Segment->SetTargetReached(true);
+					bMovementStopped = true;
+					UE_LOG(LogTemp, Log, TEXT("AEndlessRunnerManager::UpdateSegments - Segment reached target location! Stopping movement"));
+					return;
+				}
+			}
 
 			// Check if segment passed the manager (behind in spawn direction)
 			FVector ToSegment = CurrentLocation - ManagerPosition;

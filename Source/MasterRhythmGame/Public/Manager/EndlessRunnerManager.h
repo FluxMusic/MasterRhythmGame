@@ -55,11 +55,23 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Setup")
 	float DefaultSegmentLength { 2700.0f };
 
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	FVector SpawnLocationOffset { FVector::ZeroVector };
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	FRotator SpawnRotation { FRotator::ZeroRotator };
+
+	UPROPERTY(EditAnywhere, Category = "Setup")
+	FVector SpawnScale { FVector::OneVector };
+
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	EMovementDirection MovementDirection { EMovementDirection::Forward };
 
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float MovementSpeed { 500.0f };
+
+	UPROPERTY()
+	bool bMovementStopped { false };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true), Category = "Setup")
 	TSubclassOf<AGameCharacter> PlayerCharacterClass { nullptr };
