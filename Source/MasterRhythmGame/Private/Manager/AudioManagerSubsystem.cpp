@@ -1529,6 +1529,17 @@ void UAudioManagerSubsystem::HandleCyberpunkLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Cyberpunk_First_Segment"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Cyberpunk_Second_Segment"));
+			}
+
 			StartPart2Intro();
 		}
 	}
@@ -1571,6 +1582,17 @@ void UAudioManagerSubsystem::HandleCyberpunkLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Cyberpunk_Second_Segment"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Cyberpunk_Third_Segment"));
+			}
+
 			StartPart3Intro();
 		}
 	}
@@ -1611,12 +1633,19 @@ void UAudioManagerSubsystem::HandleCyberpunkLevel()
 
 			UnmuteLeads();
 		}
-		else if ((Enemy != nullptr) && (Enemy->GetHealth3() <= 0) && PartFinish == EPartFinish::Three)
-		{
-			StartOutro();
-		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Cyberpunk_Third_Segment"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Cyberpunk_Fourth_Segment"));
+			}
+
 			StartPart4Intro();
 		}
 	}
