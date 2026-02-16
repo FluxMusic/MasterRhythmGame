@@ -1767,6 +1767,17 @@ void UAudioManagerSubsystem::HandleSteampunkLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Steampunk_1"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Steampunk_2"));
+			}
+
 			StartPart2Intro();
 		}
 	}
@@ -1809,6 +1820,17 @@ void UAudioManagerSubsystem::HandleSteampunkLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Steampunk_2"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Steampunk_3"));
+			}
+
 			StartPart3Intro();
 		}
 	}
@@ -1855,6 +1877,17 @@ void UAudioManagerSubsystem::HandleSteampunkLevel()
 		}
 		else
 		{
+			if (UMyGameInstance* Gi = UMyGameInstance::Get())
+			{
+				Gi->UnloadLevel(TEXT("MAP_Steampunk_3"));
+				if (GameHUD != nullptr)
+				{
+					GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Visible);
+					GameHUD->GetBlackscreenInstance()->FadeOut();
+				}
+				Gi->LoadLevel(TEXT("MAP_Steampunk_4"));
+			}
+
 			StartPart4Intro();
 		}
 	}
