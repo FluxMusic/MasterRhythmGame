@@ -45,6 +45,19 @@ ASplineActor::ASplineActor()
 	Spline1  = CreateDefaultSubobject<USplineComponent>("Spline1");
 	Spline0  = CreateDefaultSubobject<USplineComponent>("Spline0");
 
+	NoteDisplay11 = CreateDefaultSubobject<UStaticMeshComponent>("NoteDisplay11");
+	NoteDisplay10 = CreateDefaultSubobject<UStaticMeshComponent>("NoteDisplay10");
+	NoteDisplay9  = CreateDefaultSubobject<UStaticMeshComponent>("NoteDisplay9");
+	NoteDisplay8  = CreateDefaultSubobject<UStaticMeshComponent>("NoteDisplay8");
+	NoteDisplay7  = CreateDefaultSubobject<UStaticMeshComponent>("NoteDisplay7");
+	NoteDisplay6  = CreateDefaultSubobject<UStaticMeshComponent>("NoteDisplay6");
+	NoteDisplay5  = CreateDefaultSubobject<UStaticMeshComponent>("NoteDisplay5");
+	NoteDisplay4  = CreateDefaultSubobject<UStaticMeshComponent>("NoteDisplay4");
+	NoteDisplay3  = CreateDefaultSubobject<UStaticMeshComponent>("NoteDisplay3");
+	NoteDisplay2  = CreateDefaultSubobject<UStaticMeshComponent>("NoteDisplay2");
+	NoteDisplay1  = CreateDefaultSubobject<UStaticMeshComponent>("NoteDisplay1");
+	NoteDisplay0  = CreateDefaultSubobject<UStaticMeshComponent>("NoteDisplay0");
+
 	Spline11->SetupAttachment(RootComponent);
 	Spline10->SetupAttachment(RootComponent);
 	Spline9 ->SetupAttachment(RootComponent);
@@ -57,6 +70,19 @@ ASplineActor::ASplineActor()
 	Spline2 ->SetupAttachment(RootComponent);
 	Spline1 ->SetupAttachment(RootComponent);
 	Spline0 ->SetupAttachment(RootComponent);
+
+	NoteDisplay11->SetupAttachment(RootComponent);
+	NoteDisplay10->SetupAttachment(RootComponent);
+	NoteDisplay9 ->SetupAttachment(RootComponent);
+	NoteDisplay8 ->SetupAttachment(RootComponent);
+	NoteDisplay7 ->SetupAttachment(RootComponent);
+	NoteDisplay6 ->SetupAttachment(RootComponent);
+	NoteDisplay5 ->SetupAttachment(RootComponent);
+	NoteDisplay4 ->SetupAttachment(RootComponent);
+	NoteDisplay3 ->SetupAttachment(RootComponent);
+	NoteDisplay2 ->SetupAttachment(RootComponent);
+	NoteDisplay1 ->SetupAttachment(RootComponent);
+	NoteDisplay0 ->SetupAttachment(RootComponent);
 }
 
 // Called every frame
@@ -121,6 +147,69 @@ USplineComponent* ASplineActor::GetSplines(int32 Int)
 		case ENote::B:
 		{
 			return Spline11;
+		}
+		default:
+		{
+			return nullptr;
+		}
+	}
+}
+
+UStaticMeshComponent* ASplineActor::GetNoteDisplay(int32 Idx)
+{
+	Idx = Idx % 12;
+
+	ENote Note = static_cast<ENote>(Idx);
+
+	switch (Note)
+	{
+		case ENote::C:
+		{
+			return NoteDisplay0;
+		}
+		case ENote::CSharp:
+		{
+			return NoteDisplay1;
+		}
+		case ENote::D:
+		{
+			return NoteDisplay2;
+		}
+		case ENote::DSharp:
+		{
+			return NoteDisplay3;
+		}
+		case ENote::E:
+		{
+			return NoteDisplay4;
+		}
+		case ENote::F:
+		{
+			return NoteDisplay5;
+		}
+		case ENote::FSharp:
+		{
+			return NoteDisplay6;
+		}
+		case ENote::G:
+		{
+			return NoteDisplay7;
+		}
+		case ENote::GSharp:
+		{
+			return NoteDisplay8;
+		}
+		case ENote::A:
+		{
+			return NoteDisplay9;
+		}
+		case ENote::ASharp:
+		{
+			return NoteDisplay10;
+		}
+		case ENote::B:
+		{
+			return NoteDisplay11;
 		}
 		default:
 		{
@@ -238,6 +327,19 @@ void ASplineActor::OnConstruction(const FTransform& Transform)
 	Spline9 ->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing *  9.f));
 	Spline10->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing * 10.f));
 	Spline11->SetRelativeLocation(FVector(0.0f, 0.0f, LineSpacing * 11.f));
+	
+	NoteDisplay0 ->SetRelativeLocation(FVector(-DisplayOffset, 0.0f, LineSpacing *  0.f));
+	NoteDisplay1 ->SetRelativeLocation(FVector(-DisplayOffset, 0.0f, LineSpacing *  1.f));
+	NoteDisplay2 ->SetRelativeLocation(FVector(-DisplayOffset, 0.0f, LineSpacing *  2.f));
+	NoteDisplay3 ->SetRelativeLocation(FVector(-DisplayOffset, 0.0f, LineSpacing *  3.f));
+	NoteDisplay4 ->SetRelativeLocation(FVector(-DisplayOffset, 0.0f, LineSpacing *  4.f));
+	NoteDisplay5 ->SetRelativeLocation(FVector(-DisplayOffset, 0.0f, LineSpacing *  5.f));
+	NoteDisplay6 ->SetRelativeLocation(FVector(-DisplayOffset, 0.0f, LineSpacing *  6.f));
+	NoteDisplay7 ->SetRelativeLocation(FVector(-DisplayOffset, 0.0f, LineSpacing *  7.f));
+	NoteDisplay8 ->SetRelativeLocation(FVector(-DisplayOffset, 0.0f, LineSpacing *  8.f));
+	NoteDisplay9 ->SetRelativeLocation(FVector(-DisplayOffset, 0.0f, LineSpacing *  9.f));
+	NoteDisplay10->SetRelativeLocation(FVector(-DisplayOffset, 0.0f, LineSpacing * 10.f));
+	NoteDisplay11->SetRelativeLocation(FVector(-DisplayOffset, 0.0f, LineSpacing * 11.f));
 
 	FVector Location;
 
@@ -313,6 +415,19 @@ void ASplineActor::OnConstruction(const FTransform& Transform)
 	Spline2 ->SetVisibility(false);
 	Spline1 ->SetVisibility(false);
 	Spline0 ->SetVisibility(false);
+	
+	NoteDisplay11->SetVisibility(false);
+	NoteDisplay10->SetVisibility(false);
+	NoteDisplay9 ->SetVisibility(false);
+	NoteDisplay8 ->SetVisibility(false);
+	NoteDisplay7 ->SetVisibility(false);
+	NoteDisplay6 ->SetVisibility(false);
+	NoteDisplay5 ->SetVisibility(false);
+	NoteDisplay4 ->SetVisibility(false);
+	NoteDisplay3 ->SetVisibility(false);
+	NoteDisplay2 ->SetVisibility(false);
+	NoteDisplay1 ->SetVisibility(false);
+	NoteDisplay0 ->SetVisibility(false);
 
 	if (MeshInstances && Mesh && LevelData)
 	{
@@ -325,6 +440,11 @@ void ASplineActor::OnConstruction(const FTransform& Transform)
 		{
 			auto* Spline = GetSplines(ScaleDegree);
 			Spline->SetVisibility(true);
+
+			auto* NoteDisplay = GetNoteDisplay(ScaleDegree);
+			NoteDisplay->SetVisibility(true);
+			ENote Note = static_cast<ENote>((ScaleDegree + static_cast<int32>(LevelData->RootNote)) % 12);
+			NoteDisplay->SetMaterial(0, *MaterialLookupTable.Find(Note));
 			
 			FVector Start = Spline->GetLocationAtSplinePoint(0, ESplineCoordinateSpace::Local);
 			FVector End   = Spline->GetLocationAtSplinePoint(1, ESplineCoordinateSpace::Local);

@@ -6,6 +6,7 @@
 
 #include "../CoreTypes.h"
 
+#include "Materials/MaterialInterface.h"
 #include "GameFramework/Actor.h"
 #include "SplineActor.generated.h"
 
@@ -28,6 +29,9 @@ public:
 	USplineComponent* GetSplines(int32 Int);
 
 	UFUNCTION(BlueprintCallable)
+	UStaticMeshComponent* GetNoteDisplay(int32 Idx);
+
+	UFUNCTION(BlueprintCallable)
 	FVector GetSplinesY(int32 Int);
 
 	UFUNCTION()
@@ -46,45 +50,62 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline11")
 	TObjectPtr<USplineComponent> Spline11 { nullptr };
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline10")
 	TObjectPtr<USplineComponent> Spline10 { nullptr };
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline9")
 	TObjectPtr<USplineComponent> Spline9  { nullptr };
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline8")
 	TObjectPtr<USplineComponent> Spline8  { nullptr };
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline7")
 	TObjectPtr<USplineComponent> Spline7  { nullptr };
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline6")
 	TObjectPtr<USplineComponent> Spline6  { nullptr };
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline5")
 	TObjectPtr<USplineComponent> Spline5  { nullptr };
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline4")
 	TObjectPtr<USplineComponent> Spline4  { nullptr };
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline3")
 	TObjectPtr<USplineComponent> Spline3  { nullptr };
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline2")
 	TObjectPtr<USplineComponent> Spline2  { nullptr };
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline1")
 	TObjectPtr<USplineComponent> Spline1  { nullptr };
-	
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "Spline0")
 	TObjectPtr<USplineComponent> Spline0  { nullptr };
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "NoteDisplay0")
+	TObjectPtr<UStaticMeshComponent> NoteDisplay0  { nullptr };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "NoteDisplay1")
+	TObjectPtr<UStaticMeshComponent> NoteDisplay1  { nullptr };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "NoteDisplay2")
+	TObjectPtr<UStaticMeshComponent> NoteDisplay2  { nullptr };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "NoteDisplay3")
+	TObjectPtr<UStaticMeshComponent> NoteDisplay3  { nullptr };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "NoteDisplay4")
+	TObjectPtr<UStaticMeshComponent> NoteDisplay4  { nullptr };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "NoteDisplay5")
+	TObjectPtr<UStaticMeshComponent> NoteDisplay5  { nullptr };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "NoteDisplay6")
+	TObjectPtr<UStaticMeshComponent> NoteDisplay6  { nullptr };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "NoteDisplay7")
+	TObjectPtr<UStaticMeshComponent> NoteDisplay7  { nullptr };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "NoteDisplay8")
+	TObjectPtr<UStaticMeshComponent> NoteDisplay8  { nullptr };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "NoteDisplay9")
+	TObjectPtr<UStaticMeshComponent> NoteDisplay9  { nullptr };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "NoteDisplay10")
+	TObjectPtr<UStaticMeshComponent> NoteDisplay10 { nullptr };
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Default", DisplayName = "NoteDisplay11")
+	TObjectPtr<UStaticMeshComponent> NoteDisplay11 { nullptr };
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	float LineSpacing { 75.f };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", DisplayName = "SplineLength")
 	double SplineLength { 2000.0f };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default", DisplayName = "DisplayOffset")
+	float DisplayOffset { 100.f };
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default")
 	TObjectPtr<UInstancedStaticMeshComponent> MeshInstances { nullptr };
@@ -113,4 +134,22 @@ private:
 		{ EScale::HarmonicMinor, { { 0, 2, 3, 5, 7, 8, 11 } } },
 		{ EScale::MelodicMinor,  { { 0, 2, 3, 5, 7, 9, 11 } } }
     };
+
+	//Lookup Table to remap the Notes to the right Material
+	UPROPERTY(EditAnywhere)
+	TMap<ENote, UMaterialInterface*> MaterialLookupTable
+	{
+		{ ENote::C, 	 nullptr },
+		{ ENote::CSharp, nullptr },
+		{ ENote::D, 	 nullptr },
+		{ ENote::DSharp, nullptr },
+		{ ENote::E, 	 nullptr },
+		{ ENote::F, 	 nullptr },
+		{ ENote::FSharp, nullptr },
+		{ ENote::G, 	 nullptr },
+		{ ENote::GSharp, nullptr },
+		{ ENote::A, 	 nullptr },
+		{ ENote::ASharp, nullptr },
+		{ ENote::B, 	 nullptr },
+	};
 };
