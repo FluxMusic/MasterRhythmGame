@@ -688,6 +688,12 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 	{
 		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
 		StopClock();
+
+		if (UMyGameInstance* Gi = UMyGameInstance::Get())
+		{
+			Gi->SetLevelOneUnlocked(true);
+		}
+
 		//Show Success Menu
 		GameHUD->GetSuccessWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
 		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
@@ -973,26 +979,22 @@ void UAudioManagerSubsystem::HandleVolcanoLevel()
 	{
 		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
 		StopClock();
-		// TODO: Do sth else
-		GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-		PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-		// Toggle pause state
-		bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-		UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
 
-		if (bCurrentlyPaused == false)
+		if (UMyGameInstance* Gi = UMyGameInstance::Get())
 		{
-			if (GameHUD != nullptr)
-			{
-				GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-			}
-			// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-			PlayerController->bShowMouseCursor = true;
-			FInputModeGameAndUI InputMode;
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			PlayerController->SetInputMode(InputMode);
+			Gi->SetLevelSixUnlocked(true);
 		}
+
+		//Show Success Menu
+		GameHUD->GetSuccessWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
+		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+		PlayerController->SetControllerState(EControllerStateGame::SuccessMenu);
+		
+		// Show mouse cursor and switch to GameAndUI input so widgets receive focus
+		PlayerController->bShowMouseCursor = true;
+		FInputModeGameAndUI InputMode;
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		PlayerController->SetInputMode(InputMode);
 	}
 }
 
@@ -1215,26 +1217,22 @@ void UAudioManagerSubsystem::HandleSpaceLevel()
 	{
 		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
 		StopClock();
-		// TODO: Do sth else
-		GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-		PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-		// Toggle pause state
-		bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-		UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
 
-		if (bCurrentlyPaused == false)
+		if (UMyGameInstance* Gi = UMyGameInstance::Get())
 		{
-			if (GameHUD != nullptr)
-			{
-				GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-			}
-			// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-			PlayerController->bShowMouseCursor = true;
-			FInputModeGameAndUI InputMode;
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			PlayerController->SetInputMode(InputMode);
+			Gi->SetLevelFourUnlocked(true);
 		}
+
+		//Show Success Menu
+		GameHUD->GetSuccessWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
+		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+		PlayerController->SetControllerState(EControllerStateGame::SuccessMenu);
+		
+		// Show mouse cursor and switch to GameAndUI input so widgets receive focus
+		PlayerController->bShowMouseCursor = true;
+		FInputModeGameAndUI InputMode;
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		PlayerController->SetInputMode(InputMode);
 	}
 }
 
@@ -1457,26 +1455,22 @@ void UAudioManagerSubsystem::HandleIceLevel()
 	{
 		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
 		StopClock();
-		// TODO: Do sth else
-		GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-		PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-		// Toggle pause state
-		bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-		UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
 
-		if (bCurrentlyPaused == false)
+		if (UMyGameInstance* Gi = UMyGameInstance::Get())
 		{
-			if (GameHUD != nullptr)
-			{
-				GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-			}
-			// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-			PlayerController->bShowMouseCursor = true;
-			FInputModeGameAndUI InputMode;
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			PlayerController->SetInputMode(InputMode);
+			Gi->SetLevelFiveUnlocked(true);
 		}
+
+		//Show Success Menu
+		GameHUD->GetSuccessWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
+		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+		PlayerController->SetControllerState(EControllerStateGame::SuccessMenu);
+		
+		// Show mouse cursor and switch to GameAndUI input so widgets receive focus
+		PlayerController->bShowMouseCursor = true;
+		FInputModeGameAndUI InputMode;
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		PlayerController->SetInputMode(InputMode);
 	}
 }
 
@@ -1695,26 +1689,22 @@ void UAudioManagerSubsystem::HandleCyberpunkLevel()
 	{
 		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
 		StopClock();
-		// TODO: Do sth else
-		GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-		PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-		// Toggle pause state
-		bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-		UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
 
-		if (bCurrentlyPaused == false)
+		if (UMyGameInstance* Gi = UMyGameInstance::Get())
 		{
-			if (GameHUD != nullptr)
-			{
-				GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-			}
-			// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-			PlayerController->bShowMouseCursor = true;
-			FInputModeGameAndUI InputMode;
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			PlayerController->SetInputMode(InputMode);
+			Gi->SetLevelTwoUnlocked(true);
 		}
+
+		//Show Success Menu
+		GameHUD->GetSuccessWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
+		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+		PlayerController->SetControllerState(EControllerStateGame::SuccessMenu);
+		
+		// Show mouse cursor and switch to GameAndUI input so widgets receive focus
+		PlayerController->bShowMouseCursor = true;
+		FInputModeGameAndUI InputMode;
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		PlayerController->SetInputMode(InputMode);
 	}
 }
 
@@ -1937,26 +1927,22 @@ void UAudioManagerSubsystem::HandleSteampunkLevel()
 	{
 		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
 		StopClock();
-		// TODO: Do sth else
-		GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-		PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-		// Toggle pause state
-		bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-		UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
 
-		if (bCurrentlyPaused == false)
+		if (UMyGameInstance* Gi = UMyGameInstance::Get())
 		{
-			if (GameHUD != nullptr)
-			{
-				GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-			}
-			// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-			PlayerController->bShowMouseCursor = true;
-			FInputModeGameAndUI InputMode;
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			PlayerController->SetInputMode(InputMode);
+			Gi->SetLevelThreeUnlocked(true);
 		}
+
+		//Show Success Menu
+		GameHUD->GetSuccessWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
+		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+		PlayerController->SetControllerState(EControllerStateGame::SuccessMenu);
+		
+		// Show mouse cursor and switch to GameAndUI input so widgets receive focus
+		PlayerController->bShowMouseCursor = true;
+		FInputModeGameAndUI InputMode;
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		PlayerController->SetInputMode(InputMode);
 	}
 }
 
@@ -2192,26 +2178,24 @@ void UAudioManagerSubsystem::HandleTestLevel()
 	{
 		UKismetSystemLibrary::PrintString(this, FString(TEXT("All parts finished")), true, true, FLinearColor::Blue, 5.0f);
 		StopClock();
-		// TODO: Do sth else
-		GameHUD->GetDeathWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
-		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
-		PlayerController->SetControllerState(EControllerStateGame::DeathMenu);
-		// Toggle pause state
-		bool bCurrentlyPaused = UGameplayStatics::IsGamePaused(GetWorld());
-		UGameplayStatics::SetGamePaused(GetWorld(), !bCurrentlyPaused);
-
-		if (bCurrentlyPaused == false)
+		
+		if (UMyGameInstance* Gi = UMyGameInstance::Get())
 		{
-			if (GameHUD != nullptr)
-			{
-				GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-			}
-			// Show mouse cursor and switch to GameAndUI input so widgets receive focus
-			PlayerController->bShowMouseCursor = true;
-			FInputModeGameAndUI InputMode;
-			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-			PlayerController->SetInputMode(InputMode);
+			// Gi->SetLevelFiveUnlocked(true);
+			UKismetSystemLibrary::PrintString(this, FString(TEXT("This is where the Level would be set unlocked")), true, true, FLinearColor::Blue, 5.0f);
+
 		}
+
+		//Show Success Menu
+		GameHUD->GetSuccessWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
+		AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
+		PlayerController->SetControllerState(EControllerStateGame::SuccessMenu);
+		
+		// Show mouse cursor and switch to GameAndUI input so widgets receive focus
+		PlayerController->bShowMouseCursor = true;
+		FInputModeGameAndUI InputMode;
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		PlayerController->SetInputMode(InputMode);
 	}
 }
 
