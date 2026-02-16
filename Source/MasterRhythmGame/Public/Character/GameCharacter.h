@@ -82,7 +82,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	TObjectPtr<USceneComponent> SceneComponent { nullptr };
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	TObjectPtr<USplineComponent> SplineRef { nullptr };
 
 	UPROPERTY(EditAnywhere)

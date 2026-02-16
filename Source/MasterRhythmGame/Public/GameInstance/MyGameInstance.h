@@ -116,11 +116,17 @@ private:
 	float SFXVolume { 0.75f };
 
 	// Level Unlock States
+	UPROPERTY(EditAnywhere)
 	bool bIsLevelOneUnlocked   { true };
+	UPROPERTY(EditAnywhere)
 	bool bIsLevelTwoUnlocked   { false };
+	UPROPERTY(EditAnywhere)
 	bool bIsLevelThreeUnlocked { false };
+	UPROPERTY(EditAnywhere)
 	bool bIsLevelFourUnlocked  { false };
+	UPROPERTY(EditAnywhere)
 	bool bIsLevelFiveUnlocked  { false };
+	UPROPERTY(EditAnywhere)
 	bool bIsLevelSixUnlocked   { false };
 
 	// Level Scores
