@@ -184,7 +184,7 @@ void AMainMenuController::MainMenuControl(ENote Note)
 			}
 			case ENote::B:
 			{
-				if (MainMenuHud->GetMainMenuInstance()->GetNewGameButton()->GetButton()->HasKeyboardFocus())
+				if (MainMenuHud->GetMainMenuInstance()->GetNewGameButton()->HasKeyboardFocus())
 				{
 					MainMenuIndex = 0;
 					MainMenuHud->GetMainMenuInstance()->NewGameButtonClicked();
