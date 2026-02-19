@@ -46,28 +46,27 @@ float AGameController::GetInstrumentDamageFactor(EInstrument Instrument)
 {
 	switch (Instrument)
 	{
-	case EInstrument::Piano:
+		case EInstrument::Piano:
 		{
 			return PianoDamageFactor;
 		}
-	case EInstrument::Violin:
+		case EInstrument::Violin:
 		{
 			return ViolinDamageFactor;
 		}
-	case EInstrument::Saxophone:
+		case EInstrument::Saxophone:
 		{
 			return SaxophoneDamageFactor;
 		}
-	case EInstrument::Guitar:
+		case EInstrument::Guitar:
 		{
 			return GuitarDamageFactor;
 		}
-	case EInstrument::Synth:
+		case EInstrument::Synth:
 		{
 			return SynthDamageFactor;
 		}
-	
-	default:
+		default:
 		{
 			UE_LOG(LogTemp, Error, TEXT("AGameController::GetInstrumentDamageFactor: Multiple or no Instruments selected!"));
 			UE_LOG(LogTemp, Error, TEXT("Piano: %i, Violin: %i, Saxophone: %i, Guitar: %i, Synth: %i"), 
@@ -78,7 +77,6 @@ float AGameController::GetInstrumentDamageFactor(EInstrument Instrument)
 				InstrumentFlags::HasFlag(Instrument, EInstrument::Synth));
 		}
 	}
-
 	// If there is an error, simply do not multiply damage
 	return 1.f;
 }
@@ -1380,19 +1378,19 @@ void AGameController::SuccessMenuControl(ENote Note)
 		{
 			if (GameHud != nullptr)
 			{
-				if (GameHud->GetSuccessWidgetInstance()->GetRetryButton()->HasKeyboardFocus())
+				if (GameHud->GetSuccessWidgetInstance()->GetRetryButton()->GetButton()->HasKeyboardFocus())
 				{
 					SuccessMenuIndex = 0;
 					GameHud->GetSuccessWidgetInstance()->RetryButtonClicked();
 					break;
 				}
-				if (GameHud->GetSuccessWidgetInstance()->GetMainMenuButton()->HasKeyboardFocus())
+				if (GameHud->GetSuccessWidgetInstance()->GetMainMenuButton()->GetButton()->HasKeyboardFocus())
 				{
 					SuccessMenuIndex = 0;
 					GameHud->GetSuccessWidgetInstance()->MainMenuButtonClicked();
 					break;
 				}
-				if (GameHud->GetSuccessWidgetInstance()->GetWorldMapButton()->HasKeyboardFocus())
+				if (GameHud->GetSuccessWidgetInstance()->GetWorldMapButton()->GetButton()->HasKeyboardFocus())
 				{
 					SuccessMenuIndex = 0;
 					GameHud->GetSuccessWidgetInstance()->WorldMapButtonClicked();
