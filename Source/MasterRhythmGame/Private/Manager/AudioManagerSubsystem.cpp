@@ -2217,11 +2217,11 @@ EMapNames UAudioManagerSubsystem::GetMapTypeFromString(const FString& MapName)
 	{
 		return EMapNames::Steampunk;
 	}
-	else if (MapName.Contains(TEXT("MAP_Space")))
+	else if (MapName.Contains(TEXT("MAP_Galaxy")))
 	{
 		return EMapNames::Space;
 	}
-	else if (MapName.Contains(TEXT("MAP_Volcano")))
+	else if (MapName.Contains(TEXT("MAP_Vulcano")))
 	{
 		return EMapNames::Volcano;
 	}
