@@ -539,7 +539,6 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 	{
 		StartPart1();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		// Mark that Part1Intro has finished so percentage updates are allowed
 		bPart1IntroEnded = true;
@@ -554,7 +553,6 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 	{
 		StartPart2();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -566,7 +564,6 @@ void UAudioManagerSubsystem::HandleSwampLevel()
 	{
 		StartPart3();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -591,7 +588,6 @@ void UAudioManagerSubsystem::HandleVolcanoLevel()
 	{
 		StartPart1();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		// Mark that Part1Intro has finished so percentage updates are allowed
 		bPart1IntroEnded = true;
@@ -606,7 +602,6 @@ void UAudioManagerSubsystem::HandleVolcanoLevel()
 	{
 		StartPart2();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -618,7 +613,6 @@ void UAudioManagerSubsystem::HandleVolcanoLevel()
 	{
 		StartPart3();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -630,7 +624,6 @@ void UAudioManagerSubsystem::HandleVolcanoLevel()
 	{
 		StartPart4();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -642,7 +635,6 @@ void UAudioManagerSubsystem::HandleVolcanoLevel()
 	{
 		StartPart5();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -667,7 +659,6 @@ void UAudioManagerSubsystem::HandleSpaceLevel()
 	{
 		StartPart1();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		// Mark that Part1Intro has finished so percentage updates are allowed
 		bPart1IntroEnded = true;
@@ -682,7 +673,6 @@ void UAudioManagerSubsystem::HandleSpaceLevel()
 	{
 		StartPart2();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -694,7 +684,6 @@ void UAudioManagerSubsystem::HandleSpaceLevel()
 	{
 		StartPart3();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -706,7 +695,6 @@ void UAudioManagerSubsystem::HandleSpaceLevel()
 	{
 		StartPart4();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -731,7 +719,6 @@ void UAudioManagerSubsystem::HandleIceLevel()
 	{
 		StartPart1();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		// Mark that Part1Intro has finished so percentage updates are allowed
 		bPart1IntroEnded = true;
@@ -746,7 +733,6 @@ void UAudioManagerSubsystem::HandleIceLevel()
 	{
 		StartPart2();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -758,7 +744,6 @@ void UAudioManagerSubsystem::HandleIceLevel()
 	{
 		StartPart3();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -770,7 +755,6 @@ void UAudioManagerSubsystem::HandleIceLevel()
 	{
 		StartPart4();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -795,7 +779,6 @@ void UAudioManagerSubsystem::HandleCyberpunkLevel()
 	{
 		StartPart1();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		// Mark that Part1Intro has finished so percentage updates are allowed
 		bPart1IntroEnded = true;
@@ -810,7 +793,6 @@ void UAudioManagerSubsystem::HandleCyberpunkLevel()
 	{
 		StartPart2();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -822,7 +804,6 @@ void UAudioManagerSubsystem::HandleCyberpunkLevel()
 	{
 		StartPart3();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -834,7 +815,6 @@ void UAudioManagerSubsystem::HandleCyberpunkLevel()
 	{
 		StartPart4();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -859,7 +839,6 @@ void UAudioManagerSubsystem::HandleSteampunkLevel()
 	{
 		StartPart1();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		// Mark that Part1Intro has finished so percentage updates are allowed
 		bPart1IntroEnded = true;
@@ -874,7 +853,6 @@ void UAudioManagerSubsystem::HandleSteampunkLevel()
 	{
 		StartPart2();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -886,7 +864,6 @@ void UAudioManagerSubsystem::HandleSteampunkLevel()
 	{
 		StartPart3();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -898,7 +875,6 @@ void UAudioManagerSubsystem::HandleSteampunkLevel()
 	{
 		StartPart4();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -937,7 +913,6 @@ void UAudioManagerSubsystem::HandleTestLevel()
 	{
 		StartPart2();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -949,7 +924,6 @@ void UAudioManagerSubsystem::HandleTestLevel()
 	{
 		StartPart3();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -961,7 +935,6 @@ void UAudioManagerSubsystem::HandleTestLevel()
 	{
 		StartPart4();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}
@@ -973,7 +946,6 @@ void UAudioManagerSubsystem::HandleTestLevel()
 	{
 		StartPart5();
 		bEnemyCanAttack = true;
-		bPlayAgain = true;
 
 		UnmuteLeads();
 	}

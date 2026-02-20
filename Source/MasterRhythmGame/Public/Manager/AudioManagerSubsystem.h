@@ -233,9 +233,6 @@ private:
     UPROPERTY()
     bool bPartAlreadyPlayed { false };
 
-    UPROPERTY()
-    bool bPlayAgain { false };
-
     // New: track whether Part1IntroEnd has occurred at least once
     UPROPERTY()
     bool bPart1IntroEnded { false };
