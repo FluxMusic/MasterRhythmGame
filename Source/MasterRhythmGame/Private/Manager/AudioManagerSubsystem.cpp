@@ -295,7 +295,6 @@ void UAudioManagerSubsystem::StartMusic()
 	if (ActiveAudioComponent)
 	{
 		ActiveAudioComponent->SetTriggerParameter("PlayIntro");
-		ActiveAudioComponent->SetTriggerParameter("PlayOutro");
 	}
 }
 
