@@ -15,9 +15,7 @@
 #include "Engine/World.h"
 #include "EnhancedInputComponent.h"
 #include "GameInstance/MyGameInstance.h"
-#include "Actor/NodeActor.h"
 #include "Actor/SplineActor.h"
-#include "Components/TimelineComponent.h"
 #include "Manager/AudioManagerSubsystem.h"
 #include "Enemy/TestEnemyActor.h"
 #include "UI/ButtonWidget.h"
@@ -266,7 +264,6 @@ void AGameController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceControl
 			{
 				return;
 			}
-			
 
 			//Remap incoming MIDI Note to allow different musical scales
 			//Maps the incoming scale onto the enharmonic scale with C as root note
@@ -473,47 +470,6 @@ void AGameController::HandleKeyboardAttack(int32 MidiNote)
 
 	//Handle Movement and Attacks
 	MovePlayer(NoteEnum);
-	HandleAttack(NoteEnum);
-}
-
-void AGameController::HandleAttack(ENote Note)
-{
-	UAudioManagerSubsystem* AudioManager = GetWorld()->GetSubsystem<UAudioManagerSubsystem>();
-	if (AudioManager != nullptr)
-	{
-		if (AudioManager->GetPlayerCanAttack() && GameCharacter->GetDefended() > 0)
-		{
-			auto Defended = GameCharacter->GetDefended() - 1;
-			UE_LOG(LogTemp, Warning, TEXT("Defended Left: %d"), Defended);
-			GameCharacter->SetDefended(Defended);
-
-			//Play Player Attack Anim
-			GameCharacter->OnAttack();
-			
-			if (GameCharacter->GetSplineRef()->IsVisible())
-			{
-				auto ActorLocation = GameCharacter->GetActorLocation();
-				auto SceneLocation = GameCharacter->GetSceneComponent()->GetRelativeLocation();
-				auto SpawnLocationPlayer = ActorLocation + SceneLocation;
-				auto NoteActor = GetWorld()->SpawnActor<ANodeActor>(NodeActor, SpawnLocationPlayer, GameCharacter->GetActorRotation());
-				//Play some Feedback Sound
-				GameCharacter->PlayNote(NotePlayed, SelectedInstrument);
-				InstrumentBuffer = SelectedInstrument;
-
-				if (NoteActor != nullptr && Enemy != nullptr)
-				{
-					NoteActor->SetInstrument(SelectedInstrument);
-					NoteActor->GetTimeline()->SetPlayRate(.25f);
-					NoteActor->SetSplineRef(GameCharacter->GetSplineRef());
-					NoteActor->MoveRight();
-				}
-			}
-			else
-			{
-				//TODO: Add some feedback when the Player plays a note that is off key
-			}
-		}
-	}
 }
 
 void AGameController::HandleNoteRelease()
@@ -556,15 +512,15 @@ bool AGameController::SwitchInstrument(int32 Note)
 
 	switch (Note)
 	{
-	//D0 switches to Keyboard
-	case 2:
+		//D0 switches to Keyboard
+		case 2:
 		{
 			SelectedInstrument = EInstrument::Piano;
 			bSwitchedInstrument = true;
 			break;
 		}
-	//E0 switches to Violin if unlocked
-	case 4:
+		//E0 switches to Violin if unlocked
+		case 4:
 		{
 			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Violin))
 			{
@@ -574,8 +530,8 @@ bool AGameController::SwitchInstrument(int32 Note)
 			}
 			break;
 		}
-	//F0 switches to Saxophone if unlocked
-	case 5:
+		//F0 switches to Saxophone if unlocked
+		case 5:
 		{
 			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Saxophone))
 			{
@@ -585,8 +541,8 @@ bool AGameController::SwitchInstrument(int32 Note)
 			}
 			break;
 		}
-	//G0 switches to Guitar if unlocked
-	case 7:
+		//G0 switches to Guitar if unlocked
+		case 7:
 		{
 			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Guitar))
 			{
@@ -596,8 +552,8 @@ bool AGameController::SwitchInstrument(int32 Note)
 			}
 			break;
 		}
-	//A0 switches to Synth if unlocked
-	case 9:
+		//A0 switches to Synth if unlocked
+		case 9:
 		{
 			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Synth))
 			{
@@ -607,10 +563,11 @@ bool AGameController::SwitchInstrument(int32 Note)
 			}
 			break;
 		}
-	
-	default:
-		bSwitchedInstrument = false;
-		break;
+		default:
+		{
+			bSwitchedInstrument = false;
+			break;
+		}
 	}
 
 	if (GameHud && GameHud->GetMainGameInstance())
@@ -627,7 +584,7 @@ void AGameController::SwitchInstrumentKeyboard()
 
 	switch (SelectedInstrument)
 	{
-	case EInstrument::Piano:
+		case EInstrument::Piano:
 		{
 			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Violin))
 			{
@@ -648,7 +605,7 @@ void AGameController::SwitchInstrumentKeyboard()
 			
 			break;
 		}
-	case EInstrument::Violin:
+		case EInstrument::Violin:
 		{
 			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Saxophone))
 			{
@@ -669,7 +626,7 @@ void AGameController::SwitchInstrumentKeyboard()
 			
 			break;
 		}
-	case EInstrument::Saxophone:
+		case EInstrument::Saxophone:
 		{
 			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Guitar))
 			{
@@ -686,7 +643,7 @@ void AGameController::SwitchInstrumentKeyboard()
 
 			break;
 		}
-	case EInstrument::Guitar:
+		case EInstrument::Guitar:
 		{
 			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Synth))
 			{
@@ -699,15 +656,16 @@ void AGameController::SwitchInstrumentKeyboard()
 
 			break;
 		}
-	case EInstrument::Synth:
+		case EInstrument::Synth:
 		{
 			SelectedInstrument = EInstrument::Piano;
 
 			break;
 		}
-	
-	default:
-		break;
+		default:
+		{
+			break;
+		}
 	}
 
 	if (GameHud && GameHud->GetMainGameInstance())
@@ -744,7 +702,6 @@ void AGameController::GameControl(ENote Note)
 	if (GameHud != nullptr)
 	{
 		MovePlayer(Note);
-		HandleAttack(Note);
 	}
 }
 

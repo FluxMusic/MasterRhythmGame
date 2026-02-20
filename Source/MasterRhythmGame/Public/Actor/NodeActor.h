@@ -26,9 +26,6 @@ public:
 	void MoveLeft();
 
 	UFUNCTION()
-	void MoveRight();
-
-	UFUNCTION()
 	void SetBarLength(double BPM);
 
 	UFUNCTION()
@@ -79,13 +76,6 @@ protected:
 	// Flags to track collisions during lifetime
 	UPROPERTY()
 	bool bCollidedWithPlayer { false };
-
-	UPROPERTY()
-	bool bCollidedWithEnemy { false };
-
-	// Movement direction: true = moving left (can hit player), false = moving right (can hit enemy)
-	UPROPERTY()
-	bool bMovingLeft { false };
 
 	UPROPERTY()
 	EInstrument Instrument { EInstrument::Piano };

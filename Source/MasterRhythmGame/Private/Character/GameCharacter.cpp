@@ -105,10 +105,6 @@ void AGameCharacter::ApplyDamage(int32 DamageAmount)
 
 			if (bCurrentlyPaused == false)
 			{
-				if (GameHUD != nullptr)
-				{
-					GameHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-				}
 				// Show mouse cursor and switch to GameAndUI input so widgets receive focus
 				PlayerController->bShowMouseCursor = true;
 				FInputModeGameAndUI InputMode;
@@ -151,7 +147,7 @@ void AGameCharacter::SetupHUD()
 
 void AGameCharacter::SetDefended(int32 InDefended)
 {
-	Defended = FMath::Clamp(InDefended, 0, 10);
+	Defended = InDefended;
 
 	if (GameHUD && GameHUD->GetMainGameInstance())
 	{

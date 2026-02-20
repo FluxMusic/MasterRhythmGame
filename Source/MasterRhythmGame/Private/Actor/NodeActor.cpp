@@ -34,10 +34,6 @@ ANodeActor::ANodeActor()
 
 	// initialize collision flags
 	bCollidedWithPlayer = false;
-	bCollidedWithEnemy = false;
-
-	// default movement direction (will be set by MoveLeft/MoveRight when node is sent)
-	bMovingLeft = false;
 }
 
 void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -49,104 +45,34 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 	AGameCharacter* OverlappingCharacter = Cast<AGameCharacter>(OtherActor);
 	if (OverlappingCharacter != nullptr)
 	{
-		// If the note is moving left, it targets the player side.
-		if (bMovingLeft)
-		{
-			// If player is attacking, treat as a collision that prevents damage but do not increment defended.
-			if (AudioManager != nullptr && AudioManager->GetPlayerCanAttack())
-			{
-				bCollidedWithPlayer = true;
-				return;
-			}
-
-			// Player successfully defended against left-moving note
-			// Award score points for successful defense using configured base score
-			if (AudioManager != nullptr)
-			{
-				int32 BaseScore = AudioManager->GetBaseScorePerNote();
-				AudioManager->AddScore(BaseScore);
-			}
-
-			// Player collided with a left-moving note => increment defended and prevent damage.
-			bCollidedWithPlayer = true;
-			int32 Defended = OverlappingCharacter->GetDefended();
-			Defended++;
-			OverlappingCharacter->SetDefended(Defended);
-
-			//Play Player Block Anim
-			OverlappingCharacter->OnBlock();
-			this->Destroy();
-			return;
-		}
-
-		// If note is moving right (targets enemy), player collected it but no score
-		// Mark as collided to ensure player won't be damaged by this note later.
 		bCollidedWithPlayer = true;
-	}
 
-	// Enemy collision
-	ATestEnemyActor* OverlappingEnemy = Cast<ATestEnemyActor>(OtherActor);
-	if (OverlappingEnemy != nullptr)
-	{
-		// If the note is moving right, it targets the enemy side.
-		if (!bMovingLeft)
+		// Player successfully defended
+		// Award score points for successful defense using configured base score
+		if (AudioManager != nullptr)
 		{
-			// If enemy is attacking, just mark collided to prevent damage.
-			if (AudioManager != nullptr && AudioManager->GetEnemyCanAttack())
-			{
-				bCollidedWithEnemy = true;
-				return;
-			}
-
-			// Per requirement: when MoveRight executed and enemy collides with the note, nothing happens.
-			// Mark collided so the enemy will not receive damage from this note when it finishes.
-			bCollidedWithEnemy = true;
-
-			//Play Enemy block Anim
-			OverlappingEnemy->OnBlock();
-			this->Destroy();
-			return;
+			int32 BaseScore = AudioManager->GetBaseScorePerNote();
+			AudioManager->AddScore(BaseScore);
 		}
 
-		// If note is moving left (targets player), preserve original behavior for enemy overlaps:
-		// if enemy overlaps with a left-moving note, mark and destroy.
-		if (AudioManager != nullptr && AudioManager->GetEnemyCanAttack())
-		{
-			bCollidedWithEnemy = true;
-			return;
-		}
+		// Player collided with a note => increment defended and prevent damage.
+		int32 Defended = OverlappingCharacter->GetDefended();
+		Defended++;
+		OverlappingCharacter->SetDefended(Defended);
 
-		bCollidedWithEnemy = true;
+		//Play Player Block Anim
+		OverlappingCharacter->OnBlock();
 	}
 }
 
 void ANodeActor::MoveLeft()
 {
-	// This node will travel left and therefore may damage the player (unless collided).
-	bMovingLeft = true;
-
 	// Reset collision flags for this new travel.
 	bCollidedWithPlayer = false;
-	bCollidedWithEnemy = false;
 
 	if (Timeline)
 	{
 		Timeline->ReverseFromEnd();
-	}
-}
-
-void ANodeActor::MoveRight()
-{
-	// This node will travel right and therefore may damage the enemy (unless collided).
-	bMovingLeft = false;
-
-	// Reset collision flags for this new travel.
-	bCollidedWithPlayer = false;
-	bCollidedWithEnemy = false;
-
-	if (Timeline)
-	{
-		Timeline->PlayFromStart();
 	}
 }
 
@@ -227,42 +153,31 @@ void ANodeActor::HandleTimelineFinished()
 {
 	UAudioManagerSubsystem* AudioManager = GetWorld() ? GetWorld()->GetSubsystem<UAudioManagerSubsystem>() : nullptr;
 
-	if (bMovingLeft)
+	// Player collision now damages enemy; no collision damages player
+	if (bCollidedWithPlayer && AudioManager != nullptr)
 	{
-		if (!bCollidedWithPlayer && AudioManager != nullptr && !AudioManager->GetPlayerCanAttack())
+		// Player successfully hit the note -> damage enemy
+		AGameController* GameController = Cast<AGameController>(UGameplayStatics::GetPlayerController(this, 0));
+		AActor* Found = UGameplayStatics::GetActorOfClass(GetWorld(), ATestEnemyActor::StaticClass());
+		ATestEnemyActor* Enemy = Cast<ATestEnemyActor>(Found);
+		if (Enemy != nullptr && GameController)
 		{
-			// Player was hit by note - reset combo
-			if (AudioManager)
-			{
-				AudioManager->ResetCombo();
-			}
-
-			// find the player character and apply damage
-			if (AGameCharacter* PlayerActor = Cast<AGameCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameCharacter::StaticClass())))
-			{
-				AGameCharacter* GameChar = Cast<AGameCharacter>(PlayerActor);
-				if (GameChar != nullptr)
-				{
-					UE_LOG(LogTemp, Log, TEXT("ANodeActor::HandleTimelineFinished - Applying %d damage to player."), DamageToPlayer);
-					GameChar->ApplyDamage(DamageToPlayer);
-				}
-			}
+			UE_LOG(LogTemp, Log, TEXT("ANodeActor::HandleTimelineFinished - Player hit note, applying %d damage to enemy."), DamageToEnemy);
+			Enemy->ApplyDamage(DamageToEnemy);
 		}
 	}
-	else
+	else if (!bCollidedWithPlayer && AudioManager != nullptr)
 	{
-		if (!bCollidedWithEnemy && AudioManager != nullptr && !AudioManager->GetEnemyCanAttack())
+		// Player missed the note -> damage player and reset combo
+		if (AudioManager)
 		{
-			AGameController* GameController = Cast<AGameController>(UGameplayStatics::GetPlayerController(this, 0));
-			AActor* Found = UGameplayStatics::GetActorOfClass(GetWorld(), ATestEnemyActor::StaticClass());
-			ATestEnemyActor* Enemy = Cast<ATestEnemyActor>(Found);
-			if (Enemy != nullptr && GameController)
-			{
-				float DamageFactor = GameController->GetInstrumentDamageFactor(Instrument);
-				int32 Damage = static_cast<int32>(static_cast<float>(DamageToEnemy) * DamageFactor);
-				UE_LOG(LogTemp, Log, TEXT("ANodeActor::HandleTimelineFinished - Applying %d damage to enemy."), DamageToEnemy);
-				Enemy->ApplyDamage(Damage);
-			}
+			AudioManager->ResetCombo();
+		}
+
+		if (AGameCharacter* PlayerActor = Cast<AGameCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameCharacter::StaticClass())))
+		{
+			UE_LOG(LogTemp, Log, TEXT("ANodeActor::HandleTimelineFinished - Player missed note, applying %d damage to player."), DamageToPlayer);
+			PlayerActor->ApplyDamage(DamageToPlayer);
 		}
 	}
 

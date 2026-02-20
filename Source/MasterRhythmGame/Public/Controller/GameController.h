@@ -134,9 +134,6 @@ protected:
 	void HandleKeyboardAttack(int32 MidiNote);
 
 #pragma endregion KeyboardAttacks
-
-	UFUNCTION()
-	void HandleAttack(ENote Note);
 	
 	UFUNCTION()
 	void HandleNoteRelease();
