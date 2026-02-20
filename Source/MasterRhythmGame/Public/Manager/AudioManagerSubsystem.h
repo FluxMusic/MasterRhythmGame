@@ -46,10 +46,6 @@ public:
     UFUNCTION()
     void PlayQuantized(UAudioComponent* AudioComponent);
 
-	// --- Player Can Attack accessors ---
-    bool GetPlayerCanAttack() const { return bPlayerCanAttack; }
-	void SetPlayerCanAttack(bool bInPlayerCanAttack) { bPlayerCanAttack = bInPlayerCanAttack; }
-
 	// --- Enemy Can Attack accessors ---
 	bool GetEnemyCanAttack() const { return bEnemyCanAttack; }
 
@@ -179,6 +175,24 @@ private:
     void HandleTestLevel();
 
     UFUNCTION()
+    void HandlePart1(bool LoadOtherLevel, FName UnloadLevelName = NAME_None, FName LoadLevelName = NAME_None);
+
+    UFUNCTION()
+    void HandlePart2(bool LoadOtherLevel, FName UnloadLevelName = NAME_None, FName LoadLevelName = NAME_None);
+
+    UFUNCTION()
+    void HandlePart3(bool LoadOtherLevel, FName UnloadLevelName = NAME_None, FName LoadLevelName = NAME_None);
+
+    UFUNCTION()
+	void HandlePart4(bool LoadOtherLevel, FName UnloadLevelName = NAME_None, FName LoadLevelName = NAME_None);
+
+    UFUNCTION()
+    void HandlePart5();
+
+    UFUNCTION()
+    void HandleOutro();
+
+    UFUNCTION()
     EMapNames GetMapTypeFromString(const FString& MapName);
 
 private:
@@ -221,9 +235,6 @@ private:
 
     UPROPERTY()
     bool bPlayAgain { false };
-
-    UPROPERTY()
-    bool bPlayerCanAttack { false };
 
     // New: track whether Part1IntroEnd has occurred at least once
     UPROPERTY()
