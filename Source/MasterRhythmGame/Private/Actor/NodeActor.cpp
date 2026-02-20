@@ -79,12 +79,14 @@ void ANodeActor::MoveLeft()
 void ANodeActor::SetBarLength(double BPM)
 {
 	//TODO: Make this modular
-	BPM = BPM / 240.0f;
-	BPM /= 8;
+	// BPM = 240.0f / BPM;
+	// BPM /= 8;
+
+	float PlayRate = Timeline->GetTimelineLength() / ( ( 240.f / BPM ) * 8 );
 
 	if (Timeline)
 	{
-		Timeline->SetPlayRate(static_cast<float>(BPM));
+		Timeline->SetPlayRate(static_cast<float>(PlayRate));
 	}
 }
 
@@ -151,6 +153,18 @@ void ANodeActor::HandleTimelineProgress(float Value)
 
 void ANodeActor::HandleTimelineFinished()
 {
+	if (GetWorld())
+	{
+		const double DelaySeconds = LatencyOffsetMs / 1000.0;
+
+		// Ensure any previous timer is cleared, then set the new timer
+		GetWorld()->GetTimerManager().ClearTimer(DestroyTimerHandle);
+		GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, this, &ANodeActor::OnDelayedDestroy, DelaySeconds, false);
+	}
+}
+
+void ANodeActor::OnDelayedDestroy()
+{
 	UAudioManagerSubsystem* AudioManager = GetWorld() ? GetWorld()->GetSubsystem<UAudioManagerSubsystem>() : nullptr;
 
 	// Player collision now damages enemy; no collision damages player
@@ -180,18 +194,5 @@ void ANodeActor::HandleTimelineFinished()
 			PlayerActor->ApplyDamage(DamageToPlayer);
 		}
 	}
-
-	if (GetWorld())
-	{
-		const double DelaySeconds = LatencyOffsetMs / 1000.0;
-
-		// Ensure any previous timer is cleared, then set the new timer
-		GetWorld()->GetTimerManager().ClearTimer(DestroyTimerHandle);
-		GetWorld()->GetTimerManager().SetTimer(DestroyTimerHandle, this, &ANodeActor::OnDelayedDestroy, DelaySeconds, false);
-	}
-}
-
-void ANodeActor::OnDelayedDestroy()
-{
 	this->Destroy();
 }

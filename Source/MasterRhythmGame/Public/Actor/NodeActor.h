@@ -98,5 +98,6 @@ protected:
 	 * Altogether, an Offset of 200 should be good for players with a good feel of Rhythm
 	 * For Players with a worse sense of Rhythm, we should keep the offset higher, like 250 Ms
 	 */
+	UPROPERTY(EditDefaultsOnly)
 	double LatencyOffsetMs { 250.0 };
 };

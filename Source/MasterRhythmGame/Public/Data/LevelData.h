@@ -54,6 +54,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	EPartFinish NumSegments { EPartFinish::Three };
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	int32 NumBarsInMelodyPart { 8 };
+
 	//Health Points per Note in Melody
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	int32 HealthPointsPerNote { 5 };
