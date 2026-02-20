@@ -44,8 +44,10 @@ public:
 	void Move(EDirectionWorldMap InDirection);
 
 	// --- Level Node Ref ---
-	TObjectPtr<ALevelNode> GetLevelNodeRef() const { return LevelNodeRef; }
-	void SetLevelNodeRef(TObjectPtr<ALevelNode> InLevelNodeRef) { LevelNodeRef = InLevelNodeRef; }
+	UFUNCTION(BlueprintCallable)
+	ALevelNode* GetLevelNodeRef() const { return LevelNodeRef; }
+	UFUNCTION(BlueprintCallable)
+	void SetLevelNodeRef(ALevelNode* InLevelNodeRef) { LevelNodeRef = InLevelNodeRef; }
 
 	void SetSplineRef(ALevelPath* SplineIn) { SplineRef = SplineIn; }
 

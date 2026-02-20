@@ -64,13 +64,6 @@ void AWorldMapPlayerCharacter::BeginPlay()
 		Timeline->SetTimelineLength(2.0f); // normalized length: x from 0..2
 		Timeline->SetTimelineLengthMode(ETimelineLengthMode::TL_TimelineLength);
 	}
-
-	if (LevelNodeClass)
-	{
-		// Try to find an existing actor of the specified Blueprint class
-		AActor* Found = UGameplayStatics::GetActorOfClass(GetWorld(), LevelNodeClass);
-		LevelNodeRef = Cast<ALevelNode>(Found);
-	}
 }
 
 // Called every frame
