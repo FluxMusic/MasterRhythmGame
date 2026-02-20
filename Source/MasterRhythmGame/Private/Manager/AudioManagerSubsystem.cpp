@@ -2227,7 +2227,7 @@ EMapNames UAudioManagerSubsystem::GetMapTypeFromString(const FString& MapName)
 	}
 	else if (MapName.Contains(TEXT("TestMap")))
 	{
-		return  EMapNames::TestMap;
+		return EMapNames::TestMap;
 	}
 	
 	// Default fallback
