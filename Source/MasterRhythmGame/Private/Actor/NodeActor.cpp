@@ -76,13 +76,9 @@ void ANodeActor::MoveLeft()
 	}
 }
 
-void ANodeActor::SetBarLength(double BPM)
+void ANodeActor::SetBarLength(double BPM, int32 NumBars)
 {
-	//TODO: Make this modular
-	// BPM = 240.0f / BPM;
-	// BPM /= 8;
-
-	float PlayRate = Timeline->GetTimelineLength() / ( ( 240.f / BPM ) * 8 );
+	float PlayRate = Timeline->GetTimelineLength() / ( ( 240.f / BPM ) * NumBars );
 
 	if (Timeline)
 	{

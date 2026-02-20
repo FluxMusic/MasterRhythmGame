@@ -144,9 +144,9 @@ void ATestEnemyActor::Attack(int32 InBPM)
 	auto SpawnLocation = ActorLocation + SceneLocation;
 	auto Note = GetWorld()->SpawnActor<ANodeActor>(NodeActor, SpawnLocation, GetActorRotation());
 
-	if (Note != nullptr)
+	if (Note != nullptr && LevelData)
 	{
-		Note->SetBarLength(InBPM);
+		Note->SetBarLength(InBPM, LevelData->NumBarsInMelodyPart);
 		Note->SetSplineRef(SplineRef);
 		Note->MoveLeft();
 

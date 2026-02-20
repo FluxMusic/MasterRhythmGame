@@ -26,7 +26,7 @@ public:
 	void MoveLeft();
 
 	UFUNCTION()
-	void SetBarLength(double BPM);
+	void SetBarLength(double BPM, int32 NumBars);
 
 	UFUNCTION()
 	void HandleTimelineProgress(float Value);
