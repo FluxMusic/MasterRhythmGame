@@ -46,7 +46,7 @@ private:
 	UPROPERTY(EditAnywhere, meta = (BindWidget = true))
 	UButtonWidget* MainMenu { nullptr };
 
-	const FName LevelName = FName(TEXT("WorldMap"));
+	const FName LevelName = FName(TEXT("MAP_WorldMap"));
 
-	const FName MainMenuName = FName(TEXT("MainMenu"));
+	const FName MainMenuName = FName(TEXT("MAP_MainMenu"));
 };

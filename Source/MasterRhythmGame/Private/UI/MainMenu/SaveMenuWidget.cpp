@@ -19,7 +19,7 @@ void USaveMenuWidget::ReturnMenuButtonClicked()
 	
 	FString CurrentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
 
-	if (CurrentLevel == "MainMenu")
+	if (CurrentLevel == "MAP_MainMenu")
 	{
 		if (MainMenuHud != nullptr)
 		{
@@ -31,7 +31,7 @@ void USaveMenuWidget::ReturnMenuButtonClicked()
 			PlayerController->SetControllerState(EControllerState::MainMenu);
 		}
 	}
-	else if (CurrentLevel == "WorldMap")
+	else if (CurrentLevel == "MAP_WorldMap")
 	{
 		if (WorldMapHud != nullptr)
 		{
@@ -97,7 +97,7 @@ void USaveMenuWidget::NativeConstruct()
 
 	FString CurrentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
 
-	if (CurrentLevel == "MainMenu")
+	if (CurrentLevel == "MAP_MainMenu")
 	{
 		AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
 		if (PlayerController != nullptr)
@@ -105,7 +105,7 @@ void USaveMenuWidget::NativeConstruct()
 			MainMenuHud = Cast<AMainMenuHUD>(PlayerController->GetHUD());
 		}
 	}
-	else if (CurrentLevel == "WorldMap")
+	else if (CurrentLevel == "MAP_WorldMap")
 	{
 		AWorldMapController* PlayerController = Cast<AWorldMapController>(GetOwningPlayer());
 		if (PlayerController != nullptr)

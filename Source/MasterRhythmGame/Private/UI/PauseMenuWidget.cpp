@@ -16,7 +16,7 @@ void UPauseMenuWidget::ResumeButtonClicked()
 	SetVisibility(ESlateVisibility::Hidden);
 	FString CurrentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
 
-	if (CurrentLevel == "WorldMap")
+	if (CurrentLevel == "MAP_WorldMap")
 	{
 		AWorldMapController* PlayerController = Cast<AWorldMapController>(GetOwningPlayer());
 
@@ -55,7 +55,7 @@ void UPauseMenuWidget::SaveGameButtonClicked()
 	SetVisibility(ESlateVisibility::Hidden);
 	FString CurrentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
 
-	if (CurrentLevel == "WorldMap")
+	if (CurrentLevel == "MAP_WorldMap")
 	{
 		AWorldMapController* PlayerController = Cast<AWorldMapController>(GetOwningPlayer());
 		if (PlayerController != nullptr)
@@ -88,7 +88,7 @@ void UPauseMenuWidget::LoadGameButtonClicked()
 	SetVisibility(ESlateVisibility::Hidden);
 	FString CurrentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
 
-	if (CurrentLevel == "WorldMap")
+	if (CurrentLevel == "MAP_WorldMap")
 	{
 		AWorldMapController* PlayerController = Cast<AWorldMapController>(GetOwningPlayer());
 		if (PlayerController != nullptr)
@@ -121,7 +121,7 @@ void UPauseMenuWidget::SettingsButtonClicked()
 	SetVisibility(ESlateVisibility::Hidden);
 	FString CurrentLevel = UGameplayStatics::GetCurrentLevelName(GetWorld());
 
-	if (CurrentLevel == "WorldMap")
+	if (CurrentLevel == "MAP_WorldMap")
 	{
 		AWorldMapController* PlayerController = Cast<AWorldMapController>(GetOwningPlayer());
 

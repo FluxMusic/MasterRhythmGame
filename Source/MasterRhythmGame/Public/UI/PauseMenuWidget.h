@@ -81,5 +81,5 @@ private:
 	UPROPERTY()
 	TObjectPtr<AGameHUD> GameHUD { nullptr };
 
-	const FName LevelName = FName(TEXT("MainMenu"));
+	const FName LevelName = FName(TEXT("MAP_MainMenu"));
 };
