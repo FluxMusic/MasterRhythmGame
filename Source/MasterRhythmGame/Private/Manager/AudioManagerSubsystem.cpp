@@ -997,14 +997,14 @@ void UAudioManagerSubsystem::HandlePart1(bool LoadOtherLevel, FName UnloadLevelN
 
 void UAudioManagerSubsystem::HandlePart2(bool LoadOtherLevel, FName UnloadLevelName, FName LoadLevelName)
 {
-	if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
+	if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (bEnemyCanAttack))
 	{
 		bEnemyCanAttack = false;
 		StartPart2();
 
 		MuteLeads();
 	}
-	else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack))
+	else if ((Enemy != nullptr) && (Enemy->GetHealth2() > 0) && (!bEnemyCanAttack))
 	{
 		StartPart2();
 		bEnemyCanAttack = true;
@@ -1032,13 +1032,13 @@ void UAudioManagerSubsystem::HandlePart2(bool LoadOtherLevel, FName UnloadLevelN
 
 void UAudioManagerSubsystem::HandlePart3(bool LoadOtherLevel, FName UnloadLevelName, FName LoadLevelName)
 {
-	if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
+	if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (bEnemyCanAttack))
 	{
 		bEnemyCanAttack = false;
 		StartPart3();
 		MuteLeads();
 	}
-	else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack))
+	else if ((Enemy != nullptr) && (Enemy->GetHealth3() > 0) && (!bEnemyCanAttack))
 	{
 		StartPart3();
 		bEnemyCanAttack = true;
@@ -1070,13 +1070,13 @@ void UAudioManagerSubsystem::HandlePart3(bool LoadOtherLevel, FName UnloadLevelN
 
 void UAudioManagerSubsystem::HandlePart4(bool LoadOtherLevel, FName UnloadLevelName, FName LoadLevelName)
 {
-	if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
+	if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (bEnemyCanAttack))
 	{
 		bEnemyCanAttack = false;
 		StartPart4();
 		MuteLeads();
 	}
-	else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack))
+	else if ((Enemy != nullptr) && (Enemy->GetHealth4() > 0) && (!bEnemyCanAttack))
 	{
 		StartPart4();
 		bEnemyCanAttack = true;
@@ -1108,13 +1108,13 @@ void UAudioManagerSubsystem::HandlePart4(bool LoadOtherLevel, FName UnloadLevelN
 
 void UAudioManagerSubsystem::HandlePart5()
 {
-	if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (bEnemyCanAttack))
+	if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (bEnemyCanAttack))
 	{
 		bEnemyCanAttack = false;
 		StartPart5();
 		MuteLeads();
 	}
-	else if ((Enemy != nullptr) && (Enemy->GetHealth1() > 0) && (!bEnemyCanAttack))
+	else if ((Enemy != nullptr) && (Enemy->GetHealth5() > 0) && (!bEnemyCanAttack))
 	{
 		StartPart5();
 		bEnemyCanAttack = true;
