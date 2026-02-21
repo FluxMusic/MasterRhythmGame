@@ -7,6 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "NodeActor.generated.h"
 
+class ULevelData;
 class USplineComponent;
 class UTimelineComponent;
 
@@ -90,6 +91,9 @@ protected:
 	// Timer handle used for delayed destroy (max 60ms)
 	UPROPERTY()
 	FTimerHandle DestroyTimerHandle;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	ULevelData* LevelData;
 
 	/**
 	 * The Time added for the note to stay by the player to account for latency

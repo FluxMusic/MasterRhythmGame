@@ -65,7 +65,7 @@ public:
 
 	// --- HealthBar accessors ---
 	int32 GetHealth1() const { return HealthBar1; }
-		void SetHealth1(int32 InHealth) { HealthBar1 = InHealth; }
+	void SetHealth1(int32 InHealth) { HealthBar1 = InHealth; }
 
 	int32 GetHealth2() const { return HealthBar2; }
 	void SetHealth2(int32 InHealth) { HealthBar2 = InHealth; }
@@ -78,6 +78,17 @@ public:
 
 	int32 GetHealth5() const { return HealthBar5; }
 	void SetHealth5(int32 InHealth) { HealthBar5 = InHealth; }
+
+	// --- MaxHealthBar accessors ---
+	int32 GetMaxHealth1() const { return MaxHealthBar1; }
+
+	int32 GetMaxHealth2() const { return MaxHealthBar2; }
+
+	int32 GetMaxHealth3() const { return MaxHealthBar3; }
+
+	int32 GetMaxHealth4() const { return MaxHealthBar4; }
+
+	int32 GetMaxHealth5() const { return MaxHealthBar5; }
 
 	UFUNCTION()
 	void Attack(int32 InBPM);
@@ -130,6 +141,21 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
 	int32 HealthBar5 { 0 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	int32 MaxHealthBar1 { 0 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	int32 MaxHealthBar2 { 0 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	int32 MaxHealthBar3 { 0 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	int32 MaxHealthBar4 { 0 };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = true))
+	int32 MaxHealthBar5 { 0 };
 
 	UPROPERTY()
 	TObjectPtr<USplineComponent> SplineRef { nullptr };

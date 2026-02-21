@@ -28,6 +28,12 @@ ATestEnemyActor::ATestEnemyActor()
 		AudioComponent->SetupAttachment(RootComponent);
 		AudioComponent->bAutoActivate = false;
 	}
+
+	MaxHealthBar1 = HealthBar1;
+	MaxHealthBar2 = HealthBar2;
+	MaxHealthBar3 = HealthBar3;
+	MaxHealthBar4 = HealthBar4;
+	MaxHealthBar5 = HealthBar5;
 }
 
 void ATestEnemyActor::Init(ULevelData* LevelDataIn)

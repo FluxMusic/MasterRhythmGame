@@ -172,6 +172,29 @@ void ANodeActor::OnDelayedDestroy()
 		ATestEnemyActor* Enemy = Cast<ATestEnemyActor>(Found);
 		if (Enemy != nullptr && GameController)
 		{
+			auto PartName = AudioManager->GetPartNameFix();
+
+			if (PartName.Contains(TEXT("Part1")))
+			{
+				DamageToEnemy = Enemy->GetMaxHealth1() / LevelData->NumNotesMelody1;
+			}
+			else if (PartName.Contains(TEXT("Part2")))
+			{
+				DamageToEnemy = Enemy->GetMaxHealth2() / LevelData->NumNotesMelody2;
+			}
+			else if (PartName.Contains(TEXT("Part3")))
+			{
+				DamageToEnemy = Enemy->GetMaxHealth3() / LevelData->NumNotesMelody3;
+			}
+			else if (PartName.Contains(TEXT("Part4")))
+			{
+				DamageToEnemy = Enemy->GetMaxHealth4() / LevelData->NumNotesMelody4;
+			}
+			else if (PartName.Contains(TEXT("Part5")))
+			{
+				DamageToEnemy = Enemy->GetMaxHealth5() / LevelData->NumNotesMelody5;
+			}
+
 			UE_LOG(LogTemp, Log, TEXT("ANodeActor::HandleTimelineFinished - Player hit note, applying %d damage to enemy."), DamageToEnemy);
 			Enemy->ApplyDamage(DamageToEnemy);
 		}
