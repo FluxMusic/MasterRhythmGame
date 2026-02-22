@@ -10,6 +10,7 @@
 #include "Enemy/TestEnemyActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
+#include "Actor/SplineActor.h"
 #include "Manager/AudioManagerSubsystem.h"
 
 // Sets default values
@@ -116,6 +117,12 @@ void ANodeActor::BeginPlay()
 		Timeline->SetTimelineLength(1.0f); // normalized length: x from 0..1
 		Timeline->SetTimelineLengthMode(ETimelineLengthMode::TL_TimelineLength);
 	}
+
+	if (SplineActorClass != nullptr)
+	{
+		AActor* FoundActor = UGameplayStatics::GetActorOfClass(GetWorld(), SplineActorClass);
+		SplineActor = Cast<ASplineActor>(FoundActor);
+	}
 }
 
 // Called every frame
@@ -176,23 +183,23 @@ void ANodeActor::OnDelayedDestroy()
 
 			if (PartName.Contains(TEXT("Part1")))
 			{
-				DamageToEnemy = Enemy->GetMaxHealth1() / LevelData->NumNotesMelody1;
+				DamageToEnemy = Enemy->GetMaxHealth1() / SplineActor->GetLevelData()->NumNotesMelody1;
 			}
 			else if (PartName.Contains(TEXT("Part2")))
 			{
-				DamageToEnemy = Enemy->GetMaxHealth2() / LevelData->NumNotesMelody2;
+				DamageToEnemy = Enemy->GetMaxHealth2() / SplineActor->GetLevelData()->NumNotesMelody2;
 			}
 			else if (PartName.Contains(TEXT("Part3")))
 			{
-				DamageToEnemy = Enemy->GetMaxHealth3() / LevelData->NumNotesMelody3;
+				DamageToEnemy = Enemy->GetMaxHealth3() / SplineActor->GetLevelData()->NumNotesMelody3;
 			}
 			else if (PartName.Contains(TEXT("Part4")))
 			{
-				DamageToEnemy = Enemy->GetMaxHealth4() / LevelData->NumNotesMelody4;
+				DamageToEnemy = Enemy->GetMaxHealth4() / SplineActor->GetLevelData()->NumNotesMelody4;
 			}
 			else if (PartName.Contains(TEXT("Part5")))
 			{
-				DamageToEnemy = Enemy->GetMaxHealth5() / LevelData->NumNotesMelody5;
+				DamageToEnemy = Enemy->GetMaxHealth5() / SplineActor->GetLevelData()->NumNotesMelody5;
 			}
 
 			UE_LOG(LogTemp, Log, TEXT("ANodeActor::HandleTimelineFinished - Player hit note, applying %d damage to enemy."), DamageToEnemy);

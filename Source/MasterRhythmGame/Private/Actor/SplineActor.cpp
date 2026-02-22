@@ -26,12 +26,6 @@ ASplineActor::ASplineActor()
 	MeshInstances = CreateDefaultSubobject<UInstancedStaticMeshComponent>("MeshInstances");
 	MeshInstances->SetupAttachment(RootComponent);
 
-	//if (Mesh && Material)
-	//{
-	//	Mesh->SetMaterial(0, Material);
-	//}
-	
-
 	Spline11 = CreateDefaultSubobject<USplineComponent>("Spline11");
 	Spline10 = CreateDefaultSubobject<USplineComponent>("Spline10");
 	Spline9  = CreateDefaultSubobject<USplineComponent>("Spline9");

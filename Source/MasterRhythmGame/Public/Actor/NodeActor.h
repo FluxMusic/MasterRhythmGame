@@ -7,7 +7,7 @@
 #include "GameFramework/Actor.h"
 #include "NodeActor.generated.h"
 
-class ULevelData;
+class ASplineActor;
 class USplineComponent;
 class UTimelineComponent;
 
@@ -93,7 +93,10 @@ protected:
 	FTimerHandle DestroyTimerHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	ULevelData* LevelData;
+	TSubclassOf<ASplineActor> SplineActorClass { nullptr };
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<ASplineActor> SplineActor { nullptr };
 
 	/**
 	 * The Time added for the note to stay by the player to account for latency

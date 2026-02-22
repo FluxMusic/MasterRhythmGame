@@ -28,12 +28,6 @@ ATestEnemyActor::ATestEnemyActor()
 		AudioComponent->SetupAttachment(RootComponent);
 		AudioComponent->bAutoActivate = false;
 	}
-
-	MaxHealthBar1 = HealthBar1;
-	MaxHealthBar2 = HealthBar2;
-	MaxHealthBar3 = HealthBar3;
-	MaxHealthBar4 = HealthBar4;
-	MaxHealthBar5 = HealthBar5;
 }
 
 void ATestEnemyActor::Init(ULevelData* LevelDataIn)
@@ -47,11 +41,16 @@ void ATestEnemyActor::Init(ULevelData* LevelDataIn)
 	HealthBar4 = (LevelData->NumNotesMelody4 * LevelData->HealthPointsPerNote);
 	HealthBar5 = (LevelData->NumNotesMelody5 * LevelData->HealthPointsPerNote);
 
+	MaxHealthBar1 = HealthBar1;
+	MaxHealthBar2 = HealthBar2;
+	MaxHealthBar3 = HealthBar3;
+	MaxHealthBar4 = HealthBar4;
+	MaxHealthBar5 = HealthBar5;
+
 	if (AudioComponent)
 	{
 		AudioComponent->SetSound(LevelData->Music);
 	}
-	
 
 	OnInit();
 }

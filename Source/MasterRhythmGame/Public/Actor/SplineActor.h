@@ -37,6 +37,10 @@ public:
 	UFUNCTION()
 	TArray<int32> GetScaleDegrees();
 
+	// --- ULevelData ---
+	TObjectPtr<ULevelData> GetLevelData() const { return LevelData; }
+	void SetLevelData(TObjectPtr<ULevelData> InLevelData) { LevelData = InLevelData; }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
