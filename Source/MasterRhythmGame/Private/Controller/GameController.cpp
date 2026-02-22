@@ -1301,19 +1301,19 @@ void AGameController::DeathMenuSwitchButton(EDeathState InDeathState)
 		{
 			case EDeathState::Respawn:
 			{
-				GameHud->GetDeathWidgetInstance()->GetRespawnButton()->GetButton()->SetKeyboardFocus();
+				GameHud->GetDeathWidgetInstance()->GetRespawnButton()->SetKeyboardFocus();
 				GameHud->GetDeathWidgetInstance()->GetRespawnButton()->HandleButtonHovered();
 				break;
 			}
 			case EDeathState::MainMenu:
 			{
-				GameHud->GetDeathWidgetInstance()->GetMainMenuButton()->GetButton()->SetKeyboardFocus();
+				GameHud->GetDeathWidgetInstance()->GetMainMenuButton()->SetKeyboardFocus();
 				GameHud->GetDeathWidgetInstance()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
 			case EDeathState::WorldMap:
 			{
-				GameHud->GetDeathWidgetInstance()->GetWorldMapButton()->GetButton()->SetKeyboardFocus();
+				GameHud->GetDeathWidgetInstance()->GetWorldMapButton()->SetKeyboardFocus();
 				GameHud->GetDeathWidgetInstance()->GetWorldMapButton()->HandleButtonHovered();
 				break;
 			}
