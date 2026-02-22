@@ -250,6 +250,12 @@ void AGameController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceControl
 
 	NotePlayed = Note;
 
+	if (GameCharacter)
+	{
+		GameCharacter->SetLastPlayedNote(Note);
+	}
+	
+
 	// Convert incoming MIDI note number to semitone class (0-11) and map to ENote.
 	const int32 Semitone = Note % 12;
 
@@ -464,6 +470,13 @@ void AGameController::HandleG2Attack()
 
 void AGameController::HandleKeyboardAttack(int32 MidiNote)
 {
+	//Set the Note Played in the Character for pitching
+	if (GameCharacter)
+	{
+		GameCharacter->SetLastPlayedNote(MidiNote);
+	}
+	
+
 	//Remap Midi Note (See HandleMidiNoteOn)
 	const int32 RemappedSemitone = (MidiNote - static_cast<int32>(RootNote)) % 12;
 	ENote NoteEnum = static_cast<ENote>(RemappedSemitone);

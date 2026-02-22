@@ -52,6 +52,11 @@ public:
 	USplineComponent* GetSplineRef() const { return SplineRef; }
 	void SetSplineRef(USplineComponent* InSpline) { SplineRef = InSpline; }
 
+	UFUNCTION(BlueprintCallable)
+	int32 GetLastPlayedNote() const { return LastPlayedNote; }
+	UFUNCTION(BlueprintCallable)
+	void SetLastPlayedNote(int32 NoteIn) { LastPlayedNote = NoteIn; }
+
 	//Plays a Sound when the player presses a note
 	UFUNCTION()
 	void PlayNote(int32 Note, EInstrument Instrument);
@@ -90,6 +95,9 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	int32 Defended { 0 };
+
+	UPROPERTY(VisibleAnywhere)
+	int32 LastPlayedNote { 0 };
 
 	UPROPERTY()
 	TObjectPtr<AGameHUD> GameHUD { nullptr };
