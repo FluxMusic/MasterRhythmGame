@@ -331,5 +331,6 @@ private:
 
 	FTimerHandle CollisionTimerHandle;
 
+	UPROPERTY(EditDefaultsOnly)
 	int32 FramesToEnableCollision { 30 };
 };

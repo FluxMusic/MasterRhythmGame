@@ -241,7 +241,7 @@ void AGameController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceControl
 	}
 
 	//Pause Game when player presses the lowest note on the keyboard (C1)
-	if (Note == 24)
+	if (Note == 36)
 	{
 		HandlePause();
 		return;
