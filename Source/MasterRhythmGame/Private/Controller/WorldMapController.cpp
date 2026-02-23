@@ -108,6 +108,13 @@ void AWorldMapController::Tick(float DeltaSeconds)
 void AWorldMapController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceController, int32 Timestamp, int32 Channel,
 	int32 Note, int32 Velocity)
 {
+	//Pause Game when player presses the lowest note on the keyboard (C1)
+	if (Note == 24)
+	{
+		HandlePause();
+		return;
+	}
+
 	// Convert incoming MIDI note number to semitone class (0-11) and map to ENote.
 	const int32 Semitone = Note % 12;
 
@@ -317,17 +324,6 @@ void AWorldMapController::WorldMapControl(ENote Note)
 					PlayerCharacter->SetSplineRef(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().Spline);
 					PlayerCharacter->Move(PlayerCharacter->GetLevelNodeRef()->GetSplineForward().DirectionWorldMap);
 					break;
-				}
-				break;
-			}
-			case ENote::CSharp:
-			{
-				SetControllerState(EControllerStateWorldMap::PauseMenu);
-				if (WorldMapHUD != nullptr)
-				{
-					WorldMapHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
-					// TODO: Change UI first 
-					//WorldMapHUD->GetWorldMapInstance()->SetVisibility(ESlateVisibility::Hidden);
 				}
 				break;
 			}

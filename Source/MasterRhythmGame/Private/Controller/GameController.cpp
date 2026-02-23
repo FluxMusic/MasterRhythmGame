@@ -240,8 +240,8 @@ void AGameController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceControl
 		UE_LOG(LogTemp, Warning, TEXT("Full Latency: %f ms"), Latency + LatencyBetweenThreads);
 	}
 
-	//Pause Game when player presses the lowest note on the keyboard
-	if (Note == 0)
+	//Pause Game when player presses the lowest note on the keyboard (C1)
+	if (Note == 24)
 	{
 		HandlePause();
 		return;
@@ -525,15 +525,15 @@ bool AGameController::SwitchInstrument(int32 Note)
 
 	switch (Note)
 	{
-		//D0 switches to Keyboard
-		case 2:
+		//D1 switches to Keyboard
+		case 26:
 		{
 			SelectedInstrument = EInstrument::Piano;
 			bSwitchedInstrument = true;
 			break;
 		}
-		//E0 switches to Violin if unlocked
-		case 4:
+		//E1 switches to Violin if unlocked
+		case 28:
 		{
 			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Violin))
 			{
@@ -543,8 +543,8 @@ bool AGameController::SwitchInstrument(int32 Note)
 			}
 			break;
 		}
-		//F0 switches to Saxophone if unlocked
-		case 5:
+		//F1 switches to Saxophone if unlocked
+		case 29:
 		{
 			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Saxophone))
 			{
@@ -554,8 +554,8 @@ bool AGameController::SwitchInstrument(int32 Note)
 			}
 			break;
 		}
-		//G0 switches to Guitar if unlocked
-		case 7:
+		//G1 switches to Guitar if unlocked
+		case 31:
 		{
 			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Guitar))
 			{
@@ -565,8 +565,8 @@ bool AGameController::SwitchInstrument(int32 Note)
 			}
 			break;
 		}
-		//A0 switches to Synth if unlocked
-		case 9:
+		//A1 switches to Synth if unlocked
+		case 33:
 		{
 			if (GI && InstrumentFlags::HasFlag(GI->GetUnlockedInstruments(), EInstrument::Synth))
 			{
