@@ -3,6 +3,8 @@
 
 #include "HUD/WorldMapHUD.h"
 
+#include "Controller/WorldMapController.h"
+
 AWorldMapHUD::AWorldMapHUD()
 {
 }
@@ -65,5 +67,11 @@ void AWorldMapHUD::BeginPlay()
 			AudioSettingInstance->AddToViewport();
 			AudioSettingInstance->SetVisibility(ESlateVisibility::Hidden);
 		}
+	}
+
+	AWorldMapController* Controller = Cast<AWorldMapController>(GetOwningPlayerController());
+	if (Controller != nullptr)
+	{
+		Controller->bShowMouseCursor = false;
 	}
 }

@@ -502,6 +502,11 @@ void UAudioManagerSubsystem::AddScore(int32 BasePoints)
 
 void UAudioManagerSubsystem::ResetCombo()
 {
+	if (!bScoringEnabled)
+	{
+		return;
+	}
+
 	CurrentComboMultiplier = ComboMultiplierMin;
 	CurrentComboCount = 0;
 
@@ -1174,6 +1179,7 @@ void UAudioManagerSubsystem::HandleOutro()
 	}
 
 	//Show Success Menu
+	GameHUD->GetBlackscreenInstance()->SetVisibility(ESlateVisibility::Hidden);
 	GameHUD->GetSuccessWidgetInstance()->SetVisibility(ESlateVisibility::Visible);
 	AGameController* PlayerController = Cast<AGameController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
 	PlayerController->SetControllerState(EControllerStateGame::SuccessMenu);
@@ -1181,7 +1187,6 @@ void UAudioManagerSubsystem::HandleOutro()
 	// Show mouse cursor and switch to GameAndUI input so widgets receive focus
 	PlayerController->bShowMouseCursor = true;
 	FInputModeGameAndUI InputMode;
-	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 	PlayerController->SetInputMode(InputMode);
 }
 

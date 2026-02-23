@@ -117,7 +117,7 @@ private:
 
 	// Level Unlock States
 	UPROPERTY(EditAnywhere)
-	bool bIsLevelOneUnlocked   { true };
+	bool bIsLevelOneUnlocked   { false };
 	UPROPERTY(EditAnywhere)
 	bool bIsLevelTwoUnlocked   { false };
 	UPROPERTY(EditAnywhere)
