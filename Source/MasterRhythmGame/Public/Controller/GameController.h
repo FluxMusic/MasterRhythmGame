@@ -160,6 +160,8 @@ protected:
 
 	void AudioMenuControl(ENote Note);
 
+	void ControlsMenuControl(ENote Note);
+
 	void GraphicMenuSwitchButton(EGraphicSettingItem InGraphicSettingItem);
 
 	void SwitchAudioMenuButton(EAudioSettingItem InAudioSettingItem);

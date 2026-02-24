@@ -6,6 +6,7 @@
 #include "HUD/MainMenuHUD.h"
 #include "Controller/MainMenuController.h"
 #include "Controller/WorldMapController.h"
+#include "Controller/GameController.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -77,6 +78,12 @@ void UGraphicSettingWidget::ReturnMainMenuClicked()
 	if (WorldMapController != nullptr)
 	{
 		WorldMapController->SetControllerState(EControllerStateWorldMap::SettingMenu);
+	}
+	
+	AGameController* GameController = Cast<AGameController>(GetOwningPlayer());
+	if (GameController != nullptr)
+	{
+		GameController->SetControllerState(EControllerStateGame::SettingMenu);
 	}
 }
 

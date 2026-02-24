@@ -60,6 +60,8 @@ protected:
 
 	void AudioMenuControl(ENote Note);
 
+	void ControlsMenuControl(ENote Note);
+
 	void SettingMenuControl(ENote Note);
 
 	void CreditMenuControl(ENote Note);

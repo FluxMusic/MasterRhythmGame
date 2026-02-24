@@ -19,6 +19,7 @@
 #include "Manager/AudioManagerSubsystem.h"
 #include "Enemy/TestEnemyActor.h"
 #include "UI/ButtonWidget.h"
+#include "UI/Settings/ControlsWidget.h"
 
 AGameController::AGameController()
 {
@@ -287,6 +288,11 @@ void AGameController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceControl
 		case EControllerStateGame::AudioMenu:
 		{
 			AudioMenuControl(NoteEnum);
+			break;
+		}
+		case EControllerStateGame::ControlsMenu:
+		{
+			ControlsMenuControl(NoteEnum);
 			break;
 		}
 		case EControllerStateGame::GraphicsMenu:
@@ -793,14 +799,14 @@ void AGameController::SettingMenuControl(ENote Note)
 	case ENote::C:
 	{
 		SettingMenuIndex++;
-		SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
+		SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 3);
 		UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
 		break;
 	}
 	case ENote::D:
 	{
 		SettingMenuIndex--;
-		SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
+		SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 3);
 		UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
 		break;
 	}
@@ -819,11 +825,18 @@ void AGameController::SettingMenuControl(ENote Note)
 			if (GameHud->GetMainMenuSettingInstance()->GetAudioButton()->HasKeyboardFocus())
 			{
 				SetControllerState(EControllerStateGame::AudioMenu);
-				SettingMenuIndex = 0;
+				SettingMenuIndex = 1;
 				AudioMenuIndex = 0;
 				GameHud->GetMainMenuSettingInstance()->AudioSettingClicked();
 				break;
 			}
+			if (GameHud->GetMainMenuSettingInstance()->GetControlsButton()->HasKeyboardFocus())
+				{
+					SetControllerState(EControllerStateGame::ControlsMenu);
+					SettingMenuIndex = 2;
+					GameHud->GetMainMenuSettingInstance()->ControlsClicked();
+					break;
+				}
 			if (GameHud->GetMainMenuSettingInstance()->GetMainMenuButton()->HasKeyboardFocus())
 			{
 				SetControllerState(EControllerStateGame::PauseMenu);
@@ -988,6 +1001,49 @@ void AGameController::AudioMenuControl(ENote Note)
 	SwitchAudioMenuButton(static_cast<EAudioSettingItem>(AudioMenuIndex));
 }
 
+void AGameController::ControlsMenuControl(ENote Note)
+{
+	switch (Note)
+	{
+		case ENote::C:
+		{
+			if (GameHud)
+			{
+				GameHud->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->SetKeyboardFocus();
+				GameHud->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->HandleButtonHovered();
+			}
+			break;
+		}
+		case ENote::D:
+		{
+			if (GameHud)
+			{
+				GameHud->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->SetKeyboardFocus();
+				GameHud->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->HandleButtonHovered();
+			}
+			break;
+		}
+		case ENote::B:
+		{
+			if (GameHud)
+			{
+				if (GameHud->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					GameHud->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->HandleButtonUnhovered();
+					GameHud->GetMainMenuSettingInstance()->GetControlsWidget()->ReturnMenu();
+				}
+				
+			}
+			break;
+		}
+		default:
+		{
+			// Should not land here
+			break;
+		}
+	}
+}
+
 void AGameController::GraphicMenuSwitchButton(EGraphicSettingItem InGraphicSettingItem)
 {
 	if (GameHud != nullptr)
@@ -1109,7 +1165,7 @@ void AGameController::SwitchAudioMenuButton(EAudioSettingItem InAudioSettingItem
 			}
 			case EAudioSettingItem::Return:
 			{
-				GameHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->GetButton()->SetKeyboardFocus();
+				GameHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
 				GameHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
@@ -1206,6 +1262,7 @@ void AGameController::MainSettingSwitchButton(EMainSettingItem InMainSettingItem
 	{
 		GameHud->GetMainMenuSettingInstance()->GetGraphicButton()->HandleButtonUnhovered();
 		GameHud->GetMainMenuSettingInstance()->GetAudioButton()->HandleButtonUnhovered();
+		GameHud->GetMainMenuSettingInstance()->GetControlsButton()->HandleButtonUnhovered();
 		GameHud->GetMainMenuSettingInstance()->GetMainMenuButton()->HandleButtonUnhovered();
 
 		switch (InMainSettingItem)
@@ -1220,6 +1277,12 @@ void AGameController::MainSettingSwitchButton(EMainSettingItem InMainSettingItem
 			{
 				GameHud->GetMainMenuSettingInstance()->GetAudioButton()->SetKeyboardFocus();
 				GameHud->GetMainMenuSettingInstance()->GetAudioButton()->HandleButtonHovered();
+				break;
+			}
+			case EMainSettingItem::Controls:
+			{
+				GameHud->GetMainMenuSettingInstance()->GetControlsButton()->SetKeyboardFocus();
+				GameHud->GetMainMenuSettingInstance()->GetControlsButton()->HandleButtonHovered();
 				break;
 			}
 			case EMainSettingItem::MainMenu:

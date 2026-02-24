@@ -8,6 +8,7 @@
 
 class UButtonWidget;
 class AMainMenuHUD;
+class AWorldMapHUD;
 /**
  * 
  */
@@ -73,4 +74,7 @@ private:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<AMainMenuHUD> MainMenuHud { nullptr };
+	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<AWorldMapHUD> WorldMapHUD { nullptr };
 };

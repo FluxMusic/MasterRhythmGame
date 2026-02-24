@@ -8,6 +8,7 @@
 #include "UI/MainMenu/CreditsWidget.h"
 #include "UI/MainMenu/LoadMenuWidget.h"
 #include "UI/Settings/AudioSettingWidget.h"
+#include "UI/Settings/ControlsWidget.h"
 #include "UI/Settings/GraphicSettingWidget.h"
 #include "UI/Settings/MainMenuSettingWidget.h"
 #include "MainMenuHUD.generated.h"
@@ -61,6 +62,14 @@ public:
 	// --- Audio Setting Instance ---
 	UAudioSettingWidget* GetAudioSettingInstance() const { return AudioSettingInstance; }
 	void SetAudioSettingInstance(UAudioSettingWidget* InInstance) { AudioSettingInstance = InInstance; }
+	
+	// --- Controls Widget Class ---
+	TSubclassOf<UControlsWidget> GetControlsWidgetClass() const { return ControlsWidgetClass; }
+	void SetControlsWidgetClass(TSubclassOf<UControlsWidget> InClass) { ControlsWidgetClass = InClass; }
+
+	// --- Controls Widget Instance ---
+	UControlsWidget* GetControlsWidgetInstance() const { return ControlsWidgetInstance; }
+	void SetControlsWidgetInstance(UControlsWidget* InInstance) { ControlsWidgetInstance = InInstance; }
 
 	// --- Load Menu Class ---
 	TSubclassOf<ULoadMenuWidget> GetLoadMenuClass() const { return LoadMenuClass; }
@@ -103,6 +112,12 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UAudioSettingWidget> AudioSettingInstance { nullptr };
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UControlsWidget> ControlsWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<UControlsWidget> ControlsWidgetInstance { nullptr };
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<ULoadMenuWidget> LoadMenuClass;

@@ -109,6 +109,11 @@ void AMainMenuController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceCon
 			AudioMenuControl(NoteEnum);
 			break;
 		}
+		case EControllerState::ControlsMenu:
+		{
+			ControlsMenuControl(NoteEnum);
+			break;
+		}
 		case EControllerState::CreditsMenu:
 		{
 			CreditMenuControl(NoteEnum);
@@ -288,6 +293,49 @@ void AMainMenuController::AudioMenuControl(ENote Note)
 	SwitchAudioMenuButton(static_cast<EAudioSettingItem>(AudioMenuIndex));
 }
 
+void AMainMenuController::ControlsMenuControl(ENote Note)
+{
+	switch (Note)
+	{
+		case ENote::C:
+		{
+			if (MainMenuHud)
+			{
+				MainMenuHud->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->SetKeyboardFocus();
+				MainMenuHud->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->HandleButtonHovered();
+			}
+			break;
+		}
+		case ENote::D:
+		{
+			if (MainMenuHud)
+			{
+				MainMenuHud->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->SetKeyboardFocus();
+				MainMenuHud->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->HandleButtonHovered();
+			}
+			break;
+		}
+		case ENote::B:
+		{
+			if (MainMenuHud)
+			{
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					MainMenuHud->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->HandleButtonUnhovered();
+					MainMenuHud->GetMainMenuSettingInstance()->GetControlsWidget()->ReturnMenu();
+				}
+				
+			}
+			break;
+		}
+		default:
+		{
+			// Should not land here
+			break;
+		}
+	}
+}
+
 void AMainMenuController::SettingMenuControl(ENote Note)
 {
 	switch (Note)
@@ -295,14 +343,14 @@ void AMainMenuController::SettingMenuControl(ENote Note)
 		case ENote::C:
 		{
 			SettingMenuIndex++;
-			SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
+			SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 3);
 			UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
 			break;
 		}
 		case ENote::D:
 		{
 			SettingMenuIndex--;
-			SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
+			SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 3);
 			UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
 			break;
 		}
@@ -321,9 +369,16 @@ void AMainMenuController::SettingMenuControl(ENote Note)
 				if (MainMenuHud->GetMainMenuSettingInstance()->GetAudioButton()->HasKeyboardFocus())
 				{
 					SetControllerState(EControllerState::AudioMenu);
-					SettingMenuIndex = 0;
+					SettingMenuIndex = 1;
 					AudioMenuIndex = 0;
 					MainMenuHud->GetMainMenuSettingInstance()->AudioSettingClicked();
+					break;
+				}
+				if (MainMenuHud->GetMainMenuSettingInstance()->GetControlsButton()->HasKeyboardFocus())
+				{
+					SetControllerState(EControllerState::ControlsMenu);
+					SettingMenuIndex = 2;
+					MainMenuHud->GetMainMenuSettingInstance()->ControlsClicked();
 					break;
 				}
 				if (MainMenuHud->GetMainMenuSettingInstance()->GetMainMenuButton()->HasKeyboardFocus())
@@ -568,6 +623,7 @@ void AMainMenuController::MainSettingSwitchButton(EMainSettingItem InMainSetting
 	{
 		MainMenuHud->GetMainMenuSettingInstance()->GetGraphicButton()->HandleButtonUnhovered();
 		MainMenuHud->GetMainMenuSettingInstance()->GetAudioButton()->HandleButtonUnhovered();
+		MainMenuHud->GetMainMenuSettingInstance()->GetControlsButton()->HandleButtonUnhovered();
 		MainMenuHud->GetMainMenuSettingInstance()->GetMainMenuButton()->HandleButtonUnhovered();
 
 		switch (InMainSettingItem)
@@ -582,6 +638,12 @@ void AMainMenuController::MainSettingSwitchButton(EMainSettingItem InMainSetting
 			{
 				MainMenuHud->GetMainMenuSettingInstance()->GetAudioButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->GetAudioButton()->HandleButtonHovered();
+				break;
+			}
+			case EMainSettingItem::Controls:
+			{
+				MainMenuHud->GetMainMenuSettingInstance()->GetControlsButton()->SetKeyboardFocus();
+				MainMenuHud->GetMainMenuSettingInstance()->GetControlsButton()->HandleButtonHovered();
 				break;
 			}
 			case EMainSettingItem::MainMenu:
@@ -762,7 +824,7 @@ void AMainMenuController::SwitchAudioMenuButton(EAudioSettingItem InAudioSetting
 			}
 			case EAudioSettingItem::Return:
 			{
-				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->GetButton()->SetKeyboardFocus();
+				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
 				MainMenuHud->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}

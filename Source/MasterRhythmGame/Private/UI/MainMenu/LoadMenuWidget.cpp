@@ -4,6 +4,7 @@
 #include "UI/MainMenu/LoadMenuWidget.h"
 #include "UI/ButtonWidget.h"
 #include "Controller/MainMenuController.h"
+#include "Controller/WorldMapController.h"
 #include "GameInstance/MyGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -15,10 +16,19 @@ void ULoadMenuWidget::ReturnMainMenuButtonClicked()
 	{
 		MainMenuHud->GetMainMenuInstance()->SetVisibility(ESlateVisibility::Visible);
 	}
+	if (WorldMapHUD != nullptr)
+	{
+		WorldMapHUD->GetPauseMenuInstance()->SetVisibility(ESlateVisibility::Visible);
+	}
 	AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
 	if (PlayerController != nullptr)
 	{
 		PlayerController->SetControllerState(EControllerState::MainMenu);
+	}
+	AWorldMapController* WorldMapController = Cast<AWorldMapController>(GetOwningPlayer());
+	if (WorldMapController != nullptr)
+	{
+		WorldMapController->SetControllerState(EControllerStateWorldMap::PauseMenu);
 	}
 }
 
@@ -95,11 +105,18 @@ void ULoadMenuWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	AMainMenuController* PlayerController = Cast<AMainMenuController>(GetOwningPlayer());
+	AMainMenuController* MainMenuController = Cast<AMainMenuController>(GetOwningPlayer());
 
-	if (PlayerController != nullptr)
+	if (MainMenuController != nullptr)
 	{
-		MainMenuHud = Cast<AMainMenuHUD>(PlayerController->GetHUD());
+		MainMenuHud = Cast<AMainMenuHUD>(MainMenuController->GetHUD());
+	}
+	
+	AWorldMapController* WorldMapController = Cast<AWorldMapController>(GetOwningPlayer());
+
+	if (WorldMapController != nullptr)
+	{
+		WorldMapHUD = Cast<AWorldMapHUD>(WorldMapController->GetHUD());
 	}
 
 	// Bind button click events

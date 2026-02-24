@@ -6,6 +6,7 @@
 #include "Components/Slider.h"
 #include "Controller/MainMenuController.h"
 #include "Controller/WorldMapController.h"
+#include "Controller/GameController.h"
 #include "GameInstance/MyGameInstance.h"
 #include "Sound/SoundSubmix.h"
 
@@ -61,6 +62,12 @@ void UAudioSettingWidget::ReturnMenu()
 	if (WorldMapController != nullptr)
 	{
 		WorldMapController->SetControllerState(EControllerStateWorldMap::SettingMenu);
+	}
+	
+	AGameController* GameController = Cast<AGameController>(GetOwningPlayer());
+	if (GameController != nullptr)
+	{
+		GameController->SetControllerState(EControllerStateGame::SettingMenu);
 	}
 }
 

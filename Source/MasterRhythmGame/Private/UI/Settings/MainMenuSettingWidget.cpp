@@ -35,11 +35,13 @@ void UMainMenuSettingWidget::NativeConstruct()
 	}
 
 	WBP_AudioSettingWidget->SetVisibility(ESlateVisibility::Hidden);
+	WBP_Controls->SetVisibility(ESlateVisibility::Hidden);
 	WBP_GraphicSettingWidget->SetVisibility(ESlateVisibility::Hidden);
 
 	// Bind button click events only
 	Graphic->OnClicked.AddDynamic(this, &UMainMenuSettingWidget::GraphicSettingClicked);
 	Audio->OnClicked.AddDynamic(this, &UMainMenuSettingWidget::AudioSettingClicked);
+	Controls->OnClicked.AddDynamic(this, &UMainMenuSettingWidget::ControlsClicked);
 	MainMenu->OnClicked.AddDynamic(this, &UMainMenuSettingWidget::ReturnMainMenuClicked);
 }
 
@@ -47,12 +49,21 @@ void UMainMenuSettingWidget::GraphicSettingClicked()
 {
 	WBP_GraphicSettingWidget->SetVisibility(ESlateVisibility::Visible);
 	WBP_AudioSettingWidget->SetVisibility(ESlateVisibility::Hidden);
+	WBP_Controls->SetVisibility(ESlateVisibility::Hidden);
 }
 
 void UMainMenuSettingWidget::AudioSettingClicked()
 {
 	WBP_GraphicSettingWidget->SetVisibility(ESlateVisibility::Hidden);
 	WBP_AudioSettingWidget->SetVisibility(ESlateVisibility::Visible);
+	WBP_Controls->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UMainMenuSettingWidget::ControlsClicked()
+{
+	WBP_GraphicSettingWidget->SetVisibility(ESlateVisibility::Hidden);
+	WBP_AudioSettingWidget->SetVisibility(ESlateVisibility::Hidden);
+	WBP_Controls->SetVisibility(ESlateVisibility::Visible);
 }
 
 void UMainMenuSettingWidget::ReturnMainMenuClicked()
@@ -60,6 +71,7 @@ void UMainMenuSettingWidget::ReturnMainMenuClicked()
 	SetVisibility(ESlateVisibility::Hidden);
 	WBP_GraphicSettingWidget->SetVisibility(ESlateVisibility::Hidden);
 	WBP_AudioSettingWidget->SetVisibility(ESlateVisibility::Hidden);
+	WBP_Controls->SetVisibility(ESlateVisibility::Hidden);
 	if (MainMenuHud != nullptr)
 	{
 		MainMenuHud->GetMainMenuInstance()->SetVisibility(ESlateVisibility::Visible);

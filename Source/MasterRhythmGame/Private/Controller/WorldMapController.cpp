@@ -109,7 +109,7 @@ void AWorldMapController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceCon
 	int32 Note, int32 Velocity)
 {
 	//Pause Game when player presses the lowest note on the keyboard (C1)
-	if (Note == 24)
+	if (Note == 36)
 	{
 		HandlePause();
 		return;
@@ -130,6 +130,11 @@ void AWorldMapController::HandleNoteOn(UMIDIDeviceInputController* MIDIDeviceCon
 		case EControllerStateWorldMap::PauseMenu:
 		{
 			PauseMenuControl(NoteEnum);
+			break;
+		}
+		case EControllerStateWorldMap::ControlsMenu:
+		{
+			ControlsMenuControl(NoteEnum);
 			break;
 		}
 		case EControllerStateWorldMap::SettingMenu:
@@ -363,7 +368,8 @@ void AWorldMapController::PauseMenuControl(ENote Note)
 			{
 				PauseMenuIndex--;
 				PauseMenuIndex = FMath::Clamp(PauseMenuIndex, 0, 5);
-				UE_LOG(LogTemp, Log, TEXT("PauseMenuIndex: %d"), PauseMenuIndex); break;
+				UE_LOG(LogTemp, Log, TEXT("PauseMenuIndex: %d"), PauseMenuIndex); 
+				break;
 			}
 			case ENote::B:
 			{
@@ -414,10 +420,58 @@ void AWorldMapController::PauseMenuControl(ENote Note)
 	PauseMenuSwitchButton(static_cast<EPauseMenuItem>(PauseMenuIndex));
 }
 
+void AWorldMapController::ControlsMenuControl(ENote Note)
+{
+	switch (Note)
+	{
+		case ENote::C:
+		{
+			if (WorldMapHUD)
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->HandleButtonHovered();
+			}
+			break;
+		}
+		case ENote::D:
+		{
+			if (WorldMapHUD)
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->HandleButtonHovered();
+			}
+			break;
+		}
+		case ENote::B:
+		{
+			if (WorldMapHUD)
+			{
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->HasKeyboardFocus())
+				{
+					WorldMapHUD->GetMainMenuSettingInstance()->GetControlsWidget()->GetMainMenuButton()->HandleButtonUnhovered();
+					WorldMapHUD->GetMainMenuSettingInstance()->GetControlsWidget()->ReturnMenu();
+				}
+				
+			}
+			break;
+		}
+		default:
+		{
+			// Should not land here
+			break;
+		}
+	}
+}
+
 void AWorldMapController::MainSettingSwitchButton(EMainSettingItem InMainSettingItem)
 {
 	if (WorldMapHUD != nullptr)
 	{
+		WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetAudioButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetControlsButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetMainMenuButton()->HandleButtonUnhovered();
+
 		switch (InMainSettingItem)
 		{
 			case EMainSettingItem::Graphic:
@@ -430,6 +484,12 @@ void AWorldMapController::MainSettingSwitchButton(EMainSettingItem InMainSetting
 			{
 				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioButton()->SetKeyboardFocus();
 				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioButton()->HandleButtonHovered();
+				break;
+			}
+			case EMainSettingItem::Controls:
+			{
+				WorldMapHUD->GetMainMenuSettingInstance()->GetControlsButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetControlsButton()->HandleButtonHovered();
 				break;
 			}
 			case EMainSettingItem::MainMenu:
@@ -451,6 +511,17 @@ void AWorldMapController::GraphicMenuSwitchButton(EGraphicSettingItem InGraphicS
 {
 	if (WorldMapHUD != nullptr)
 	{
+		WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeDownButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetWindowModeUpButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionDownButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetResolutionUpButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicDownButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetGraphicUpButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncDownButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetVSyncUpButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetApplyButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetGraphicSettingWidget()->GetMainMenuButton()->HandleButtonUnhovered();
+
 		switch (InGraphicSettingItem)
 		{
 			case EGraphicSettingItem::WindowModeDown:
@@ -564,7 +635,7 @@ void AWorldMapController::AudioMenuControl(ENote Note)
 					AudioMenuIndex = 0;
 					break;
 				}
-				if (WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->GetButton()->HasKeyboardFocus())
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->HasKeyboardFocus())
 				{
 					AudioMenuIndex = 0;
 					WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->ReturnMenu();
@@ -588,14 +659,14 @@ void AWorldMapController::SettingMenuControl(ENote Note)
 		case ENote::C:
 		{
 			SettingMenuIndex++;
-			SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
+			SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 3);
 			UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
 			break;
 		}
 		case ENote::D:
 		{
 			SettingMenuIndex--;
-			SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 2);
+			SettingMenuIndex = FMath::Clamp(SettingMenuIndex, 0, 3);
 			UE_LOG(LogTemp, Log, TEXT("SettingMenuIndex: %d"), SettingMenuIndex);
 			break;
 		}
@@ -614,9 +685,16 @@ void AWorldMapController::SettingMenuControl(ENote Note)
 				if (WorldMapHUD->GetMainMenuSettingInstance()->GetAudioButton()->HasKeyboardFocus())
 				{
 					SetControllerState(EControllerStateWorldMap::AudioMenu);
-					SettingMenuIndex = 0;
+					SettingMenuIndex = 1;
 					AudioMenuIndex = 0;
 					WorldMapHUD->GetMainMenuSettingInstance()->AudioSettingClicked();
+					break;
+				}
+				if (WorldMapHUD->GetMainMenuSettingInstance()->GetControlsButton()->HasKeyboardFocus())
+				{
+					SetControllerState(EControllerStateWorldMap::ControlsMenu);
+					SettingMenuIndex = 2;
+					WorldMapHUD->GetMainMenuSettingInstance()->ControlsClicked();
 					break;
 				}
 				if (WorldMapHUD->GetMainMenuSettingInstance()->GetMainMenuButton()->HasKeyboardFocus())
@@ -728,6 +806,11 @@ void AWorldMapController::SwitchAudioMenuButton(EAudioSettingItem InAudioSetting
 {
 	if (WorldMapHUD != nullptr)
 	{
+		WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->MasterVolumeSliderUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->MusicVolumeSliderUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->SfxVolumeSliderUnhovered();
+		WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->HandleButtonUnhovered();
+
 		switch (InAudioSettingItem)
 		{
 			case EAudioSettingItem::MasterVolumeSlider:
@@ -752,7 +835,7 @@ void AWorldMapController::SwitchAudioMenuButton(EAudioSettingItem InAudioSetting
 			}
 			case EAudioSettingItem::Return:
 			{
-				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->GetButton()->SetKeyboardFocus();
+				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->SetKeyboardFocus();
 				WorldMapHUD->GetMainMenuSettingInstance()->GetAudioSettingWidget()->GetMainMenuButton()->HandleButtonHovered();
 				break;
 			}
@@ -793,6 +876,13 @@ void AWorldMapController::PauseMenuSwitchButton(EPauseMenuItem InPauseMenuItem)
 {
 	if (WorldMapHUD != nullptr)
 	{
+		WorldMapHUD->GetPauseMenuInstance()->GetResumeButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetPauseMenuInstance()->GetSaveGameButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetPauseMenuInstance()->GetLoadGameButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetPauseMenuInstance()->GetSettingsButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetPauseMenuInstance()->GetMainMenuButton()->HandleButtonUnhovered();
+		WorldMapHUD->GetPauseMenuInstance()->GetQuitButton()->HandleButtonUnhovered();
+
 		switch (InPauseMenuItem)
 		{
 			case EPauseMenuItem::Resume:

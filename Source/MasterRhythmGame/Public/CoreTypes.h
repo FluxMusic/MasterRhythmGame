@@ -98,6 +98,7 @@ enum class EControllerStateWorldMap : uint8
 	WorldMap,
 	PauseMenu,
 	AudioMenu,
+	ControlsMenu,
 	GraphicsMenu,
 	SettingMenu,
 	SaveMenu,
@@ -139,7 +140,8 @@ enum class EMainSettingItem : uint8
 {
 	Graphic = 0,
 	Audio = 1,
-	MainMenu = 2
+	Controls = 2,
+	MainMenu = 3
 };
 
 UENUM(BlueprintType)
@@ -172,6 +174,7 @@ enum class EControllerState : uint8
 	MainMenu,
 	CreditsMenu,
 	AudioMenu,
+	ControlsMenu,
 	GraphicsMenu,
 	LoadMenu,
 	SettingMenu
@@ -185,6 +188,7 @@ enum class EControllerStateGame : uint8
 	SettingMenu,
 	GraphicsMenu,
 	AudioMenu,
+	ControlsMenu,
 	DeathMenu,
 	SuccessMenu,
 	SaveMenu,
