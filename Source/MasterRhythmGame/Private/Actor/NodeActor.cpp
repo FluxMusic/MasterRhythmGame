@@ -66,6 +66,8 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 
 		//Play Player Block Anim
 		OverlappingCharacter->OnBlock();
+
+		OnDelayedDestroy();
 	}
 }
 
