@@ -502,6 +502,45 @@ void UAudioManagerSubsystem::AddScore(int32 BasePoints)
 		GameHUD->GetMainGameInstance()->UpdateScore(CurrentScore, CurrentComboMultiplier);
 	}
 
+	FString WorldName = GetWorld()->GetMapName();
+
+	if (UMyGameInstance* Gi = UMyGameInstance::Get())
+	{
+		switch (GetMapTypeFromString(GetWorld()->GetMapName()))
+		{
+			case EMapNames::Swamp:
+			{
+				Gi->SetLevelScore(ELevels::LevelOne, CurrentScore);
+				break;
+			}
+			case EMapNames::Ice:
+			{
+				Gi->SetLevelScore(ELevels::LevelFive, CurrentScore);
+				break;
+			}
+			case EMapNames::Cyberpunk:
+			{
+				Gi->SetLevelScore(ELevels::LevelTwo, CurrentScore);
+				break;
+			}
+			case EMapNames::Space:
+			{
+				Gi->SetLevelScore(ELevels::LevelFour, CurrentScore);
+				break;
+			}
+			case EMapNames::Steampunk:
+			{
+				Gi->SetLevelScore(ELevels::LevelThree, CurrentScore);
+				break;
+			}
+			case EMapNames::Volcano:
+			{
+				Gi->SetLevelScore(ELevels::LevelSix, CurrentScore);
+				break;
+			}
+		}
+	}
+
 	UE_LOG(LogTemp, Log, TEXT("Score Added: %d (Base: %d x Multiplier: %.2f) | Total Score: %d | Combo: %d"), 
 		PointsToAdd, BasePoints, CurrentComboMultiplier, CurrentScore, CurrentComboCount);
 }
