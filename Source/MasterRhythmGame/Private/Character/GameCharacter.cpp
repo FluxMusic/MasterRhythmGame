@@ -8,6 +8,8 @@
 #include "Components/AudioComponent.h"
 #include "HUD/GameHUD.h"
 #include "Components/CapsuleComponent.h"
+#include "Controller/MainMenuController.h"
+#include "Data/LevelData.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/SplineComponent.h"
 #include "Actor/SplineActor.h"
@@ -136,7 +138,7 @@ void AGameCharacter::SetupHUD()
 		{
 			TArray<int32> ScaleDegrees = Cast<ASplineActor>(SplineRef->GetOwner())->GetScaleDegrees();
 			
-			GameHUD->GetMainGameInstance()->GetKeyboardWidget()->SetScaleHighlights(ScaleDegrees);
+			GameHUD->GetMainGameInstance()->GetKeyboardWidget()->SetScaleHighlights(static_cast<int32>(Cast<ASplineActor>(SplineRef->GetOwner())->GetLevelData()->RootNote), ScaleDegrees);
 		}
 	}
 	else

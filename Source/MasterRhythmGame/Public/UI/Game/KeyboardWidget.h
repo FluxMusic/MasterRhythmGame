@@ -17,6 +17,6 @@ class MASTERRHYTHMGAME_API UKeyboardWidget : public UUserWidget
 public:
 
 	UFUNCTION(BlueprintNativeEvent)
-	void SetScaleHighlights(const TArray<int32>& ScaleDegrees);
-	void SetScaleHighlights_Implementation(TArray<int32> ScaleDegrees) {}
+	void SetScaleHighlights(int32 RootNote, const TArray<int32>& ScaleDegrees);
+	void SetScaleHighlights_Implementation(int32 RootNote, TArray<int32> ScaleDegrees) {}
 };
