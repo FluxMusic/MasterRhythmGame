@@ -5,6 +5,7 @@
 #include "Components/TimelineComponent.h"
 #include "Controller/GameController.h"
 #include "Components/SplineComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Curves/CurveFloat.h"
 #include "Components/StaticMeshComponent.h"
 #include "Enemy/TestEnemyActor.h"
@@ -60,6 +61,8 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 		int32 Defended = OverlappingCharacter->GetDefended();
 		Defended++;
 		OverlappingCharacter->SetDefended(Defended);
+
+		OverlappingCharacter->GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 		//Play Player Block Anim
 		OverlappingCharacter->OnBlock();

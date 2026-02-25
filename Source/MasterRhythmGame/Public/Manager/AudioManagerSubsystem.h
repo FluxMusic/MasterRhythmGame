@@ -92,6 +92,9 @@ private:
 
     UFUNCTION()
 	void WatchOutputMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output);
+    
+    UFUNCTION()
+	void WatchOutputMidiNoteTrigger(FName OutputName, const FMetaSoundOutput& Output);
 
     UFUNCTION()
     void WatchOutputPartFinishedPart(FName OutputName, const FMetaSoundOutput& Output);
@@ -224,6 +227,9 @@ private:
 
     UPROPERTY()
     bool bPlayerCanCollectNotes { true };
+
+    UPROPERTY()
+    int32 MIDINote { -1 };
 
     UPROPERTY()
     FString PartNameFix;

@@ -113,6 +113,10 @@ void UAudioManagerSubsystem::PlayQuantized(UAudioComponent* AudioComponent)
 		FOnMetasoundOutputValueChanged MidiDelegate;
 		MidiDelegate.BindUFunction(this, FName("WatchOutputMidiNoteChange"));
 		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("MIDINoteOut")), MidiDelegate);
+		
+		FOnMetasoundOutputValueChanged MidiTriggerDelegate;
+		MidiTriggerDelegate.BindUFunction(this, FName("WatchOutputMidiNoteTrigger"));
+		MetaSoundOutputSubsystem->WatchOutput(AudioComponent, FName(TEXT("OnMIDINoteOn")), MidiTriggerDelegate);
 
 		FOnMetasoundOutputValueChanged PartNameDelegate;
 		PartNameDelegate.BindUFunction(this, FName("WatchOutputPartFinishedName"));
@@ -342,19 +346,21 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 	MetaSoundOutputTimeSeconds = FPlatformTime::Seconds();
 
 	// Extract MIDI note as int32 and print it
-	int32 MidiNote = -1;
-	if (Output.Get<int32>(MidiNote))
+	if (Output.Get<int32>(MIDINote))
 	{
-		if (MidiNote == 0)
+		if (MIDINote == 0)
 		{
 			return;
 		}
-		MidiNote = (MidiNote - static_cast<int32>(RootNote)) % 12;
+		MIDINote = (MIDINote - static_cast<int32>(RootNote)) % 12;
 
-		const FString Msg = FString::Printf(TEXT("%s = %d"), *OutputName.ToString(), MidiNote);
+		const FString Msg = FString::Printf(TEXT("%s = %d"), *OutputName.ToString(), MIDINote);
 		UKismetSystemLibrary::PrintString(this, Msg, true, true, FLinearColor::Red, 5.0f);
 	}
+}
 
+void UAudioManagerSubsystem::WatchOutputMidiNoteTrigger(FName OutputName, const FMetaSoundOutput& Output)
+{
 	// Ensure we have a valid enemy class to search for. If none has been set, default to the concrete actor class.
 	if (EnemyClass == nullptr)
 	{
@@ -375,7 +381,7 @@ void UAudioManagerSubsystem::WatchOutputMidiNoteChange(FName OutputName, const F
 	//Move the Enemy to the corresponding Line based on the Midi Note
 	if (Enemy != nullptr && Spline != nullptr)
 	{
-		Enemy->SetSplineRef(Spline->GetSplines(MidiNote));
+		Enemy->SetSplineRef(Spline->GetSplines(MIDINote));
 
 		const int32 Index = Enemy->GetSplineRef()->GetNumberOfSplinePoints() - 1;
 
