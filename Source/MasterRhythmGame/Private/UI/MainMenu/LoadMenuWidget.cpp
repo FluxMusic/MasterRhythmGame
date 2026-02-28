@@ -61,7 +61,7 @@ void ULoadMenuWidget::LoadSaveSlot(const FString& SlotName)
 				UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("Loaded %s Successfully!"), *SlotName), true, true, FLinearColor::Green, 5.0f);
 				
 				// Load to world map after loading save
-				UGameplayStatics::OpenLevel(GetWorld(), TEXT("WorldMap"));
+				UGameplayStatics::OpenLevel(GetWorld(), TEXT("MAP_WorldMap"));
 			}
 			else
 			{
