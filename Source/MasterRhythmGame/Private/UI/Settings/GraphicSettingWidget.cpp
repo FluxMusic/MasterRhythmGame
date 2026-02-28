@@ -18,6 +18,18 @@ void UGraphicSettingWidget::NativeConstruct()
 	if (UserSettings != nullptr)
 	{
 		UserSettings->LoadSettings();
+		
+		// Check if this is the first run by checking if settings are at default values
+		bool bIsFirstRun = (UserSettings->GetOverallScalabilityLevel() == 0);
+		
+		if (bIsFirstRun)
+		{
+			// Set graphics to (High = Index 2) on first run
+			UserSettings->SetOverallScalabilityLevel(2);
+			UserSettings->ApplySettings(false);
+			UserSettings->SaveSettings();
+		}
+		
 		WindowMode = UserSettings->GetFullscreenMode();
 		GraphicsIndex = UserSettings->GetOverallScalabilityLevel();
 		bVSync = UserSettings->IsVSyncEnabled();
