@@ -18,6 +18,17 @@ class ULevelData;
 struct FMetaSoundOutput;
 
 /**
+ * Delegates
+ */
+
+//Fires when a Segment finished playing
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSegmentFinished, FString, SegmentName);
+//Fires when the MIDI Note does
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMIDINote, int32, MIDINote);
+//Fires when the playback percent changes
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPartFinishedPercentChanged, float, Percent);
+
+/**
  * 
  */
 UCLASS()
@@ -27,7 +38,7 @@ class MASTERRHYTHMGAME_API UAudioManagerSubsystem : public UWorldSubsystem
 public:
     UAudioManagerSubsystem();
 
-    UFUNCTION()
+    UFUNCTION(BlueprintCallable)
     void InitSubsystem(ULevelData* Data);
 
     // --- Quartz control ---
@@ -37,17 +48,17 @@ public:
     UFUNCTION(BlueprintCallable)
     void StopClock();
 
-    UFUNCTION()
+    UFUNCTION(BlueprintCallable)
     void ClockHandleInit(FName ClockName);
 
-    UFUNCTION()
+    UFUNCTION(BlueprintCallable)
     void SetBeatsPerMinute(float InBPM, FQuartzQuantizationBoundary InBoundary, FOnQuartzCommandEventBP InDelegate);
 
-    UFUNCTION()
+    UFUNCTION(BlueprintCallable)
     void PlayQuantized(UAudioComponent* AudioComponent);
 
-	// --- Enemy Can Attack accessors ---
-	bool GetEnemyCanAttack() const { return bEnemyCanAttack; }
+    UFUNCTION(BlueprintCallable)
+    UQuartzClockHandle* GetClockHandle() const { return ClockHandle; }
 
 	// --- Part Name Fix accessors ---
 	FString GetPartNameFix() const { return PartNameFix; }
@@ -66,30 +77,11 @@ public:
     UFUNCTION(BlueprintCallable)
     float GetAnimTime();
 
-    // --- Score System ---
-    UFUNCTION(BlueprintCallable)
-    int32 GetCurrentScore() const { return CurrentScore; }
-
-    UFUNCTION(BlueprintCallable)
-    float GetCurrentComboMultiplier() const { return CurrentComboMultiplier; }
-
-    UFUNCTION(BlueprintCallable)
-    int32 GetCurrentComboCount() const { return CurrentComboCount; }
-
-    UFUNCTION(BlueprintCallable)
-    int32 GetBaseScorePerNote() const { return BaseScorePerNote; }
-
-    UFUNCTION()
-    void AddScore(int32 BasePoints);
-
-    UFUNCTION()
-    void ResetCombo();
-
-    UFUNCTION()
-    void SetScoringEnabled(bool bEnabled);
-
 private:
 
+    UFUNCTION()
+    void OnQuartzClockBeat(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
+    
     UFUNCTION()
 	void WatchOutputMidiNoteChange(FName OutputName, const FMetaSoundOutput& Output);
     
@@ -98,57 +90,33 @@ private:
 
     UFUNCTION()
     void WatchOutputPartFinishedPart(FName OutputName, const FMetaSoundOutput& Output);
-
+    
     UFUNCTION()
     void WatchOutputPartFinishedName(FName OutputName, const FMetaSoundOutput& Output);
-
+    
     UFUNCTION()
     void WatchOutputPartFinishedPercent(FName OutputName, const FMetaSoundOutput& Output);
+    
+    UFUNCTION()
+    void StartMusic();
 
     UFUNCTION()
     void StartIntro();
 
     UFUNCTION()
-    void StartPart1Intro();
+    void HandlePartIntro();
 
     UFUNCTION()
-    void StartPart1();
-
+    void HandlePart();
+    
     UFUNCTION()
-    void StartPart2Intro();
-
-    UFUNCTION()
-    void StartPart2();
-
-    UFUNCTION()
-    void StartPart3Intro();
-
-    UFUNCTION()
-    void StartPart3();
-
-    UFUNCTION()
-    void StartPart4Intro();
-
-    UFUNCTION()
-	void StartPart4();
-
-    UFUNCTION()
-    void StartPart5Intro();
-
-    UFUNCTION()
-    void StartPart5();
-
+    void StartOutroLoop();
+    
     UFUNCTION()
     void StartOutro();
 
     UFUNCTION()
-    void StartOutroLoop();
-
-    UFUNCTION()
-    void OnQuartzClockBeat(FName ClockName, EQuartzCommandQuantization QuantizationType, int32 NumBars, int32 Beat, float BeatFraction);
-
-    UFUNCTION()
-    void StartMusic();
+    void OnMusicFinished();
 
     UFUNCTION()
 	void MuteLeads();
@@ -157,46 +125,12 @@ private:
 	void UnmuteLeads();
 
     UFUNCTION()
-    void HandleSwampLevel();
+    void HandleMusicSequencing();
 
-    UFUNCTION()
-    void HandleVolcanoLevel();
-
-    UFUNCTION()
-    void HandleSpaceLevel();
-
-    UFUNCTION()
-    void HandleIceLevel();
-
-    UFUNCTION()
-    void HandleCyberpunkLevel();
-
-    UFUNCTION()
-    void HandleSteampunkLevel();
-
-    UFUNCTION()
-    void HandleTestLevel();
-
-    UFUNCTION()
-    void HandlePart1(bool LoadOtherLevel, FName UnloadLevelName = NAME_None, FName LoadLevelName = NAME_None);
-
-    UFUNCTION()
-    void HandlePart2(bool LoadOtherLevel, FName UnloadLevelName = NAME_None, FName LoadLevelName = NAME_None);
-
-    UFUNCTION()
-    void HandlePart3(bool LoadOtherLevel, FName UnloadLevelName = NAME_None, FName LoadLevelName = NAME_None);
-
-    UFUNCTION()
-	void HandlePart4(bool LoadOtherLevel, FName UnloadLevelName = NAME_None, FName LoadLevelName = NAME_None);
-
-    UFUNCTION()
-    void HandlePart5();
-
-    UFUNCTION()
-    void HandleOutro();
-
-    UFUNCTION()
-    EMapNames GetMapTypeFromString(const FString& MapName);
+public:
+    FOnSegmentFinished SegmentFinishedDelegate;
+    FOnMIDINote MIDINoteDelegate;
+    FOnPartFinishedPercentChanged PartFinishedPercentDelegate;
 
 private:
 
@@ -213,21 +147,6 @@ private:
     UPROPERTY()
     UAudioComponent* ActiveAudioComponent{ nullptr };
 
-	UPROPERTY()
-    TSubclassOf<ATestEnemyActor> EnemyClass { nullptr };
-
-    UPROPERTY()
-    TObjectPtr<ATestEnemyActor> Enemy { nullptr };
-
-    UPROPERTY()
-	TObjectPtr<ASplineActor> Spline { nullptr };
-
-    UPROPERTY()
-    bool bEnemyCanAttack { true };
-
-    UPROPERTY()
-    bool bPlayerCanCollectNotes { true };
-
     UPROPERTY()
     int32 MIDINote { -1 };
 
@@ -239,43 +158,27 @@ private:
     UPROPERTY()
     bool bPartAlreadyPlayed { false };
 
-    // New: track whether Part1IntroEnd has occurred at least once
-    UPROPERTY()
-    bool bPart1IntroEnded { false };
-
-    UPROPERTY()
-    TObjectPtr<AGameHUD> GameHUD { nullptr };
-
-    UPROPERTY()
-    ENote RootNote { ENote::C };
-
     UPROPERTY()
     EPartFinish PartFinish { EPartFinish::Three };
 
-    // Score System
+    //The current segment to play
     UPROPERTY()
-    int32 CurrentScore { 0 };
+    int32 CurrentSegment { 1 };
 
+    //Flag to see if you should repeat the current part
     UPROPERTY()
-    float CurrentComboMultiplier { 1.0f };
+    bool bRepeatCurrentSegment { false };
 
+    //We just play the part twice (one with, one without leads) this flag keeps track
     UPROPERTY()
-    int32 CurrentComboCount { 0 };
+    bool bPlayerTurn { false };
 
+    //Flag that plays the next part (Set this outside of subsystem)
     UPROPERTY()
-    bool bScoringEnabled { true };
+    bool bEnemySegmentHealthDepleted { false };
 
-    UPROPERTY()
-    int32 BaseScorePerNote { 50 };
-
-    UPROPERTY()
-    float ComboMultiplierMin { 1.0f };
-
-    UPROPERTY()
-    float ComboMultiplierMax { 5.0f };
-
-    UPROPERTY()
-    float ComboMultiplierIncrement { 0.1f };
+    //Necessary to play the right part once and then repeat correctly
+    bool bFirstTimePlayingSegment { true };
 
     //Animation Stuff
 

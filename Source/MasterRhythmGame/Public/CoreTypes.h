@@ -247,9 +247,11 @@ enum class ELevels : uint8
 UENUM(BlueprintType)
 enum class EPartFinish : uint8
 {
-	Three,
-	Four,
-	Five
+	None  = 0,
+
+	Three = 3,
+	Four  = 4,
+	Five  = 5
 };
 
 UENUM(BlueprintType)

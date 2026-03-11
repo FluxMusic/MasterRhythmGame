@@ -53,8 +53,10 @@ void ANodeActor::OnNoteBeginOverlap(UPrimitiveComponent* OverlappedComp, AActor*
 		// Award score points for successful defense using configured base score
 		if (AudioManager != nullptr)
 		{
-			int32 BaseScore = AudioManager->GetBaseScorePerNote();
-			AudioManager->AddScore(BaseScore);
+			//TODO: Move Score Addition elsewhere
+
+			// int32 BaseScore = AudioManager->GetBaseScorePerNote();
+			// AudioManager->AddScore(BaseScore);
 		}
 
 		// Player collided with a note => increment defended and prevent damage.
@@ -216,7 +218,9 @@ void ANodeActor::OnDelayedDestroy()
 		// Player missed the note -> damage player and reset combo
 		if (AudioManager)
 		{
-			AudioManager->ResetCombo();
+			//TODO: Move Resetting of Combo elsewhere
+
+			// AudioManager->ResetCombo();
 		}
 
 		if (AGameCharacter* PlayerActor = Cast<AGameCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameCharacter::StaticClass())))
